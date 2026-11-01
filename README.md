@@ -16,6 +16,8 @@
 
 书里的框分五类：【公式】【套路】【易错】【直觉】【例】，靠图标、文字标签和边框样式区分（黑白打印也能分清），使用说明里有图例。
 
+首批校订的 [PPT 页码依据](docs/errata-first-batch.md) 使用课件右下角数字，正文以 `s` 标注；原有 `p` 标注表示 PDF 文件页序。
+
 ## 编译
 
 需要 TeX Live（XeLaTeX、makeindex）、Noto Serif SC / Noto Sans SC 字体，以及 Python 包 `pypinyin`（索引按拼音排序）。

@@ -235,18 +235,30 @@ $T(u,v)=L^2\big[\frac12\sinc(Lu)+\frac14\sinc(L(u-\frac1d))+\frac14\sinc(L(u+\fr
 
 \subsection*{完整推导：4f 输出（两种方法，任选其一抄写）}\label{sec:4fderiv}
 
-\textbf{方法一：直接积分 [F3-p80]}（一维写，二维同理各方向相乘）
+\textbf{方法一：二维直接积分 [F2-s2；F3-s80,82]}（保留振幅系数）
 \begin{enumerate}
 \item 第一个 2f（输入面在 $L_1$ 前焦面）：
-$\displaystyle \tilde E_f(\xi)=\frac{\ee^{i2kf_1}}{i\lambda f_1}\int\tilde E(x_1)\exp\!\left(-i2\pi\frac{\xi x_1}{\lambda f_1}\right)\dd x_1$。\quad 依据：透镜傅里叶变换性质，$d_0=f_1$。
+\[
+\tilde E_f(\xi,\eta)=\frac{\ee^{i2kf_1}}{i\lambda f_1}\iint\tilde E(x_1,y_1)\exp\!\left[-i2\pi\frac{\xi x_1+\eta y_1}{\lambda f_1}\right]\dd x_1\dd y_1.
+\]
+依据：透镜傅里叶变换性质，$d_0=f_1$。
 \item 第二个 2f（频谱面在 $L_2$ 前焦面），仍是\textbf{正}变换：
-$\displaystyle \tilde E_{\text{out}}(x)=\frac{\ee^{i2kf_2}}{i\lambda f_2}\int\tilde E_f(\xi)\exp\!\left(-i2\pi\frac{x\xi}{\lambda f_2}\right)\dd\xi$。
+\[
+\tilde E_{\text{out}}(x,y)=\frac{\ee^{i2kf_2}}{i\lambda f_2}\iint\tilde E_f(\xi,\eta)\exp\!\left[-i2\pi\frac{x\xi+y\eta}{\lambda f_2}\right]\dd\xi\dd\eta.
+\]
 \item 代入并交换积分次序：
-$\displaystyle \tilde E_{\text{out}}(x)=\frac{\ee^{i2k(f_1+f_2)}}{(i\lambda)^2f_1f_2}\int\tilde E(x_1)\left[\int\exp\!\left(-i2\pi\xi\Big(\frac{x_1}{\lambda f_1}+\frac{x}{\lambda f_2}\Big)\right)\dd\xi\right]\dd x_1$。
-\item 方括号用 $\int\ee^{-i2\pi\xi s}\dd\xi=\delta(s)$，再用 $\delta(as)=\frac{1}{|a|}\delta(s)$：
-$\delta\!\Big(\frac{1}{\lambda f_1}\big(x_1+\frac{f_1}{f_2}x\big)\Big)=\lambda f_1\,\delta\!\Big(x_1+\frac{f_1}{f_2}x\Big)$。
-\item $\delta$ 函数筛选出 $x_1=-\frac{f_1}{f_2}x$：
-$\displaystyle \tilde E_{\text{out}}(x)=\frac{\ee^{i2k(f_1+f_2)}}{i^2\lambda f_2}\lambda f_1\ \tilde E\!\Big(-\frac{f_1}{f_2}x\Big)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\tilde E\!\Big(-\frac{f_1}{f_2}x\Big)$（一维；二维时系数 $\frac{1}{(i\lambda)^2f_1f_2}\cdot(\lambda f_1)^2=-\frac{f_1}{f_2}$，结果相同）。
+\[
+\tilde E_{\text{out}}(x,y)=\frac{\ee^{i2k(f_1+f_2)}}{(i\lambda)^2f_1f_2}\iint\tilde E(x_1,y_1)\,K\dd x_1\dd y_1,
+\]
+其中 $K=\iint\exp\{-i2\pi[\xi(\frac{x_1}{\lambda f_1}+\frac{x}{\lambda f_2})+\eta(\frac{y_1}{\lambda f_1}+\frac{y}{\lambda f_2})]\}\dd\xi\dd\eta$。
+\item 两个方向各用一次 $\int\ee^{-i2\pi\xi s}\dd\xi=\delta(s)$。设 $f_1,f_2>0$，由 $\delta(as)=\delta(s)/|a|$：
+\[
+K=(\lambda f_1)^2\delta\!\left(x_1+\frac{f_1}{f_2}x\right)\delta\!\left(y_1+\frac{f_1}{f_2}y\right).
+\]
+\item 筛选 $x_1=-\frac{f_1}{f_2}x,\ y_1=-\frac{f_1}{f_2}y$，前因子为 $\frac{(\lambda f_1)^2}{(i\lambda)^2f_1f_2}=-\frac{f_1}{f_2}$，故
+\[
+\tilde E_{\text{out}}(x,y)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\tilde E\!\left(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\right).
+\]
 \end{enumerate}
 
 \textbf{方法二：占位符（尺度缩放）法 [F3-p81–82]}（多级、带滤波时更快）
@@ -660,17 +672,17 @@ $\frac12E_1(x'-b)+\frac14E_1(x')+\frac14E_1(x'-2b)+\frac12E_2(x'+b)+\frac14E_2(x
 \item 看到的是强度：$|E_1-E_2|^2$，两图相同处变暗——可用来找两幅图的差异。
 \end{itemize}
 
-\begin{formula}{泽尼克相衬与暗场 [F3-p89–92]}\ix{相衬}\ix{泽尼克相衬}\ix{暗场}\ix{弱相位物体}
-弱相位物体：$t=\ee^{i\varphi}\approx1+i\varphi$，频谱 $T(u,v)=\delta(u,v)+i\Phi(u,v)$（直流在频谱面中心，$\Phi$ 在外围）。
+\begin{formula}{泽尼克相衬与暗场 [F3-s90–92]}\ix{相衬}\ix{泽尼克相衬}\ix{暗场}\ix{弱相位物体}
+弱相位物体：$t=\ee^{i\varphi}\approx1+i\varphi$，频谱 $T(u,v)\approx\delta(u,v)+i\Phi(u,v)$（取 $\varphi$ 零均值，直流在频谱面中心）。以下取单位平面波照明、理想 4f 成像，忽略倒像。
 \begin{itemize}
-\item 明场：$I=|1+i\varphi|^2=1+\varphi^2\approx1$，看不见。
-\item \textbf{暗场}（挡零级）：$T'=i\Phi$，$I=|\varphi|^2$，看得见但\textbf{非线性}。
+\item 明场（完整传递该纯相位场）：$I=|\ee^{i\varphi}|^2=1$，无相位对比。按 [F3-s90] 将场展开到二阶，$-\varphi^2/2$ 与 $i\varphi$ 对强度的二阶贡献抵消。
+\item \textbf{暗场}（挡零级）：一阶场 $T'\approx i\Phi$，领先阶强度 $I\approx|\varphi|^2$，看得见但\textbf{非线性} [F3-s91]。
 \item \textbf{相衬}（零级乘 $iA$：相移 $90^\circ$、振幅透过 $A$）：$T'=iA\delta+i\Phi$，像面复振幅 $iA+i\varphi=i(A+\varphi)$，
 \[
-I=A^2+2A\varphi+\varphi^2\approx\boxed{A^2+2A\varphi}
+I\approx\boxed{A^2+2A\varphi}\qquad(\text{强度保留到一阶，见 [F3-s92]})
 \]
 \end{itemize}
-与相位\textbf{成线性}。对比度 $\frac{2\varphi}{A}$，$A<1$（零级同时衰减）时对比度增大。
+相衬强度与相位\textbf{成线性}。相对背景的变化 $\Delta I/I_0\approx2\varphi/A$；线性近似要求 $|\varphi|\ll A$，适当减小 $A$ 可增大相对变化。
 （物理说明：$1+i\varphi$ 中直流与散射光相差 $90^\circ$，叠加不产生一阶强度变化；把直流相移 $90^\circ$ 后两者同相或反相，干涉出与 $\varphi$ 成正比的强度。）
 \end{formula}
 
@@ -683,16 +695,16 @@ I=A^2+2A\varphi+\varphi^2\approx\boxed{A^2+2A\varphi}
 \item 泰勒展开：$\ee^{i\varphi}=1+i\varphi-\frac{\varphi^2}2-\cdots\approx1+i\varphi$（$|\varphi|\ll1$）。
 \item 频谱：$\F\{1\}=\delta(u,v)$（只在频谱面中心一点），$\F\{i\varphi\}=i\Phi(u,v)$（分布在外围）。（假设 $\varphi$ 无直流分量；有的话并入常数相位。）
 \item 频谱面操作只作用在中心那一点：中心乘 $c$（不放 $c=1$；挡住 $c=0$；相位板 $c=A\ee^{\pm i\pi/2}=\pm iA$）。
-\item 像面复振幅（忽略倒像）：$c+i\varphi$。
-\item 强度：$I=|c+i\varphi|^2$。$c=1$：$1+\varphi^2$；$c=0$：$\varphi^2$；$c=iA$：$|i(A+\varphi)|^2=A^2+2A\varphi+\varphi^2\approx A^2+2A\varphi$；$c=-iA$：$A^2-2A\varphi$（负相衬）。
+\item 像面一阶复振幅（忽略倒像）：$c+i\varphi$ [F3-s90–92]。
+\item 按强度所需的阶数计算：明场 $c=1$，完整场给 $I=|\ee^{i\varphi}|^2=1$；暗场 $c=0$，领先阶 $I\approx\varphi^2$；相衬 $c=\pm iA$，保留一阶得 $I\approx A^2\pm2A\varphi$。
 \end{enumerate}
 
 \textbf{【适配/数值】}
 \begin{itemize}
-\item $\varphi_{\max}=0.1$ rad：明场强度起伏 $\varphi^2=0.01$（1\%，看不见）；暗场 $I\le0.01$，很暗且正负 $\varphi$ 一样亮；相衬 $A=1$：$I=1\pm0.2$（$\pm20\%$）；$A=0.5$：$I=0.25\pm0.1$，相对对比度 $\frac{2\varphi}A=40\%$。
+\item $\varphi_{\max}=0.1$ rad：理想明场 $I=1$；暗场领先阶 $I\lesssim0.01$，且正负 $\varphi$ 一样亮；相衬一阶估计 $A=1$ 时 $I\approx1\pm0.2$（$\pm20\%$），$A=0.5$ 时 $I\approx0.25\pm0.1$（相对背景变化约 $40\%$）。
 \item \textbf{正相衬 / 负相衬}：零级相移 $+90^\circ$ 时相位大处更亮（$+2A\varphi$），相移 $-90^\circ$ 时更暗。
-\item \textbf{相位不小}（$\varphi\sim1$）：线性关系失效，要保留 $\varphi^2$ 项。
-\item \textbf{相位光栅} $\varphi=\phi_0\cos\frac{2\pi x}d$：暗场 $I=\phi_0^2\cos^2\frac{2\pi x}{d}$，周期变为 $\frac d2$（倍频，同 §\ref{sec:gratingfilter}(b)）；相衬 $I\approx A^2+2A\phi_0\cos\frac{2\pi x}d$，周期 $d$，忠实反映相位。
+\item \textbf{相位不小}（$\varphi\sim1$）：从完整的 $t=\ee^{i\varphi}$ 计算频谱和滤波后的场，再求强度。
+\item \textbf{相位光栅} $\varphi=\phi_0\cos\frac{2\pi x}d$：暗场 $I\approx\phi_0^2\cos^2\frac{2\pi x}{d}$，周期变为 $\frac d2$（倍频，同 §\ref{sec:gratingfilter}(b)）；相衬 $I\approx A^2+2A\phi_0\cos\frac{2\pi x}d$，周期 $d$，一阶强度反映相位。
 \end{itemize}
 
 \begin{warn}[相衬题易错]

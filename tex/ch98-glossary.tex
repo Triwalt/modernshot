@@ -147,7 +147,7 @@ gamma & 视 & 灰阶到亮度的幂律关系 \sig{无记忆非线性} & $L\propt
 高斯公式 & & $\to$ 见\textbf{成像公式} & & \\
 光焦度 & & $\to$ 见\textbf{屈光度} & & \\
 光栅、衍射级 & ①② & 周期透光结构；它的频谱是一排点，每个点是一个衍射级（0、$\pm1$……） \sig{周期信号 $\to$ 线谱（傅里叶级数）} & $\sin\theta_m=m\lambda/d$ & \gp{sec:p-screen}{sec:ftexamples}\\
-光瞳函数 $P$（光瞳） & ③ & 出瞳的透光形状（透光 1，不透光 0） \sig{相干时它就是传递函数（理想低通窗）} & CTF $=P(\lambda z_iu)$ & \gp{sec:p-imaging}{ch:imaging}\\
+光瞳函数 $P$（光瞳） & ③ & 出瞳的透光形状（透光 1，不透光 0） \sig{相干传递函数为光瞳的坐标反演与缩放} & CTF $=P(-\lambda z_iu)$ & \gp{sec:p-imaging}{ch:imaging}\\
 光通量 $\Phi$ & 度 & 每秒发出的总“可见光量”，单位 lm（流明） \sig{功率} &  & \gd{sec:photounits}\\
 光线像差、Shack-Hartmann & ④ & 波面倾斜使光线偏离理想像点；用微透镜阵列测波面斜率 \sig{相位的导数 = 瞬时频率} &  & \gd{sec:rayaberr}\\
 光学传递函数 OTF & ③ & 非相干成像的频率响应 = 光瞳的归一化自相关 \sig{非相干系统的 $H$} & $\mathcal H=\frac{\F\{|h|^2\}}{\F\{|h|^2\}|_0}$ & \gp{sec:p-imaging}{sec:typeB}\\
@@ -261,7 +261,7 @@ Talbot 自成像 & ② & 周期物传播一定距离后自己重新出现 \sig{�
 像差 & ④ & 实际镜头和理想镜头的偏差，使像变模糊 \sig{相位失真} &  & \gp{sec:p-aberr}{ch:aberr}\\
 相衬（泽尼克相衬） & ③ & 给频谱面的 0 级加 $\pi/2$ 相位，让看不见的相位物体变成明暗 \sig{把相位调制变成幅度调制} &  & \gp{sec:p-wave}{sec:phasecontrast}\\
 相干（相干照明、相干成像） & ③ & 激光：相位关系固定，叠加复振幅，能干涉；对复振幅是线性系统 & 传递函数 CTF & \gp{sec:p-imaging}{ch:imaging}\\
-相干传递函数 CTF & ③ & 相干成像的频率响应 = 光瞳本身（理想低通） \sig{相干系统的 $H$} & $H_c=P(\lambda z_iu,\lambda z_iv)$ & \gp{sec:p-imaging}{sec:typeA}\\
+相干传递函数 CTF & ③ & 相干成像的频率响应；偶对称光瞳可省坐标反演 \sig{相干系统的 $H$} & $H_c=P(-\lambda z_iu,-\lambda z_iv)$ & \gp{sec:p-imaging}{sec:typeA}\\
 相关、自相关 $\corr$ & 数 & 一个函数和平移后的另一个（或自己）重叠了多少；OTF 就是光瞳的自相关 \sig{同信号与系统} & $\int f^*(\xi)\,g(\xi+x)\dd\xi$ & \gp{sec:p-imaging}{sec:convcalc}\\
 相关色温 & 度 & 和这个颜色最接近的黑体温度 &  & \gd{sec:color}\\
 相位 & ② & 波此刻走到一个周期的哪个位置；探测器看不见 \sig{相量的辐角} & $\ee^{i\phi}$ 中的 $\phi$ & \gp{sec:p-wave}{ch:wave}\\
