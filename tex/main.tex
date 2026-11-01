@@ -11,6 +11,7 @@
 \pgfplotsset{compat=1.18}
 \usepackage[most]{tcolorbox}
 \usepackage{fancyhdr,needspace,newunicodechar}
+\usepackage{eso-pic}
 \newunicodechar{↔}{\ensuremath{\leftrightarrow}}
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 \usepackage{imakeidx}
@@ -28,7 +29,8 @@
 
 \setlength{\headheight}{15pt}
 \pagestyle{fancy}\fancyhf{}
-\fancyhead[L]{\small\sffamily 现代光学 · 开卷手册}
+\newcommand{\hbversion}{v1.1（2026-11-01）}
+\fancyhead[L]{\small\sffamily 现代光学 · 开卷手册\quad\textbar\quad Hemios\,\textperiodcentered\,\hbversion}
 \fancyhead[R]{\small\sffamily\nouppercase{\leftmark}}
 \fancyfoot[C]{\sffamily\bfseries\thepage}
 
