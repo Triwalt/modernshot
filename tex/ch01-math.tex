@@ -1,0 +1,539 @@
+\chapter{数学工具：傅里叶变换速查}\label{ch:math}
+\providecommand{\cOneQtype}[1]{\subsection*{#1}\addcontentsline{toc}{subsection}{#1}}
+
+\begin{idea}[这一章在整个体系里的位置]
+傅里叶光学只有一个核心思想：\textbf{任何光场 = 一堆不同方向平面波的叠加}，每个方向对应一个空间频率 $(u,v)$。
+傅里叶变换就是把“光场长什么样”翻译成“由哪些方向的平面波组成”。
+所以考试里几乎每道题都是：写出某个面的复振幅 $\to$ 做一次（或两次）傅里叶变换 $\to$ 读结果。
+这一章的公式只需会“查表 + 套性质”；§\ref{sec:ftproofs} 收了几条课件证明，题目要求“证明”时照抄。
+\end{idea}
+
+\begin{idea}[本章题型一览]
+\begin{tabular}{@{}P{6.6cm}P{8.6cm}@{}}
+求单缝、矩孔、圆孔的衍射图样 & 题型 1、5（§\ref{sec:ftexamples}）\\
+多缝、阵列、偏心孔的频谱 & 题型 2\\
+余弦光栅、两片光栅叠合、光栅乘物 & 题型 3\\
+黑白（矩形）光栅的各级强度、缺级 & 题型 4\\
+卷积 / 相关怎么算、怎么画 & §\ref{sec:convcalc}\\
+“证明”某个傅里叶性质 & §\ref{sec:ftproofs}\\
+采样、混叠、像素、DFT 尺度 & §\ref{sec:sampling}
+\end{tabular}
+\end{idea}
+
+\needspace{8\baselineskip}\section{定义与记号约定}
+
+\begin{formula}{二维傅里叶变换（课件约定）}\ix{傅里叶变换!定义}
+\[
+F(u,v)=\F\{f(x,y)\}=\dint f(x,y)\,\exp[-i2\pi(ux+vy)]\dd x\dd y
+\]
+\[
+f(x,y)=\IF\{F(u,v)\}=\dint F(u,v)\,\exp[+i2\pi(ux+vy)]\dd u\dd v
+\]
+$u,v$（也写 $f_x,f_y$）：空间频率，单位 mm$^{-1}$ 或 线对/mm。正变换核是 $\exp(-i2\pi\cdots)$，逆变换是 $\exp(+i2\pi\cdots)$。[F1-p29]
+一维时间信号版本（视光学采样部分用）：$F(\omega)=\int f(t)\ee^{-i\omega t}\dd t$，$f(t)=\frac1{2\pi}\int F(\omega)\ee^{i\omega t}\dd\omega$。用角频率时乘积定理多一个 $\frac1{2\pi}$：$\F\{fg\}=\frac1{2\pi}F\conv G$；线频率 $u$ 没有这个因子。[F1-p44]
+\end{formula}
+
+\begin{formula}{常用函数定义}\ix{rect}\ix{sinc}\ix{circ}\ix{delta 函数@$\delta$ 函数}\ix{comb}\ix{三角函数 Lambda@三角函数 $\Lambda$}
+\begin{tabular}{@{}ll@{}}
+$\rect(x)=\begin{cases}1,&|x|<\tfrac12\\0,&|x|>\tfrac12\end{cases}$ &
+$\rect\!\left(\frac{x}{a}\right)$：宽 $a$、中心在 0 的矩形（狭缝）\\[8pt]
+$\sinc(x)=\dfrac{\sin(\pi x)}{\pi x}$，$\sinc(0)=1$ & 零点在 $x=\pm1,\pm2,\dots$\\[8pt]
+$\circf(r)=\begin{cases}1,&r<1\\0,&r>1\end{cases}$ & $\circf\!\left(\frac{r}{a}\right)$：半径 $a$ 的圆孔\\[8pt]
+$\tri(x)=\begin{cases}1-|x|,&|x|\le1\\0,&|x|>1\end{cases}$ & 三角函数（两个 rect 的卷积）\\[8pt]
+$\delta(x)$：$\int\delta(x)\dd x=1$，$\int f(x)\delta(x-a)\dd x=f(a)$ & 点源、单一平面波的频谱\\[8pt]
+$\comb(x)=\sum_{n}\delta(x-n)$ & 周期点阵，采样函数
+\end{tabular}
+
+\smallskip
+$\delta$ 的三条性质 [F1-p53]：偶函数 $\delta(-x)=\delta(x)$；筛选 $\int f(x)\delta(x-a)\dd x=f(a)$；卷积即平移 $f(x)\conv\delta(x-a)=f(x-a)$。
+\end{formula}
+
+\begin{warn}[两个最容易抄错的约定]
+\begin{itemize}
+\item \textbf{sinc}：课件和本手册统一用 $\sinc(x)=\sin(\pi x)/(\pi x)$。若题目或其他书用 $\sin x/x$，零点会从整数变成 $n\pi$，抄公式时要核对。
+\item \textbf{宽度参数}：$\rect(x/a)$ 的 $a$ 是\textbf{全宽}；$\circf(r/a)$ 的 $a$ 是\textbf{半径}，直径 $D=2a$。[F1-p10] 题目给“直径 $D$”时写 $\circf\!\left(\frac{r}{D/2}\right)$。
+\end{itemize}
+\end{warn}
+
+\begin{exam}{推导：用定义算出最基本的五个变换（考试要求“由定义求”时照抄）}\ix{rect!变换推导}
+\textbf{(1) rect $\to$ sinc} [F1-p49]：
+\begin{align*}
+\F\{\rect(x)\}&=\int_{-1/2}^{1/2}\ee^{-i2\pi ux}\dd x
+=\left.\frac{\ee^{-i2\pi ux}}{-i2\pi u}\right|_{-1/2}^{1/2}
+=\frac{\ee^{-i\pi u}-\ee^{i\pi u}}{-i2\pi u}
+=\frac{\sin(\pi u)}{\pi u}=\sinc(u).
+\end{align*}
+依据：rect 只在 $|x|<\frac12$ 等于 1；欧拉公式 $\ee^{i\theta}-\ee^{-i\theta}=2i\sin\theta$。
+
+\textbf{(2) 加宽度}：令 $x'=x/a$（$\dd x=a\dd x'$），
+$\F\{\rect(x/a)\}=\int\rect(x')\ee^{-i2\pi(au)x'}a\dd x'=a\,\sinc(au)$。这就是缩放性质。
+
+\textbf{(3) 二维矩孔}：$\exp[-i2\pi(ux+vy)]=\ee^{-i2\pi ux}\ee^{-i2\pi vy}$，二重积分拆成两个一维积分之积 [F1-p38]：
+$\F\{\rect\frac xa\rect\frac yb\}=ab\,\sinc(au)\sinc(bv)$。
+
+\textbf{(4) $\delta$ 与常数} [F1-p54]：$\F\{\delta(x-a)\}=\int\delta(x-a)\ee^{-i2\pi ux}\dd x=\ee^{-i2\pi ua}$（筛选性质）；$a=0$ 时为 1。
+反过来 $\IF\{\delta(u)\}=1$，所以 $\F\{1\}=\delta(u)$，$\F\{\ee^{i2\pi u_0x}\}=\delta(u-u_0)$。
+
+\textbf{(5) 余弦}：$\cos(2\pi u_0x)=\frac12\left(\ee^{i2\pi u_0x}+\ee^{-i2\pi u_0x}\right)\Rightarrow\F=\frac12[\delta(u-u_0)+\delta(u+u_0)]$。
+同理 $\sin(2\pi u_0x)=\frac1{2i}(\ee^{i2\pi u_0x}-\ee^{-i2\pi u_0x})\Rightarrow\F=\frac1{2i}[\delta(u-u_0)-\delta(u+u_0)]$。
+\end{exam}
+
+\begin{idea}[频谱怎么“读”成看得见的东西]
+$F(u,v)$ 在 $(u,v)$ 处的值 = 沿方向 $\sin\theta_x=\lambda u$、$\sin\theta_y=\lambda v$ 传播的那个平面波分量的复振幅。
+远场（距离 $z$）或透镜后焦面（焦距 $f$）上，这个分量落在
+\[
+x=\lambda z\,u,\ y=\lambda z\,v\qquad\text{或}\qquad x=\lambda f\,u,\ y=\lambda f\,v .
+\]
+所以“求衍射图样”= 求 $F(u,v)$，再把 $u$ 换成 $x/(\lambda z)$ 或 $x/(\lambda f)$，强度取 $|F|^2$。
+\end{idea}
+
+\needspace{8\baselineskip}\section{傅里叶变换对（查表）}\label{sec:pairs}
+
+\begin{formula}{一维变换对表}\ix{傅里叶变换!变换对表}
+\par\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}lll@{}}
+\toprule
+$f(x)$ & $F(u)=\F\{f\}$ & 备注 \\ \midrule
+$\rect(x/a)$ & $a\,\sinc(au)$ & 狭缝 $\to$ 单缝衍射，第一零点 $u=1/a$\\
+$\sinc(x/a)$ & $a\,\rect(au)$ & 对偶\\
+$\tri(x/a)$ & $a\,\sinc^2(au)$ & \\
+$\sinc^2(x/a)$ & $a\,\tri(au)$ & 非相干 PSF$\leftrightarrow$OTF\\
+$\delta(x)$ & $1$ & 点 $\to$ 全频谱\\
+$\delta(x-x_0)$ & $\ee^{-i2\pi ux_0}$ & 平移的点\\
+$1$ & $\delta(u)$ & 正入射平面波 $\to$ 一个点\\
+$\ee^{i2\pi u_0x}$ & $\delta(u-u_0)$ & 斜入射平面波 $\to$ 偏离中心的点\\
+$\cos(2\pi u_0x)$ & $\tfrac12[\delta(u-u_0)+\delta(u+u_0)]$ & 余弦光栅 $\to$ 两个点\\
+$\sin(2\pi u_0x)$ & $\tfrac1{2i}[\delta(u-u_0)-\delta(u+u_0)]$ & \\
+$\sum_n\delta(x-nd)$（周期 $d$ 的点阵）& $\dfrac1d\sum_m\delta\!\left(u-\dfrac md\right)$ & 周期 $d\to$ 频谱间隔 $1/d$\\
+$\ee^{-\pi x^2}$ & $\ee^{-\pi u^2}$ & 高斯自变换\\
+$\ee^{i\pi a x^2}$ & $\frac{1}{\sqrt{-ia}}\ee^{-i\pi u^2/a}$ & 二次相位（菲涅耳）\\
+$\mathrm{sgn}(x)$ & $\dfrac{1}{i\pi u}$ & \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+注：$\comb(x/d)=d\sum_n\delta(x-nd)$。周期函数 $=$ 单元 $\conv$ 点阵 $\Rightarrow$ 频谱 $=$ 单元频谱 $\times$ 等间隔 $\delta$（只在 $u=m/d$ 处有值，即光栅方程）。
+\end{formula}
+
+\begin{formula}{二维变换对（可分离 + 圆对称）}\ix{jinc}\ix{艾里斑}
+\par\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}lll@{}}
+\toprule
+$f(x,y)$ & $F(u,v)$ & 备注\\ \midrule
+$\rect\frac{x}{a}\rect\frac{y}{b}$ & $ab\,\sinc(au)\sinc(bv)$ & 矩形孔\\
+$\circf\frac{r}{a}$，$r=\sqrt{x^2+y^2}$ & $a^2\dfrac{J_1(2\pi a\rho)}{a\rho}=\pi a^2\cdot\dfrac{2J_1(2\pi a\rho)}{2\pi a\rho}$ & 圆孔，$\rho=\sqrt{u^2+v^2}$\\
+$\delta(x,y)$ & $1$ & \\
+$\delta(x-a,y-b)$ & $\ee^{-i2\pi(ua+vb)}$ & \\
+$\exp[i2\pi(u_0x+v_0y)]$ & $\delta(u-u_0,v-v_0)$ & 斜平面波\\
+$\exp[-\pi(x^2+y^2)]$ & $\exp[-\pi(u^2+v^2)]$ & \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+圆孔（直径 $D$）的强度：$I\propto\left[\dfrac{2J_1(\pi D\rho)}{\pi D\rho}\right]^2$，第一暗环 $\pi D\rho=3.832\Rightarrow\rho_1=\dfrac{1.22}{D}$。
+换成角度/位置：$\sin\theta_1=1.22\lambda/D$；透镜焦面上半径 $r_1=1.22\lambda f/D$（艾里斑半径）。\ix{艾里斑!半径 1.22}
+圆孔在直角坐标里不能分离变量，只能用傅里叶–贝塞尔变换，课件\textbf{不定量要求推导}，直接引用结果。[F1-p38, p51]
+\end{formula}
+
+\begin{formula}{常用组合图形的频谱（直接抄）}\ix{双缝}\ix{多缝}\ix{矩形光栅}\ix{环形孔}
+\par\renewcommand{\arraystretch}{1.7}
+\begin{tabular}{@{}P{5.0cm}P{6.9cm}P{3.5cm}@{}}
+\toprule
+图形 $f(x)$ & 频谱 $F(u)$ & 怎么来的\\ \midrule
+偏心狭缝 $\rect\!\left(\frac{x-x_0}{a}\right)$ & $a\sinc(au)\,\ee^{-i2\pi ux_0}$ & 平移；强度与不偏心相同\\
+双缝（宽 $a$，中心 $\pm\frac d2$）$\rect\frac xa\conv[\delta(x-\frac d2)+\delta(x+\frac d2)]$ & $2a\sinc(au)\cos(\pi du)$ & 卷积定理 + 欧拉\\
+三缝（中心 $0,\pm d$）& $a\sinc(au)[1+2\cos(2\pi du)]$ & 同上\\
+$N$ 缝（周期 $d$，对称放置）& $a\sinc(au)\dfrac{\sin(N\pi du)}{\sin(\pi du)}$ & 等比级数\\
+无限黑白光栅（缝宽 $w$，周期 $d$）$\rect\frac xw\conv\sum_n\delta(x-nd)$ & $\sum_m\dfrac wd\sinc\!\left(\dfrac{mw}{d}\right)\delta\!\left(u-\dfrac md\right)$ & 卷积定理 + 点阵表\\
+有限光栅（再乘 $\rect\frac xL$）& $\sum_m\dfrac wd\sinc\!\left(\dfrac{mw}{d}\right)L\sinc\!\left[L\!\left(u-\dfrac md\right)\right]$ & 乘积 $\to$ 卷积，$\delta$ 变成窄 sinc\\
+环形孔（外半径 $a$、内半径 $b$）$\circf\frac ra-\circf\frac rb$ & 两个 jinc 相减 & 线性\\
+任意 $f$ 乘斜平面波 $f\,\ee^{i2\pi u_0x}$ & $F(u-u_0)$ & 调制（频移）\\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\needspace{28\baselineskip}\section{傅里叶变换性质}\label{sec:props}
+
+\begin{formula}{性质总表（$f\leftrightarrow F$，$g\leftrightarrow G$）}\ix{傅里叶变换!性质}\ix{平移定理}\ix{缩放定理}\ix{卷积定理}\ix{帕塞瓦尔定理}
+\par\renewcommand{\arraystretch}{1.7}
+\begin{tabular}{@{}P{2.6cm}P{6.6cm}P{6.0cm}@{}}
+\toprule
+性质 & 公式 & 光学含义\\ \midrule
+线性 & $\F\{af+bg\}=aF+bG$ & 叠加原理\\
+可分离 & $f=A(x)B(y)\Rightarrow F=\F\{A\}(u)\cdot\F\{B\}(v)$ & 矩形孔拆成两个狭缝\\
+缩放 & $\F\{f(ax,by)\}=\dfrac1{|ab|}F\!\left(\dfrac ua,\dfrac vb\right)$ & 孔越小，衍射越宽；放大 $M$ 倍$\Rightarrow$频率缩 $M$ 倍\\
+平移 & $\F\{f(x-a,y-b)\}=F(u,v)\,\ee^{-i2\pi(ua+vb)}$ & 物平移 $\Rightarrow$ 频谱只多线性相位，强度谱不变\\
+调制（频移）& $\F\{f(x,y)\ee^{i2\pi(u_0x+v_0y)}\}=F(u-u_0,v-v_0)$ & 斜照明 $\Rightarrow$ 频谱整体平移（SIM 的原理）\\
+共轭 & $\F\{f^*(x,y)\}=F^*(-u,-v)$ & \\
+翻转 & $\F\{f(-x,-y)\}=F(-u,-v)$；$\F\{F(u,v)\}=f(-x,-y)$ & \textbf{连续做两次正变换 = 倒像}（4f 系统）\\
+卷积 & $\F\{f\conv g\}=F\cdot G$ & 成像 = 物 $\conv$ PSF\\
+乘积 & $\F\{f\cdot g\}=F\conv G$ & 物乘照明 $\Rightarrow$ 频谱卷积\\
+相关 & $\F\{f\corr g\}=F^*\cdot G$ & \\
+自相关 & $\F\{f\corr f\}=|F|^2$；$\F\{|f|^2\}=F\corr F$ & \textbf{OTF = 光瞳自相关}\\
+帕塞瓦尔 & $\dint|f|^2\dd x\dd y=\dint|F|^2\dd u\dd v$ & 能量守恒\\
+零频 & $F(0,0)=\dint f\dd x\dd y$；$f(0,0)=\dint F\dd u\dd v$ & PSF 中心值 = 光瞳函数积分（Strehl 比）\\
+导数 & $\F\{\partial f/\partial x\}=i2\pi u\,F$ & \\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\begin{formula}{卷积、相关的定义（课件写法）}\ix{卷积}\ix{互相关}\ix{自相关}
+\begin{align*}
+\text{卷积：}\quad & f(x,y)\conv g(x,y)=\dint f(s,t)\,g(x-s,y-t)\dd s\dd t\\
+\text{互相关：}\quad & f(x,y)\corr g(x,y)=\dint f^*(s,t)\,g(x+s,y+t)\dd s\dd t\\
+\text{自相关：}\quad & f(x,y)\corr f(x,y)=\dint f^*(s,t)\,f(x+s,y+t)\dd s\dd t
+\end{align*}
+与 $\delta$ 函数卷积 = 平移：$f(x,y)\conv\delta(x-a,y-b)=f(x-a,y-b)$。[F1-p41, p53]
+\end{formula}
+
+\begin{recipe}{求一个图形的傅里叶变换}
+\begin{enumerate}
+\item 把图形拆成基本块：rect、circ、$\delta$、cos 的\textbf{和、积、卷积}。例：三条缝 = 一条缝 $\conv$ 三个 $\delta$；有限长光栅 = (无限光栅) $\times$ rect；圆环 = 大圆 $-$ 小圆。
+\item 每块查表 \hyperref[sec:pairs]{§\ref*{sec:pairs}}。
+\item 和 $\to$ 和；积 $\to$ 卷积；卷积 $\to$ 积；平移 $\to$ 乘 $\ee^{-i2\pi ua}$；缩放 $\to$ 倒数缩放并除以 $|a|$。
+\item 若要强度，取 $|F|^2$；线性相位因子此时消失。
+\item 若要屏上的图样，把 $u$ 换成 $x/(\lambda z)$（远场）或 $x/(\lambda f)$（透镜焦面）。
+\end{enumerate}
+\end{recipe}
+
+\subsection{卷积与相关怎么算、怎么画}\label{sec:convcalc}
+
+\begin{recipe}{图解卷积 / 相关（“对折—平移—算重叠面积”）[F1-p42]}\ix{卷积!图解}
+\begin{enumerate}
+\item \textbf{卷积} $f\conv g$ 在 $x$ 处的值：把 $g(s)$ \textbf{对折}成 $g(-s)$，再\textbf{平移}到 $g(x-s)$，与 $f(s)$ 相乘后求面积。
+\item \textbf{相关} $f\corr g$：\textbf{不对折}，把 $g$ 平移 $-x$（即 $g(s+x)$），与 $f^*(s)$ 相乘求面积。对称图形（rect、circ）对折不变，卷积和相关结果一样。
+\item 分段：按“开始重叠、完全重叠、开始分离、完全分离”几个临界 $x$ 分段写出重叠面积。
+\item 检查：结果宽度 = 两者宽度之和；结果面积 = 两者面积之积；自相关在 $x=0$ 处最大。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{$\rect(x/a)\conv\rect(x/a)=a\,\tri(x/a)$ 的完整写法}
+\textbf{解}：两个宽 $a$ 的矩形，一个平移 $x$。
+\begin{itemize}
+\item $|x|\ge a$：完全不重叠，积分为 0。
+\item $|x|<a$：重叠区间长度 $a-|x|$，被积函数为 $1\times1$，积分 $=a-|x|=a\left(1-\frac{|x|}a\right)$。
+\end{itemize}
+故 $\rect\frac xa\conv\rect\frac xa=a\,\tri\!\left(\frac xa\right)$：底宽 $2a$、高 $a$ 的三角形。
+
+\textbf{验算}（卷积定理）：$\F=a\sinc(au)\cdot a\sinc(au)=a^2\sinc^2(au)$，查表 $\tri(x/a)\leftrightarrow a\sinc^2(au)$，一致。
+
+\textbf{变式}：宽度不同 $\rect\frac xa\conv\rect\frac xb$（$a>b$）是\textbf{梯形}：$|x|\le\frac{a-b}2$ 时为 $b$（小的完全落在大的里面）；$\frac{a-b}2<|x|<\frac{a+b}2$ 时线性降为 0，值为 $\frac{a+b}2-|x|$。
+\end{exam}
+
+\begin{center}
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+\draw[->] (-1.4,0)--(1.4,0) node[below]{$x$};
+\draw[->] (0,0)--(0,1.5);
+\draw[thick,blue] (-1.2,0)--(-0.5,0)--(-0.5,1)--(0.5,1)--(0.5,0)--(1.2,0);
+\node[below] at (-0.5,0){$-\frac a2$}; \node[below] at (0.5,0){$\frac a2$};
+\node[above right] at (0.5,1){$\rect\frac xa$};
+\node at (2.3,0.5){\Large$\conv$ 自身 $=$};
+\begin{scope}[xshift=5.3cm]
+\draw[->] (-2.1,0)--(2.1,0) node[below]{$x$};
+\draw[->] (0,0)--(0,1.5);
+\draw[thick,red] (-1.9,0)--(-1,0)--(0,1)--(1,0)--(1.9,0);
+\node[below] at (-1,0){$-a$}; \node[below] at (1,0){$a$};
+\node[above right] at (0.1,1){$a\tri(x/a)$，高 $a$};
+\end{scope}
+\begin{scope}[xshift=11.2cm]
+\draw[->] (-2.7,0)--(2.7,0) node[below]{$x$};
+\draw[->] (0,0)--(0,1.5);
+\draw[thick,red] (-2.5,0)--(-1.6,0)--(-1.2,0.5)--(-0.8,0)--(-0.4,0)--(0,1)--(0.4,0)--(0.8,0)--(1.2,0.5)--(1.6,0)--(2.5,0);
+\node[below] at (-1.2,0){$-d$}; \node[below] at (1.2,0){$d$};
+\node[right] at (0.1,1){$2w$}; \node[above] at (1.2,0.5){$w$};
+\node at (0,-0.75){双缝（缝宽 $w$、间距 $d$）的自相关};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{exam}{多条缝的自相关（第 5 章三缝 MTF 的基础）}\ix{自相关!多缝}
+双缝 $f=\rect\frac xw\conv[\delta(x-\frac d2)+\delta(x+\frac d2)]$（$d>w$）。
+\begin{enumerate}
+\item 拆开：$f=r\conv p$，$r=\rect\frac xw$，$p=\delta(x-\frac d2)+\delta(x+\frac d2)$。
+\item 自相关也满足“拆开再组合”：$f\corr f=(r\corr r)\conv(p\corr p)$。依据：两边做傅里叶变换都等于 $|R|^2|P|^2$。
+\item $r\corr r=w\tri(x/w)$（上例）；$p\corr p=\delta(x+d)+2\delta(x)+\delta(x-d)$：两组点相互平移，重合的点对数就是系数（平移 0 时两对都重合，平移 $\pm d$ 时只有一对）。
+\item 结果：$f\corr f=w\left[2\tri\!\left(\frac xw\right)+\tri\!\left(\frac{x-d}w\right)+\tri\!\left(\frac{x+d}w\right)\right]$，三个三角形，中间高 $2w$，两边高 $w$（上图右）。
+\end{enumerate}
+
+\textbf{三缝}（中心 $0,\pm d$）：点集自相关 $=3\delta(x)+2\delta(x\mp d)+\delta(x\mp2d)$，五个三角形，高度比 $3:2:1$。$N$ 缝：平移 $kd$ 时重合 $N-|k|$ 对。
+
+\textbf{注意}：只有 $d\ge 2w$ 时三角形互不重叠，可以直接画；$w<d<2w$ 时相邻三角形要相加。
+\end{exam}
+
+\subsection{可以直接抄的证明}\label{sec:ftproofs}
+
+\begin{exam}{证明 1：平移性质 [F1-p40]}\ix{平移定理!证明}
+\begin{align*}
+\F\{f(x-a,y-b)\}&=\dint f(x-a,y-b)\exp[-i2\pi(ux+vy)]\dd x\dd y\\
+&\overset{s=x-a,\ t=y-b}{=}\dint f(s,t)\exp\{-i2\pi[u(s+a)+v(t+b)]\}\dd s\dd t\\
+&=\exp[-i2\pi(ua+vb)]\dint f(s,t)\exp[-i2\pi(us+vt)]\dd s\dd t=F(u,v)\,\ee^{-i2\pi(ua+vb)}.
+\end{align*}
+调制性质的证明完全对称：$\F\{f\ee^{i2\pi(u_0x+v_0y)}\}=\dint f\exp\{-i2\pi[(u-u_0)x+(v-v_0)y]\}=F(u-u_0,v-v_0)$。
+\end{exam}
+
+\begin{exam}{证明 2：卷积定理 [F1-p46]}\ix{卷积定理!证明}
+\begin{align*}
+\F\{f\conv g\}&=\dint\left[\dint f(s,t)g(x-s,y-t)\dd s\dd t\right]\ee^{-i2\pi(ux+vy)}\dd x\dd y\\
+&=\dint f(s,t)\left[\dint g(x-s,y-t)\ee^{-i2\pi(ux+vy)}\dd x\dd y\right]\dd s\dd t\qquad(\text{交换积分次序})\\
+&=\dint f(s,t)\,G(u,v)\ee^{-i2\pi(us+vt)}\dd s\dd t\qquad(\text{方括号内用平移性质})\\
+&=G(u,v)\dint f(s,t)\ee^{-i2\pi(us+vt)}\dd s\dd t=F(u,v)\,G(u,v).
+\end{align*}
+\end{exam}
+
+\begin{exam}{证明 3：共轭与光强的频谱 $\F\{|f|^2\}=F\corr F$ [F1-p45, p47]}\ix{自相关!证明}
+共轭：$F^*(-u,-v)=\left[\dint f\,\ee^{+i2\pi(ux+vy)}\right]^*=\dint f^*\ee^{-i2\pi(ux+vy)}=\F\{f^*\}$。
+
+光强：$|f|^2=f^*\cdot f$，用乘积定理：
+\begin{align*}
+\F\{|f|^2\}&=\F\{f^*\}\conv\F\{f\}=F^*(-u,-v)\conv F(u,v)
+=\dint F^*(-s,-t)\,F(u-s,v-t)\dd s\dd t\\
+&\overset{s\to-s,\ t\to-t}{=}\dint F^*(s,t)\,F(u+s,v+t)\dd s\dd t=F\corr F.
+\end{align*}
+（课件 p47 此处有笔误，写成 $F^*(u+s,u+t)$ 且共轭放错位置，按上面写。）同理 $\F\{f\corr f\}=|F|^2$。
+\end{exam}
+
+\begin{exam}{证明 4：两次正变换 = 坐标反演（4f 倒像的根源）[F1-p44]}\ix{两次变换}
+\begin{align*}
+\F\{F(u,v)\}(x',y')&=\dint F(u,v)\ee^{-i2\pi(ux'+vy')}\dd u\dd v\\
+&=\dint F(u,v)\ee^{+i2\pi[u(-x')+v(-y')]}\dd u\dd v=f(-x',-y').
+\end{align*}
+最后一步是逆变换的定义（在点 $(-x',-y')$ 处取值）。
+\end{exam}
+
+\needspace{10\baselineskip}\section{典型题型：从图形到衍射图样}\label{sec:ftexamples}
+
+\begin{idea}[这一节怎么用]
+每个题型都按“题目长相 $\to$ 推导 $\to$ 可抄的答案 $\to$ 变式 $\to$ 数值例”写。考场上找到最像的一个，把参数换掉照写。
+所有结果都是\textbf{频谱 $F(u,v)$}；要屏上强度，统一做最后一步：$I(x,y)\propto|F(u,v)|^2$，$u=\frac{x}{\lambda z}$（远场）或 $u=\frac{x}{\lambda f}$（透镜焦面），常数系数 $\frac{1}{\lambda^2z^2}$ 等一般可写进 $\propto$。
+\end{idea}
+
+\cOneQtype{题型 1：单缝 / 矩孔的夫琅禾费衍射}\ix{单缝衍射}\ix{矩孔衍射}
+
+\begin{exam}{答题模板：宽 $a$、高 $b$ 的矩孔，单位振幅平面波正入射，透镜焦距 $f$，求焦面强度}
+\textbf{解}：孔的复透射系数 $t(x_1,y_1)=\rect\!\left(\frac{x_1}{a}\right)\rect\!\left(\frac{y_1}{b}\right)$。
+
+焦面复振幅正比于 $t$ 的傅里叶变换（夫琅禾费衍射 / 透镜傅里叶变换性质），由可分离性与缩放性质：
+\[
+T(u,v)=\F\{t\}=ab\,\sinc(au)\,\sinc(bv),\qquad u=\frac{x}{\lambda f},\ v=\frac{y}{\lambda f}.
+\]
+焦面强度
+\[
+I(x,y)=\frac{1}{\lambda^2f^2}|T|^2=\frac{a^2b^2}{\lambda^2f^2}\sinc^2\!\left(\frac{ax}{\lambda f}\right)\sinc^2\!\left(\frac{by}{\lambda f}\right).
+\]
+零点：$x=\pm\frac{m\lambda f}{a}$，$y=\pm\frac{n\lambda f}{b}$（$m,n=1,2,\dots$）；中央亮斑全宽 $\frac{2\lambda f}{a}\times\frac{2\lambda f}{b}$。孔在 $x$ 方向越窄，图样在 $x$ 方向越宽。
+\end{exam}
+
+\begin{recipe}{题型 1 的变式}
+\begin{enumerate}
+\item \textbf{无透镜、远场距离 $z$}：把 $f$ 换成 $z$。
+\item \textbf{问角度}：$\sin\theta_x=\lambda u$，第一零点 $\sin\theta=\lambda/a$。
+\item \textbf{孔不在中心}（中心在 $(x_0,y_0)$）：$T$ 多乘 $\ee^{-i2\pi(ux_0+vy_0)}$，\textbf{强度不变}（图样不随孔平移）。
+\item \textbf{斜入射}（照明 $\ee^{i2\pi u_0x_1}$，$u_0=\sin\theta_0/\lambda$）：$T(u-u_0,v)$，整个图样中心移到 $x=\lambda fu_0$。
+\item \textbf{一维狭缝}：只保留 $x$ 方向，$I\propto a^2\sinc^2(ax/\lambda f)$。
+\item \textbf{孔里有透过率 $\tau<1$ 或相位板 $\ee^{i\phi}$}：$T$ 乘 $\tau$ 或 $\ee^{i\phi}$，强度乘 $\tau^2$ 或不变。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例}
+$a=0.1$ mm，$b=0.2$ mm，$\lambda=0.5\,\mu$m $=5\times10^{-4}$ mm，$f=500$ mm。
+$x$ 方向第一零点 $\frac{\lambda f}{a}=\frac{5\times10^{-4}\times500}{0.1}=2.5$ mm，$y$ 方向 $1.25$ mm。中央亮斑 $5\text{ mm}\times2.5\text{ mm}$：横宽竖窄，与孔“横窄竖宽”正好相反。
+\end{exam}
+
+\cOneQtype{题型 2：双缝、多缝、阵列}\ix{多缝}\ix{阵列衍射}
+
+\begin{exam}{推导：$N$ 条等间距狭缝（宽 $a$、周期 $d$、关于原点对称）}
+\textbf{第 1 步 拆开}：$f(x)=\rect\!\left(\frac xa\right)\conv\sum_{n=1}^{N}\delta(x-x_n)$，$x_n=\left(n-\frac{N+1}{2}\right)d$。依据：$\delta$ 卷积 = 平移，每个 $\delta$ 放一条缝。
+
+\textbf{第 2 步 卷积定理}：$F(u)=a\sinc(au)\cdot\sum_n\ee^{-i2\pi ux_n}$。
+
+\textbf{第 3 步 求和}（等比级数，公比 $q=\ee^{-i2\pi ud}$）：
+\[
+\sum_{n=1}^N\ee^{-i2\pi ux_n}=\ee^{i\pi(N-1)ud}\,\frac{1-\ee^{-i2\pi Nud}}{1-\ee^{-i2\pi ud}}=\frac{\sin(N\pi du)}{\sin(\pi du)}.
+\]
+（分子分母各提出 $\ee^{-i\pi Nud}$、$\ee^{-i\pi ud}$，剩下 $\frac{2i\sin}{2i\sin}$；对称放置使前面的相位正好消掉。）
+
+\textbf{第 4 步 强度}：
+\[
+|F|^2=\underbrace{a^2\sinc^2(au)}_{\text{单缝衍射因子}}\cdot\underbrace{\frac{\sin^2(N\pi du)}{\sin^2(\pi du)}}_{\text{多缝干涉因子}}.
+\]
+\end{exam}
+
+\begin{formula}[label=fml:multislit]{多缝图样的特征量（画图题必标）}
+\begin{itemize}
+\item 主极大：$u=m/d$（$d\sin\theta=m\lambda$），干涉因子取 $N^2$，主极大强度 $N^2a^2\sinc^2(ma/d)$。
+\item 相邻主极大之间：$N-1$ 个零点（$u=\frac{k}{Nd}$，$k$ 不是 $N$ 的倍数），$N-2$ 个次极大。
+\item 缺级：主极大恰好落在单缝因子零点 $u=k/a$ 上，即 $\frac md=\frac ka$；$d/a$ 为整数时，$m=\frac da,\frac{2d}{a},\dots$ 级缺失。
+\item 包络：单缝因子 $\sinc^2(au)$ 的中央主瓣（$|u|<1/a$）里有 $2\frac da-1$ 个主极大（$d/a$ 为整数时）。
+\item 特例 $N=2$：$F=2a\sinc(au)\cos(\pi du)$，$|F|^2=4a^2\sinc^2(au)\cos^2(\pi du)$。
+\item 特例 $N=3$：$F=a\sinc(au)[1+2\cos(2\pi du)]$，$|F|^2=a^2\sinc^2(au)[1+2\cos(2\pi du)]^2$。
+\end{itemize}
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=13cm,height=4.6cm,axis lines=left,xmin=-1.05,xmax=1.05,ymin=0,ymax=9.8,
+  xlabel={$u$（单位 $1/a$）},ylabel={$|F|^2/a^2$},xtick={-1,-0.5,-0.3333,0,0.3333,0.5,1},
+  xticklabels={$-\frac1a$,$-\frac1{2a}$,,$0$,$\frac1{3a}$,$\frac1{2a}$,$\frac1a$},ytick={0,9},
+  samples=500,domain=-1:1,font=\small,legend style={draw=none,font=\scriptsize,at={(0.98,0.95)}}]
+\addplot[blue,thick] {( (abs(x)<1e-6) ? 1 : (sin(deg(pi*x))/(pi*x))^2 ) * (1+2*cos(deg(2*pi*3*x)))^2};
+\addplot[red,dashed] {( (abs(x)<1e-6) ? 9 : 9*(sin(deg(pi*x))/(pi*x))^2 )};
+\legend{三缝 $d=3a$,包络 $9\sinc^2(au)$}
+\end{axis}
+\end{tikzpicture}
+
+{\small 三缝、$d=3a$：主极大在 $u=m/(3a)$，每两个主极大之间 2 个零点、1 个次极大；$m=\pm3$（$u=\pm1/a$）缺级。}
+\end{center}
+
+\begin{recipe}{题型 2 的变式}
+\begin{enumerate}
+\item \textbf{不对称放置}（例如缝心在 $0,d,\dots,(N-1)d$）：求和多一个整体相位 $\ee^{-i\pi(N-1)ud}$，\textbf{强度不变}。
+\item \textbf{间距不等}或个数很少：不用公式，直接写 $\sum_n\ee^{-i2\pi ux_n}$ 再取模平方。例：缝心 $0$ 和 $d$ 且第二条缝振幅 $\tau$：$|1+\tau\ee^{-i2\pi ud}|^2=1+\tau^2+2\tau\cos(2\pi ud)$。
+\item \textbf{各缝宽度不同}：不能提公因子，逐条写 $a_n\sinc(a_nu)\ee^{-i2\pi ux_n}$ 再相加。
+\item \textbf{二维阵列}（单元 $t_0$，位置 $(\Delta x_n,\Delta y_n)$）[F1-p64]：$T=T_0(u,v)\sum_n\ee^{-i2\pi(u\Delta x_n+v\Delta y_n)}$，“衍射因子 × 干涉因子”。矩形 $N_x\times N_y$ 阵列：干涉因子 $=\frac{\sin(N_x\pi d_xu)}{\sin(\pi d_xu)}\frac{\sin(N_y\pi d_yv)}{\sin(\pi d_yv)}$。
+\item \textbf{缝换成点（针孔）}：单缝因子换成 1（或圆孔的 jinc），只剩干涉因子。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例：双缝}
+$a=0.02$ mm，$d=0.1$ mm，$\lambda=0.6\,\mu$m，$f=1$ m。条纹间距 $\frac{\lambda f}d=\frac{6\times10^{-4}\times1000}{0.1}=6$ mm；包络第一零点 $\frac{\lambda f}{a}=30$ mm；$d/a=5$，第 $\pm5$ 级缺级，中央包络内有 $\pm4$ 级共 9 条亮纹。
+\end{exam}
+
+\cOneQtype{题型 3：余弦振幅光栅及其组合}\ix{余弦光栅}
+
+\begin{exam}{推导（课件原题）：$t=\left[\frac12+\frac m2\cos(2\pi f_0x_1)\right]\rect\frac{x_1}L\rect\frac{y_1}L$，求频谱与衍射图样 [F1-p55–58]}
+\textbf{第 1 步}：乘积 $\to$ 卷积（乘积定理）：
+$T(u,v)=\F\left\{\tfrac12+\tfrac m2\cos(2\pi f_0x_1)\right\}\conv\F\left\{\rect\tfrac{x_1}L\rect\tfrac{y_1}L\right\}$。
+
+\textbf{第 2 步}：余弦写成两个指数，逐项查表：
+$\F\left\{\tfrac12+\tfrac m4\ee^{i2\pi f_0x_1}+\tfrac m4\ee^{-i2\pi f_0x_1}\right\}=\tfrac12\delta(u,v)+\tfrac m4\delta(u-f_0,v)+\tfrac m4\delta(u+f_0,v)$。
+
+\textbf{第 3 步}：方孔的频谱 $P(u,v)=L^2\sinc(Lu)\sinc(Lv)$。
+
+\textbf{第 4 步}：与 $\delta$ 卷积 = 平移：
+\[
+T(u,v)=\tfrac12P(u,v)+\tfrac m4P(u-f_0,v)+\tfrac m4P(u+f_0,v).
+\]
+（课件 p57 第一项漏了 $\frac12$。）
+
+\textbf{第 5 步 读结果}：三个 sinc 斑，0 级在 $u=0$，$\pm1$ 级在 $u=\pm f_0$，即衍射角 $\sin\theta=\pm\lambda f_0$，焦面位置 $x=\pm\lambda ff_0$。
+只要 $f_0\gg1/L$（孔里有很多个周期），三个斑互不重叠，强度可以分别算：中心强度比 $\frac14:\frac{m^2}{16}:\frac{m^2}{16}$，即 $4:m^2:m^2$。
+\end{exam}
+
+\begin{recipe}{题型 3 的变式}
+\begin{enumerate}
+\item \textbf{光栅乘任意物} $g$（物贴在光栅上）[F1-p59]：$T=\frac12G(u,v)+\frac m4G(u-f_0,v)+\frac m4G(u+f_0,v)$，光栅把物的频谱“复制搬运”到三处。
+\item \textbf{光栅横移 $x_0$}（$\cos[2\pi f_0(x_1-x_0)]$）：$\pm1$ 级分别多乘 $\ee^{\mp i2\pi f_0x_0}$，强度不变，相位变（光学加减法、相移的原理）。
+\item \textbf{两片平行叠合}（频率 $f_1,f_2$，透过率相乘）[F1-p60]：积化和差
+$t=\tfrac14+\tfrac m4\cos2\pi f_1x+\tfrac m4\cos2\pi f_2x+\tfrac{m^2}8\cos2\pi(f_1+f_2)x+\tfrac{m^2}8\cos2\pi(f_1-f_2)x$。
+频谱：0；$\pm f_1$、$\pm f_2$；和频 $\pm(f_1+f_2)$；差频 $\pm(f_1-f_2)$，共 9 个点排在 $u$ 轴上。
+\item \textbf{两片垂直叠合}（$\cos2\pi f_1x$ 与 $\cos2\pi f_2y$）[F1-p61]：系数同上，但交叉项 $\cos2\pi(f_1x\pm f_2y)$ 落在 $(\pm f_1,\pm f_2)$ 四个角，频谱是 $3\times3$ 点阵。
+\item \textbf{正弦相位光栅} $\ee^{i\phi_0\cos(2\pi f_0x)}$，相位很小时 $\approx1+i\phi_0\cos(2\pi f_0x)$：$\pm1$ 级振幅 $\frac{\phi_0}{2}$，与 0 级相差 $90^\circ$（相位 $i$）。（准确值是贝塞尔函数 $J_{\pm1}(\phi_0)$，出现更高级次，不定量要求。）
+\item \textbf{调制度、偏置换了}（$t=A+B\cos$）：0 级权重 $A$，$\pm1$ 级各 $\frac B2$。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例}
+$f_0=100$ mm$^{-1}$（每毫米 100 条），$\lambda=0.5\,\mu$m，$f=200$ mm，$m=1$，$L=10$ mm。
+$\pm1$ 级：$\sin\theta=\lambda f_0=5\times10^{-4}\times100=0.05$，$\theta\approx2.9^\circ$；焦面位置 $x=\lambda ff_0=10$ mm。
+每个斑的半宽（第一零点）$\frac{\lambda f}{L}=0.01$ mm，远小于间距 10 mm，互不重叠。强度比 $4:1:1$。
+\end{exam}
+
+\cOneQtype{题型 4：黑白（矩形）光栅的各级强度与缺级}\ix{矩形光栅}\ix{缺级}
+
+\begin{exam}{推导：缝宽 $w$、周期 $d$ 的光栅，孔径 $L$ [F1-p63]}
+\textbf{第 1 步 拆开}：$t(x)=\left[\rect\frac xw\conv\sum_n\delta(x-nd)\right]\cdot\rect\frac xL$。
+
+\textbf{第 2 步}：方括号内（卷积 $\to$ 乘积，点阵查表）：
+$w\sinc(wu)\cdot\frac1d\sum_m\delta\!\left(u-\frac md\right)=\sum_m c_m\,\delta\!\left(u-\frac md\right)$，$\boxed{c_m=\dfrac wd\sinc\!\left(\dfrac{mw}{d}\right)}$。
+（$\sinc(wu)\delta(u-\frac md)=\sinc(\frac{mw}d)\delta(u-\frac md)$：$\delta$ 只在 $u=m/d$ 取值。）
+
+\textbf{第 3 步}：乘 $\rect\frac xL$ $\to$ 卷积 $L\sinc(Lu)$：$T(u)=\sum_mc_m\,L\sinc\!\left[L\left(u-\frac md\right)\right]$。
+
+\textbf{第 4 步 读结果}：第 $m$ 级在 $u=m/d$（光栅方程 $d\sin\theta=m\lambda$），振幅 $\propto c_m$，强度 $\propto c_m^2$。
+\end{exam}
+
+\begin{formula}[label=fml:dutycycle]{占空比 $w/d=\frac12$ 的光栅（最常考）}
+$c_0=\frac12$，$c_{\pm1}=\frac12\sinc\frac12=\frac1\pi$，$c_{\pm2}=0$（缺级），$c_{\pm3}=\frac12\sinc\frac32=-\frac1{3\pi}$，所有偶数级缺失。
+强度比 $I_0:I_1:I_3=\frac14:\frac1{\pi^2}:\frac1{9\pi^2}=1:0.405:0.045$。
+与余弦光栅对比：黑白光栅 = 很多个余弦光栅叠加（傅里叶级数），第 $m$ 个余弦分量把光瞳频谱搬到第 $m$ 级。
+\end{formula}
+
+\begin{recipe}{题型 4 的变式}
+\begin{enumerate}
+\item \textbf{占空比 $w/d=\frac13$}：$3,6,9,\dots$ 级缺失；$c_m=\frac13\sinc\frac m3$。一般：$d/w=k$ 为整数，$k$ 的倍数级缺失。
+\item \textbf{问能看到几级}：$|\sin\theta|=|m|\lambda/d<1$，即 $|m|<d/\lambda$，再扣掉缺级。
+\item \textbf{问透镜后焦面上各级位置}：$x_m=m\lambda f/d$。
+\item \textbf{反相光栅、相位光栅}：先写一个周期内的 $t(x)$，按同样方法求 $c_m=\frac1d\int_{\text{一个周期}}t(x)\ee^{-i2\pi mx/d}\dd x$（傅里叶级数系数）。
+\end{enumerate}
+\end{recipe}
+
+\cOneQtype{题型 5：圆孔、环孔（艾里斑）}\ix{艾里斑}\ix{圆孔衍射}
+
+\begin{exam}{答题模板：直径 $D$ 的圆孔，透镜焦距 $f$，求焦面强度和艾里斑半径}
+\textbf{解}：$t=\circf\!\left(\frac{r_1}{D/2}\right)$，查表
+$T(\rho)=\frac{\pi D^2}{4}\cdot\frac{2J_1(\pi D\rho)}{\pi D\rho}$，$\rho=\frac{r}{\lambda f}$。
+焦面强度 $I(r)=I_0\left[\dfrac{2J_1(\pi Dr/\lambda f)}{\pi Dr/\lambda f}\right]^2$，$I_0=\left(\dfrac{\pi D^2}{4\lambda f}\right)^2$。
+第一暗环：$\pi D\rho=3.832\Rightarrow\boxed{r_1=1.22\dfrac{\lambda f}{D}}$，角半径 $\theta_1=1.22\frac\lambda D$。中央亮斑集中约 84\% 的能量。
+\end{exam}
+
+\begin{recipe}{题型 5 的变式与数值例}
+\begin{enumerate}
+\item \textbf{给 $F$ 数}（$F/\#=f/D$）：$r_1=1.22\lambda F/\#$。例：$\lambda=0.55\,\mu$m，$F/2$：$r_1=1.34\,\mu$m。
+\item \textbf{人眼}：瞳孔 $D=3$ mm，$\lambda=0.55\,\mu$m：$\theta_1=1.22\times\frac{0.55\times10^{-3}}{3}=2.24\times10^{-4}$ rad $=0.77'$。
+\item \textbf{环形孔}：$T=\F\{\circf\frac ra\}-\F\{\circf\frac rb\}$（线性），中心强度 $\propto[\pi(a^2-b^2)]^2$，中央斑比同外径圆孔略小、旁瓣更强。
+\item \textbf{例}：$D=2$ mm，$\lambda=0.55\,\mu$m，$f=100$ mm：$r_1=1.22\times\frac{5.5\times10^{-4}\times100}{2}=0.0336$ mm $=33.6\,\mu$m。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[题型 1–5 共同的易错点]
+\begin{itemize}
+\item 换算 $u=x/(\lambda f)$ 时\textbf{单位统一}：$\lambda$ 写成 mm（$0.5\,\mu$m $=5\times10^{-4}$ mm）。
+\item 强度要取模平方，线性相位因子（孔平移、对称放置）在强度里消失，但在\textbf{振幅}里不能丢（问复振幅时要写）。
+\item 乘积 $\to$ 卷积，卷积 $\to$ 乘积，别做反；与 $\delta$ 卷积是“搬过去”，与 $\delta$ 相乘是“取一个值”。
+\item 圆孔用直径 $D$ 还是半径 $a$：$1.22\lambda/D=0.61\lambda/a$。
+\end{itemize}
+\end{warn}
+
+\needspace{8\baselineskip}\section{采样与 comb 函数}\label{sec:sampling}
+\begin{formula}{采样定理}\ix{采样定理}\ix{奈奎斯特}
+采样：$f_s(x)=f(x)\cdot\sum_n\delta(x-nT)$ $\Rightarrow$ $F_s(u)=\dfrac1T\sum_m F\!\left(u-\dfrac mT\right)$（频谱以 $1/T$ 为周期复制）。
+
+不混叠条件（带宽 $|u|\le B$）：$\dfrac1T\ge 2B$，即 采样频率 $\ge$ 2 倍最高频率；奈奎斯特频率 $u_N=\dfrac1{2T}$。
+
+理想重建：用 $H(u)=T\rect(uT)$ 低通，$f(x)=\sum_n f(nT)\sinc\!\left(\dfrac{x-nT}{T}\right)$。
+
+零阶保持（像素显示）：$\tilde f=[f\cdot\sum\delta(x-nT)]\conv\rect(x/T)$ $\Rightarrow$ 频谱再乘 $T\sinc(uT)$，造成高频衰减（和镜像残留）。
+\end{formula}
+
+\begin{exam}{推导：采样后频谱为什么是周期复制（要求说明时照抄）}
+\textbf{第 1 步}：采样 = 乘点阵：$f_s=f\cdot\sum_n\delta(x-nT)$。
+
+\textbf{第 2 步}：乘积 $\to$ 卷积，点阵查表：$F_s=F\conv\frac1T\sum_m\delta(u-\frac mT)$。
+
+\textbf{第 3 步}：与 $\delta$ 卷积 = 平移：$F_s=\frac1T\sum_mF(u-\frac mT)$，原频谱每隔 $1/T$ 复制一份。
+
+\textbf{第 4 步}：原频谱占 $[-B,B]$，相邻副本中心相距 $1/T$；不重叠要求 $\frac1T-B\ge B$，即 $\frac1T\ge2B$。重叠了就是\textbf{混叠}：高于 $u_N$ 的频率 $u$ 被当成 $\left|u-\frac kT\right|$（取落在 $[0,u_N]$ 内的那个）。
+\end{exam}
+
+\begin{recipe}{采样题的变式与数值例}\ix{混叠}
+\begin{enumerate}
+\item \textbf{传感器像素间距 $p$}：采样周期 $T=p$，$u_N=\frac1{2p}$。$p=5\,\mu$m $\Rightarrow u_N=\frac1{2\times0.005}=100$ lp/mm。
+\item \textbf{混叠频率}：$p=5\,\mu$m 拍 120 lp/mm 的条纹，采样频率 200 lp/mm，看到的是 $|120-200|=80$ lp/mm 的假条纹（摩尔纹）。
+\item \textbf{零阶保持的衰减}：在奈奎斯特频率处乘 $\sinc(u_NT)=\sinc\frac12=\frac2\pi=0.637$；第一零点 $u=1/T$。
+\item \textbf{要防混叠}：采样前先低通（光学低通滤波器、镜头 MTF 截止 $\le u_N$），见第 \ref{ch:imaging} 章 OLPF。
+\item \textbf{用角度表示}（视光学）：像素角间距 $\Delta\theta$，奈奎斯特 $\frac{1}{2\Delta\theta}$ 周期/弧度，再乘 $\frac{\pi}{180}$ 得周期/度（CPD）。
+\end{enumerate}
+\end{recipe}
+
+\begin{formula}{DFT / FFT 计算衍射时的尺度 [F3-p66–68]}\ix{DFT}\ix{空间带宽积}\ix{fftshift}
+$N$ 点、空域跨度 $L$：采样间隔 $L/N$，频域跨度 $N/L$，频域间隔 $1/L$。（“一个域的周期 = 另一个域跨度的倒数”）
+夫琅禾费：接收屏跨度 $\lambda z\dfrac NL$，像素间距 $\dfrac{\lambda z}{L}$。
+空间带宽积 $\mathrm{SBP}=L\cdot\frac NL=N$（数字成像/显示中就是像素数）。
+代码：\texttt{fftshift(fft2(ifftshift(E)))}，再乘采样间隔 $(L/N)^2$ 才有正确幅值。
+$X[m]=\sum_{n=0}^{M-1}x[n]\exp\!\left(-i2\pi\frac{mn}{M}\right)$。
+
+\smallskip
+
+\textbf{数值例}：$N=1024$，$L=10$ mm，$\lambda=0.5\,\mu$m，$z=1$ m：屏上像素间距 $\frac{\lambda z}{L}=\frac{5\times10^{-4}\times1000}{10}=0.05$ mm，屏跨度 $1024\times0.05=51.2$ mm。
+课件 p50 的示例代码至少有这些问题：没有物理单位（坐标没换算成 $x=\lambda zu$）；缺 \texttt{ifftshift}（原点不在数组中心导致相位错）；没乘采样间隔（幅值不对）；采样/补零不足会混叠或分辨率不够。[F1-p50]
+\end{formula}

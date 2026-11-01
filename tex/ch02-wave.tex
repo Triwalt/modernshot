@@ -1,0 +1,297 @@
+\chapter{光波、复振幅、空间频率（公式细节）}\label{ch:wave}
+
+\begin{idea}[先建立的三个图像]
+\begin{enumerate}
+\item \textbf{光是波}，在某个平面上我们只关心它每一点的“振幅有多大、相位走到哪”，合起来写成一个复数 $\tilde E(x,y)$，叫\textbf{复振幅}。眼睛和探测器只看得到\textbf{强度} $I=|\tilde E|^2$。
+\item \textbf{斜着走的平面波}在一个平面上留下的是“条纹状”的相位变化 $\exp[i2\pi(ux+vy)]$。方向越斜，条纹越密，$u,v$ 越大。$u,v$ 就是\textbf{空间频率}。
+\item \textbf{任何复振幅 = 一堆斜平面波的叠加}，权重就是傅里叶变换 $\F\{\tilde E\}(u,v)$。透镜把同一方向的平面波汇聚到焦面上一点，所以\textbf{焦面上看到的就是频谱}。
+\end{enumerate}
+后面所有题都在用这三句话。老师的原话：以空间频率表示一个“面”内的波动，并以此为工具处理“面”到“面”的光传播问题（变化 = 信息）。[F1-p07]
+\end{idea}
+
+\begin{idea}[本章题型一览]
+\begin{tabular}{@{}P{6.6cm}P{8.6cm}@{}}
+已知传播方向求空间频率，或反过来 & §\ref{sec:spfreq} 题型 A\\
+两束光干涉的条纹频率、周期、对比度 & §\ref{sec:twobeam}\\
+写出孔、光栅、棱镜、透镜、介质的复透射系数 & §\ref{sec:screens}\\
+看相位因子判断会聚/发散、会聚到哪里 & §\ref{sec:phasefactors}
+\end{tabular}
+\end{idea}
+
+\needspace{8\baselineskip}\section{从实数波到复振幅}
+
+\begin{formula}{平面波与复振幅}\ix{复振幅}\ix{平面波}\ix{波矢}
+实际电场：$E(\bm r,t)=A\cos(\bm k\cdot\bm r-\omega t)$，$|\bm k|=k=\dfrac{2\pi}{\lambda}$，$\omega=\dfrac{2\pi}{T}$。
+
+复数写法：$E=\mathrm{Re}\{A\exp[i(\bm k\cdot\bm r-\omega t)]\}$。时间因子 $\ee^{-i\omega t}$ 大家都一样，扔掉，剩下：
+\[
+\tilde E(\bm r)=A\exp(i\bm k\cdot\bm r),\qquad \bm k=\frac{2\pi}{\lambda}(\cos\alpha,\cos\beta,\cos\gamma)
+\]
+$\alpha,\beta,\gamma$：波矢与 $x,y,z$ 轴的夹角（方向余弦满足 $\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$）。
+在平面 $z=z_0$ 上：$\tilde E(x,y)=\tilde A\exp[ik(x\cos\alpha+y\cos\beta)]$，$\tilde A$ 吸收了常数相位 $kz_0\cos\gamma$。
+符号约定：时间因子 $\ee^{-i\omega t}$，空间相位 $\ee^{+i\bm k\cdot\bm r}$（课件约定，决定了“会聚 = 负二次相位”）。[F1-p02]
+\end{formula}
+
+\begin{exam}{推导：平面波在 $z=z_0$ 面上的复振幅（要求“写出”时照抄）[F1-p02–06]}
+\textbf{第 1 步}：沿单位矢量 $\bm k_0$ 传播的平面波，同一波面上各点相同，到原点的“传播距离”是 $z'=\bm k_0\cdot\bm r$：
+$E=A\cos(kz'-\omega t)=A\cos(\bm k\cdot\bm r-\omega t)$，$\bm k=k\bm k_0$。
+
+\textbf{第 2 步}：写成复指数并去掉公共时间因子：$\tilde E=A\exp(i\bm k\cdot\bm r)$。
+
+\textbf{第 3 步}：代入方向余弦 $\bm k=k(\cos\alpha,\cos\beta,\cos\gamma)$、$\bm r=(x,y,z)$：
+$\tilde E=A\exp[ik(x\cos\alpha+y\cos\beta+z\cos\gamma)]$。
+
+\textbf{第 4 步}：在平面 $z=z_0$ 上，$z_0\cos\gamma$ 是常数，并入振幅 $\tilde A=A\ee^{ikz_0\cos\gamma}$：
+\[
+\tilde E(x,y)=\tilde A\exp\left[i2\pi\left(\frac{\cos\alpha}{\lambda}x+\frac{\cos\beta}{\lambda}y\right)\right]=\tilde A\exp[i2\pi(ux+vy)],\quad u=\frac{\cos\alpha}\lambda,\ v=\frac{\cos\beta}\lambda .
+\]
+\end{exam}
+
+\begin{formula}{强度、振幅、相位}\ix{强度}\ix{相位}\ix{相干叠加}
+\[
+\tilde E=|\tilde E|\ee^{i\varphi},\qquad I=|\tilde E|^2=\tilde E\tilde E^*
+\]
+\begin{itemize}
+\item 乘一个常数相位 $\ee^{i\varphi_0}$：强度不变（“略去常数相位因子”的依据）。
+\item 乘 $\ee^{i\varphi(x,y)}$（随位置变化）：强度当场不变，但传播之后会变，这就是透镜和相位板起作用的方式。
+\item 相干叠加：$I=|\tilde E_1+\tilde E_2|^2=I_1+I_2+2\sqrt{I_1I_2}\cos\Delta\varphi$（有干涉项）。
+\item 非相干叠加：$I=I_1+I_2$（相位随机，干涉项平均为 0）。
+\item 条纹对比度（可见度）：$V=\dfrac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}=\dfrac{2\sqrt{I_1I_2}}{I_1+I_2}$，两束等强时 $V=1$。\ix{对比度}
+\end{itemize}
+\end{formula}
+
+\begin{exam}{小练习：复数运算的几个必会写法}
+\begin{itemize}
+\item $|1+\ee^{i\phi}|^2=(1+\ee^{i\phi})(1+\ee^{-i\phi})=2+2\cos\phi=4\cos^2\frac\phi2$。
+\item $|a+b\ee^{i\phi}|^2=a^2+b^2+2ab\cos\phi$（$a,b$ 为实数）。
+\item $\ee^{i\theta}+\ee^{-i\theta}=2\cos\theta$，$\ee^{i\theta}-\ee^{-i\theta}=2i\sin\theta$，$i=\ee^{i\pi/2}$，$-1=\ee^{i\pi}$。
+\item 提公因子技巧：$\ee^{ia}+\ee^{ib}=\ee^{i\frac{a+b}2}\left(\ee^{i\frac{a-b}2}+\ee^{-i\frac{a-b}2}\right)=2\ee^{i\frac{a+b}2}\cos\frac{a-b}2$。
+\end{itemize}
+\end{exam}
+
+\needspace{8\baselineskip}\section{空间频率}\label{sec:spfreq}
+
+\begin{formula}{空间频率的定义}\ix{空间频率}\ix{方向余弦}
+\[
+\tilde E(x,y)=A\exp[i2\pi(ux+vy)],\qquad
+\boxed{u=\frac{\cos\alpha}{\lambda}=\frac{\sin\theta_x}{\lambda},\quad v=\frac{\cos\beta}{\lambda}=\frac{\sin\theta_y}{\lambda}}
+\]
+$\theta_x$：波矢在 $xz$ 面内与 $z$ 轴的夹角（$\sin\theta_x=\cos\alpha$）。单位 mm$^{-1}$（每毫米多少个周期）。
+\begin{itemize}
+\item $x$ 方向上相位的周期：$d_x=\dfrac{\lambda}{\cos\alpha}=\dfrac1u$。
+\item 正入射：$u=v=0$。掠入射（沿 $x$ 轴）：$u=1/\lambda$，最大。
+\item $u^2+v^2>1/\lambda^2$ 的分量不能传播（倏逝波），所以任何光学系统的空间频率上限是 $1/\lambda$；在折射率 $n$ 的介质中是 $n/\lambda$。\ix{倏逝波}
+\item 透镜焦面上：$x=\lambda fu$，$y=\lambda fv$（每个方向 $\to$ 焦面上一个点）。
+\end{itemize}
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}[font=\small]
+\begin{scope}
+\clip (0,0) rectangle (6.2,3);
+\foreach \s in {0,...,7} {\draw[blue!60] ({1.2+0.8*\s},0)--++(120:4);}
+\end{scope}
+\draw[->] (0,0)--(6.5,0) node[right]{$z$};
+\draw[->] (0,-0.3)--(0,3.2) node[above]{$x$};
+\draw[->,thick,red] (0.6,0.4)--++(30:1.5) node[above]{$\bm k$};
+\draw[red] (1.2,0.4) arc (0:30:0.6); \node[red] at (1.5,0.55){$\theta_x$};
+\draw[thick] (3.6,0)--(3.6,3.0) node[above]{$z=z_0$ 面};
+\draw[<->,green!50!black,thick] (3.75,0)--(3.75,1.386) node[midway,right]{$d_x=\lambda/\sin\theta_x$};
+\node[blue] at (5.3,-0.35){相邻波面间距 $\lambda$};
+\end{tikzpicture}
+
+{\small 斜着走的平面波被 $z=z_0$ 面截出 $x$ 方向的周期 $d_x=\lambda/\sin\theta_x$，倒数就是空间频率 $u$。[F1-p05]}
+\end{center}
+
+\begin{exam}{题型 A：已知方向求空间频率，或反过来（答题模板 + 数值例）}
+\textbf{题目长相}：“波长 $\lambda$ 的平面波与 $z$ 轴成 $\theta$ 角（在 $xz$ 面内）入射到 $xy$ 平面，写出该面上的复振幅与空间频率”；或“频谱面上 $x$ 处对应的空间频率 / 传播方向是多少”。
+
+\textbf{解（正向）}：$\tilde E(x,y)=A\exp\left(i2\pi\frac{\sin\theta}{\lambda}x\right)$，故 $u=\frac{\sin\theta}{\lambda}$，$v=0$，$x$ 方向周期 $\frac{\lambda}{\sin\theta}$。
+
+\textbf{解（反向）}：透镜后焦面上 $x$ 处 $\Leftrightarrow u=\frac{x}{\lambda f}\Leftrightarrow\sin\theta=\frac xf$。
+
+\textbf{数值例}：$\lambda=632.8$ nm $=6.328\times10^{-4}$ mm，$\theta=30^\circ$：$u=\frac{0.5}{6.328\times10^{-4}}=790$ mm$^{-1}$，周期 $1.27\,\mu$m。
+$f=200$ mm 的透镜，$\lambda=0.5\,\mu$m，$u=100$ mm$^{-1}$ 的分量落在 $x=\lambda fu=5\times10^{-4}\times200\times100=10$ mm。
+\end{exam}
+
+\begin{recipe}{题型 A 的变式}
+\begin{enumerate}
+\item \textbf{题目给的是与 $x$ 轴的夹角 $\alpha$}：$u=\cos\alpha/\lambda$（不是 $\sin$）。先看清角度从哪条轴量起。
+\item \textbf{三维方向}（同时给 $\alpha,\beta$）：$u=\cos\alpha/\lambda$，$v=\cos\beta/\lambda$，$\cos\gamma=\sqrt{1-\cos^2\alpha-\cos^2\beta}$。
+\item \textbf{在介质 $n$ 中}：波长变 $\lambda/n$，$u=\frac{n\sin\theta}{\lambda}$（$\lambda$ 为真空波长）。由折射定律 $n\sin\theta$ 跨界面不变，所以\textbf{空间频率跨界面不变}。
+\item \textbf{光栅方程}：周期 $d$ 的光栅给出空间频率 $m/d$，第 $m$ 级方向 $\sin\theta_m=\sin\theta_0+m\lambda/d$（$\theta_0$ 为入射角）。
+\item \textbf{问“能否传播”}：$\sqrt{u^2+v^2}>1/\lambda$ 的分量是倏逝波，传不出去（细节传不到远处）。
+\end{enumerate}
+\end{recipe}
+
+\needspace{10\baselineskip}\section{两束平面波干涉}\label{sec:twobeam}
+
+\begin{formula}{两束平面波干涉的一般结果}\ix{两束光干涉}\ix{干涉条纹频率}
+两束相干平面波在 $z=z_0$ 面上：$\tilde E=A_1\ee^{i2\pi(u_1x+v_1y)+i\phi_1}+A_2\ee^{i2\pi(u_2x+v_2y)+i\phi_2}$（$A_1,A_2$ 实数）。
+\[
+I=A_1^2+A_2^2+2A_1A_2\cos[2\pi(\Delta u\,x+\Delta v\,y)+\Delta\phi],\qquad \Delta u=u_1-u_2,\ \Delta v=v_1-v_2 .
+\]
+\begin{itemize}
+\item 条纹空间频率 $f_0=\sqrt{\Delta u^2+\Delta v^2}$，周期 $\Lambda=1/f_0$；条纹走向\textbf{垂直于} $(\Delta u,\Delta v)$。
+\item 对比度 $V=\dfrac{2A_1A_2}{A_1^2+A_2^2}$；$\Delta\phi$ 只让条纹整体平移（不改变频率）。
+\item 两束都在 $xz$ 面内、与 $z$ 轴夹角 $\theta_1,\theta_2$：$f_0=\dfrac{|\sin\theta_1-\sin\theta_2|}{\lambda}$。
+\end{itemize}
+\end{formula}
+
+\begin{exam}{答题模板：对称的两束光（SIM 题的照明，2024 期中第 3 题）}\label{ex:twobeam}
+两束等振幅平面波，波矢在 $xz$ 面内，与 $z$ 轴夹角 $\pm\theta/2$（两束夹角 $\theta$）。
+
+\textbf{解}：两束在 $z$ 面上的复振幅分别为 $A\ee^{\pm i2\pi u_0x}$，$u_0=\frac{\sin(\theta/2)}{\lambda}$（共同的 $z$ 相位因子 $\exp(ikz\cos\frac\theta2)$ 两束一样，求强度时消掉）。
+\[
+\tilde E=A\ee^{i2\pi u_0x}+A\ee^{-i2\pi u_0x}=2A\cos(2\pi u_0x),
+\]
+\[
+I=|\tilde E|^2=4A^2\cos^2(2\pi u_0x)=2A^2[1+\cos(2\pi\cdot2u_0x)].
+\]
+条纹空间频率 $f_0=2u_0=\dfrac{2\sin(\theta/2)}{\lambda}$，周期 $\Lambda=\dfrac{\lambda}{2\sin(\theta/2)}$，对比度 $V=1$。
+
+\textbf{频谱}：$\F\{I\}=2A^2\left[\delta(u)+\tfrac12\delta(u-f_0)+\tfrac12\delta(u+f_0)\right]$，三个点（SIM 里正是这三个点把物频谱搬成三份）。
+\end{exam}
+
+\begin{recipe}{两束光干涉的变式}
+\begin{enumerate}
+\item \textbf{一束正入射、一束斜 $\theta$}：$f_0=\frac{\sin\theta}{\lambda}$（不是 $2\sin$）。
+\item \textbf{振幅不等}（强度 $I_1,I_2$）：$I=I_1+I_2+2\sqrt{I_1I_2}\cos(2\pi f_0x)$，$V=\frac{2\sqrt{I_1I_2}}{I_1+I_2}$。例 $I_1:I_2=4:1$，$V=\frac{2\times2}{5}=0.8$。
+\item \textbf{两束不在同一平面内}：用一般公式，按 $(\Delta u,\Delta v)$ 求频率和走向。
+\item \textbf{非相干}（两个独立光源）：$I=I_1+I_2$，没有条纹。
+\item \textbf{物镜限制}（SIM）：两束都要从数值孔径 NA 的物镜出来，$\sin\frac\theta2\le\mathrm{NA}$，所以 $f_0\le\frac{2\,\mathrm{NA}}{\lambda}$（恰好等于非相干截止频率）。在折射率 $n$ 的介质中把 $\sin$ 换成 $n\sin$。
+\item \textbf{三束或更多}：$|\sum_jA_j\ee^{i2\pi\bm f_j\cdot\bm r}|^2$ 展开，每一对产生频率 $\bm f_j-\bm f_k$ 的条纹。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例}
+$\lambda=0.5\,\mu$m，两束夹角 $\theta=60^\circ$（各偏 $30^\circ$）：$f_0=\frac{2\times0.5}{5\times10^{-4}}=2000$ mm$^{-1}$，周期 $0.5\,\mu$m。
+夹角 $\theta=2^\circ$：$f_0=\frac{2\sin1^\circ}{\lambda}=\frac{2\times0.01745}{5\times10^{-4}}=69.8$ mm$^{-1}$，周期 $14.3\,\mu$m。
+NA $=1.4$ 油浸物镜、$\lambda=0.5\,\mu$m：最高照明条纹频率 $\frac{2\times1.4}{5\times10^{-4}}=5600$ mm$^{-1}$。
+\end{exam}
+
+\begin{warn}[干涉题易错]
+\begin{itemize}
+\item 夹角 $\theta$ 是“两束之间”还是“每束与轴之间”，差一个因子 2。
+\item 条纹频率是\textbf{强度}的频率 $2u_0$，不是复振幅的 $u_0$。
+\item 求强度时公共相位（$z$ 方向、常数）可以扔，相对相位 $\Delta\phi$ 不能扔（决定条纹位置）。
+\end{itemize}
+\end{warn}
+
+\needspace{10\baselineskip}\section{写出光屏的复透射系数}\label{sec:screens}
+
+\begin{formula}{复透射系数}\ix{复透射系数}\ix{振幅型光屏}\ix{相位型光屏}
+\[
+\tilde t(x,y)=\frac{\tilde E'(x,y)}{\tilde E(x,y)}=|\tilde t|\exp\{i\arg\tilde t\},\qquad \tilde E_{\text{后}}=\tilde t\cdot\tilde E_{\text{前}}
+\]
+模 = 对振幅的调制，幅角 = 对相位的调制。振幅型（如孔、光栅）：$\arg\tilde t$ 为常数。相位型（如透镜、相位板）：$|\tilde t|=1$。[F1-p09]\\
+厚度 $\Delta(x,y)$、折射率 $n$ 的薄介质：$\tilde t=\exp[ik(n-1)\Delta(x,y)]$（忽略常数相位）。
+\end{formula}
+
+\begin{formula}{常见光屏的复透射系数（直接抄）}\ix{棱镜}\ix{光楔}
+\par\renewcommand{\arraystretch}{1.75}
+\begin{tabular}{@{}P{3.4cm}P{6.4cm}P{5.6cm}@{}}
+\toprule
+光屏 & $\tilde t(x,y)$ & 说明\\ \midrule
+矩孔 $a\times b$ & $\rect\frac xa\rect\frac yb$ & $a,b$ 为全宽 [F1-p10]\\
+圆孔（半径 $a$）& $\circf\frac ra$，$r=\sqrt{x^2+y^2}$ & 给直径 $D$ 时 $a=D/2$\\
+黑白光栅（缝宽 $w$、周期 $d$、尺寸 $A\times B$）& $\rect\frac xA\rect\frac yB\cdot\sum_N\rect\frac{x-Nd}{w}$ & [F1-p11]\\
+余弦振幅光栅 & $\left[\frac12+\frac m2\cos(2\pi f_0x)\right]\rect\frac xA\rect\frac yB$ & $0<m\le1$ 为调制度\\
+棱镜 / 光楔（楔角 $\alpha$，沿 $x$ 变厚）& $\exp[ik(n-1)\alpha x]=\ee^{i2\pi u_0x}$，$u_0=\frac{(n-1)\alpha}{\lambda}$ & 线性相位 = 把光偏折 $(n-1)\alpha$\\
+薄透镜（焦距 $f$）& $P(x,y)\exp\!\left[-ik\frac{x^2+y^2}{2f}\right]$ & 负 = 会聚，见第 \ref{ch:lens} 章\\
+相位板 & $\exp[i\phi(x,y)]$ & 相位物体 $|\tilde t|=1$\\
+吸收片 & $\tau$（常数，$0<\tau<1$）& 强度乘 $\tau^2$\\
+斜入射照明 & 照明本身 $\ee^{i2\pi u_0x}$，与屏相乘 & $u_0=\sin\theta_0/\lambda$\\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\begin{recipe}{写某个面后复振幅的步骤}
+\begin{enumerate}
+\item 写照明光在该面上的复振幅：正入射平面波 $=1$（或 $A$）；斜入射 $=\ee^{i2\pi u_0x}$；点源发出的球面波见 §\ref{sec:phasefactors}。
+\item 写每个元件的 $\tilde t$；几个元件紧贴时\textbf{相乘}（相位相加）。
+\item 出射复振幅 $=$ 照明 $\times\prod\tilde t$。
+\item 若是“相位 $\varphi(x,y)$ 由厚度决定”，用 $\varphi=k(n-1)\Delta(x,y)$，再按 §\ref{sec:phasefactors} 读出它的作用（线性项 = 偏折，二次项 = 透镜）。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{光楔的复透射系数与偏折角}
+\textbf{题目}：折射率 $n=1.5$、楔角 $\alpha=1^\circ$ 的薄光楔，厚度沿 $x$ 线性增加，正入射 $\lambda=0.5\,\mu$m，求出射光方向；后接 $f=200$ mm 透镜，焦点移到哪。
+
+\textbf{解}：厚度 $\Delta(x)=\Delta_0+\alpha x$，$\tilde t=\exp[ik(n-1)(\Delta_0+\alpha x)]\propto\exp\left[i2\pi\frac{(n-1)\alpha}{\lambda}x\right]$。
+这是线性相位，相当于空间频率 $u_0=\frac{(n-1)\alpha}{\lambda}=\frac{0.5\times0.01745}{5\times10^{-4}}=17.45$ mm$^{-1}$ 的斜平面波，
+出射方向 $\sin\theta=\lambda u_0=(n-1)\alpha=0.0087$，$\theta\approx0.5^\circ$（偏向厚度\textbf{增加}的一侧，即 $+x$）。
+焦点横移 $x=\lambda fu_0=f(n-1)\alpha=200\times0.0087=1.75$ mm。
+\end{exam}
+
+\needspace{8\baselineskip}\section{看懂相位因子}\label{sec:phasefactors}
+\begin{formula}{常见相位因子的物理意义（读题时对照）}\ix{相位因子!读法}\ix{二次相位}\ix{线性相位}
+\par\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}P{5.2cm}P{10.6cm}@{}}
+\toprule
+相位因子 & 含义\\ \midrule
+$\exp(i\varphi_0)$ & 常数，强度无关，可略\\
+$\exp[i2\pi(u_0x+v_0y)]$ & 线性相位 = 斜平面波 = 棱镜。频谱平移到 $(u_0,v_0)$，焦点横移 $\lambda fu_0$\\
+$\exp\!\left(+ik\dfrac{x^2+y^2}{2R}\right)$ & 发散球面波，好像从后方 $R$ 处的点发出\\
+$\exp\!\left(-ik\dfrac{x^2+y^2}{2R}\right)$ & 会聚球面波，汇聚到前方 $R$ 处；= 焦距 $R$ 的透镜\\
+$\exp\!\left\{-ik\dfrac{(x-x_0)^2+(y-y_0)^2}{2R}\right\}$ & 会聚到前方 $R$ 处、横向位置 $(x_0,y_0)$ 的点\\
+$\exp[-i\pi\lambda z(u^2+v^2)]$ & （频域）自由传播 $z$ 的传递函数\\
+$\exp[ikW(x,y)]$ & 光瞳上的波像差 $W$（单位：长度）\\
+$\exp[ik(n-1)\Delta(x,y)]$ & 厚度 $\Delta$ 的介质\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+换算：$k\dfrac{r^2}{2R}=\dfrac{\pi r^2}{\lambda R}$。所以 $\exp\left(-\dfrac{i\pi r^2}{\lambda R}\right)$ 也是“会聚到 $R$”。
+\end{formula}
+
+\begin{recipe}{读一个相位因子“会聚到哪里”（配方法）}\ix{配方法}
+\begin{enumerate}
+\item 把指数整理成 $\varphi(x,y)=a(x^2+y^2)+bx+cy+\text{常数}$（只看与 $x,y$ 有关的部分）。
+\item \textbf{二次项}：与 $\mp\frac{k}{2R}(x^2+y^2)$ 对比，得 $R=\frac{k}{2|a|}=\frac{\pi}{\lambda|a|}$；$a<0$ 会聚（像在前方 $R$ 处，相当于焦距 $f=R$ 的正透镜），$a>0$ 发散（像在后方 $R$ 处，负透镜 $f=-R$）。
+\item \textbf{一次项}：配方 $a(x^2+bx/a)=a\left(x+\frac{b}{2a}\right)^2-\frac{b^2}{4a}$，会聚点横向位置 $x_0=-\frac{b}{2a}$，$y_0=-\frac{c}{2a}$。
+等价说法：一次项 $bx=2\pi u_0x$ 是倾斜，$u_0=\frac{b}{2\pi}$，焦点横移 $\lambda Ru_0$。
+\item \textbf{三次及以上}：不能配成球面，不是理想透镜（像差，或 Alvarez 要靠平移消掉，见第 \ref{ch:lens} 章）。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{读出相位板的作用}
+\textbf{题目}：$\lambda=0.5\,\mu$m，某元件 $\tilde t=\exp\left[-\dfrac{i\pi(x^2+y^2)}{\lambda\cdot400\text{ mm}}\right]\exp(i2\pi\cdot50x)$（$x$ 以 mm 计），平面波正入射，出射光会聚到哪？
+
+\textbf{解}：二次项 $-\frac{\pi r^2}{\lambda R}$，$R=400$ mm，负号 $\Rightarrow$ 会聚，相当于 $f=400$ mm（$+2.5$ D）的透镜。
+一次项 $2\pi u_0x$，$u_0=50$ mm$^{-1}$，光束偏折 $\sin\theta=\lambda u_0=0.025$。
+会聚点在元件后 $400$ mm、横向 $x_0=\lambda Ru_0=5\times10^{-4}\times400\times50=10$ mm 处。
+
+\textbf{用配方法验算}：$a=-\frac{\pi}{\lambda R}$，$b=2\pi\times50$，$x_0=-\frac{b}{2a}=\frac{2\pi\times50\,\lambda R}{2\pi}=50\lambda R=10$ mm，一致。
+\end{exam}
+
+\begin{recipe}{相位因子题的变式}
+\begin{enumerate}
+\item \textbf{点源在透镜前 $l$ 处}：入射到透镜的是 $\exp\left(+ik\frac{x^2+y^2}{2l}\right)$，乘透镜 $\exp\left(-ik\frac{x^2+y^2}{2f}\right)$，合起来二次系数 $\frac k2\left(\frac1l-\frac1f\right)$；令它等于 $-\frac{k}{2l'}$ 就得高斯公式 $\frac1l+\frac1{l'}=\frac1f$。
+\item \textbf{两片透镜紧贴}：二次相位相加，$\frac1f=\frac1{f_1}+\frac1{f_2}$（光焦度相加）。
+\item \textbf{轴外点源 $(x_0,y_0)$}：$\exp\left\{ik\frac{(x-x_0)^2+(y-y_0)^2}{2l}\right\}$，展开后的一次项就是倾斜。
+\item \textbf{用屈光度表示}：$\Phi=1/f$（m$^{-1}$ = D）。例：二次系数 $a=-\frac{\pi}{\lambda f}$，$\lambda=0.5\,\mu$m、$a=-6.283\times10^{6}$ m$^{-2}$ $\Rightarrow f=\frac{\pi}{5\times10^{-7}\times6.283\times10^{6}}=1$ m，$\Phi=1$ D。
+\end{enumerate}
+\end{recipe}
+
+\needspace{18\baselineskip}\section{符号与常数速查}
+\begin{formula}{本手册统一记号}\ix{记号}
+\par\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+$k=2\pi/\lambda$ & 波数 & $(x_1,y_1)$ & 输入面（衍射屏、物）坐标\\
+$\lambda$ & 真空波长 & $(x,y)$ & 输出面（观察屏、焦面、像面）\\
+$(u,v)$ 或 $(f_x,f_y)$ & 空间频率 & $(\xi,\eta)$ & 4f 的频谱面坐标\\
+$z,\ z_1,\ d_0$ & 传播距离 & $l,\ l'$ & 物距、像距（课件取正值）\\
+$f$ & 焦距 & $P(x,y)$ & 光瞳函数\\
+$W(x,y)$ & 波像差（长度）& $\sigma_W$ & RMS 波前误差\\
+$h$ & 振幅点扩散函数 & $|h|^2$ & 强度 PSF\\
+$H_c$ & 相干传递函数 CTF & $\mathcal H$ & 光学传递函数 OTF，$|\mathcal H|$ = MTF\\
+$\conv$ & 卷积 & $\corr$ & 相关\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+常数：$1'=\frac{1}{60}^\circ=2.909\times10^{-4}$ rad；$1^\circ=0.01745$ rad；$J_1$ 第一零点 $3.832$（$\Rightarrow1.22\pi$）；$\sinc(\tfrac12)=2/\pi=0.637$；$(2\pi/14)^2=0.2014$。\\
+单位换算：$1\,\mu$m $=10^{-3}$ mm，$1$ nm $=10^{-6}$ mm；$0.5\,\mu$m $=5\times10^{-4}$ mm，$0.55\,\mu$m $=5.5\times10^{-4}$ mm，$632.8$ nm $=6.328\times10^{-4}$ mm；lp/mm = 线对/mm = mm$^{-1}$。
+\end{formula}

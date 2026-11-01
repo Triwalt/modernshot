@@ -1,0 +1,10 @@
+build/
+*.aux
+*.log
+*.idx
+*.ind
+*.ilg
+*.toc
+*.out
+*.loc
+*.lo*

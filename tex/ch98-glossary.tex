@@ -1,0 +1,289 @@
+\chapter*{题干信号词与术语表}\addcontentsline{toc}{chapter}{题干信号词与术语表}\phantomsection\label{ch:glossary}\markboth{信号词与术语表}{信号词与术语表}
+\providecommand{\gp}[2]{\pageref{#1}\,/\,\pageref{#2}}
+\providecommand{\gd}[1]{—\,/\,\pageref{#1}}
+\providecommand{\ggrp}[1]{\multicolumn{5}{@{}l}{\rule{0pt}{15pt}\sffamily\bfseries\large\color{blue!50!black}#1}\\*}
+\providecommand{\sig}[1]{{\sffamily\small〔信号：#1〕}}
+\providecommand{\sgrp}[1]{\multicolumn{4}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【#1】}\\*}
+
+\section*{一、题干信号词 $\to$ 题型 $\to$ 页码}\phantomsection\label{tab:signal}
+\addcontentsline{toc}{section}{题干信号词、题型与页码}
+\begin{idea}[怎么用这张表]
+读题时把题干里的关键词圈出来，在左列找到\textbf{同时出现}的那组词，就知道是哪类题：先翻“套路 / 详解”页照步骤做，再对照“往年答卷”页照着写。没有往年题的写“—”。也可以先看第 \pageref{fig:dectree} 页的解题决策树。
+\end{idea}
+
+{\small\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{@{}P{5.9cm}P{5.1cm}P{2.9cm}P{2.1cm}@{}}
+\toprule
+题干里同时看到 & 是哪类题 / 核心一步 & 套路、详解页 & 往年答卷\\ \midrule
+\endfirsthead
+\toprule
+题干里同时看到 & 是哪类题 / 核心一步 & 套路、详解页 & 往年答卷\\ \midrule
+\endhead
+\bottomrule
+\endfoot
+\sgrp{① 元件：乘一个复数函数}
+面型 $T(x,y)$ / 厚度 + 折射率 $n$ + “等效于焦距为 $F$ 的透镜” & 等效透镜：$k(n-1)\Delta$ 凑成 $-\frac{kr^2}{2F}$ & \pageref{sec:equivlens}, \pageref{sec:screens} & —\\
+三次面型 $x^3$ + 两片互补 + 平移 $d$ + 焦距 & Alvarez：错位相减 = 二次相位 & \pageref{sec:alvarezi} & \pageref{ex:2025-3}\\
+写出某光屏 / 光栅 / 棱镜的复透射系数 & 九种光屏速查 & \pageref{sec:screens} & —\\
+两束平面波 + 夹角 $\theta$ + 强度分布 / 条纹频率 & 两束光干涉：$f_0=\frac{2\sin(\theta/2)}{\lambda}$ & \pageref{sec:twobeam} & \pageref{ex:2024-3}\\
+\sgrp{② 传播 / 衍射}
+傍轴 / 远场 + “哪个更难满足” + 菲涅耳 / 夫琅禾费 + 衍射屏、观察屏 & 近似条件定量比较 & \pageref{box:approx} & \pageref{ex:2025-1}\\
+从惠更斯-菲涅耳积分 + “推导” & 逐步推导菲涅耳、夫琅禾费公式 & \pageref{sec:diffderiv} & —\\
+孔 / 缝 / 光栅 + 远场 / 夫琅禾费图样 + 画强度 & 远场图样六步 & \pageref{sec:fraunrecipe}, \pageref{sec:ftexamples} & —\\
+周期物 + 传播距离 $z$ / 自成像 / 角谱 & 角谱传递函数、Talbot & \pageref{sec:angspec}, \pageref{ex:talbot} & —\\
+\sgrp{透镜与 4f}
+物在透镜前 $d_0$ / 后焦面 + 求频谱、谱点位置 & 焦面复振幅 & \pageref{sec:focalplane} & —\\
+两个 4f 级联 + 总放大率 $M$ & 两次 FT = 倒像，放大率相乘 & \pageref{sec:4fderiv} & \pageref{ex:2024-4}\\
+4f + 频谱面放滤波器 $T(\frac{\xi}{\lambda f})$ + 相干传递函数 & CTF = 滤波片本身 & \pageref{sec:4fctf} & \pageref{ex:2024-4}\\
+4f + 输入光栅 + 挡掉某几级 & 光栅滤波，求输出条纹 & \pageref{sec:gratingfilter} & —\\
+4f + 偏离前焦面 $x_1$ + 后焦面前 $x_2$ + $M^2$ & 两段二次相位抵消 & \pageref{sec:4foffset} & \pageref{ex:2024-5}\\
+频谱面 + SLM / 棱镜 + 线性（倾斜）相位 $kQ\xi$ & 频域线性相位 = 输出平移 & \pageref{sec:linphase}, \pageref{sec:alvarezii} & \pageref{ex:2025-3}\\
+相位物体 + 看不见 / 相衬 / 暗场 & 0 级加 $\pi/2$ 或挡掉 & \pageref{sec:phasecontrast} & —\\
+显微镜 + 周期物 + 倾斜照明 / 至少收几级 & 阿贝成像 & \pageref{sec:abbe} & —\\
+\sgrp{③ 成像 = LTI 系统}
+相干照明 + 口径 $D$ / NA + 截止频率（物方、像方） & CTF = 光瞳 & \pageref{sec:typeA} & —\\
+非相干 + 方瞳 / 圆瞳 + OTF / 画 MTF & OTF = 光瞳自相关 & \pageref{sec:typeB} & —\\
+出射光瞳形状图（几条缝、几个孔）+ 画 MTF + 截止频率 & 分块光瞳：几个三角形叠加 & \pageref{sec:typeC}, \pageref{ex:3slit} & \pageref{ex:2025-2}\\
+出瞳图 + “点扩展函数（二维形式）” & PSF $=|\F\{P\}|^2$ 缩放 & \pageref{sec:typeD} & \pageref{ex:2025-2}\\
+物 $1+\cos(2\pi Fx)$ + 像的对比度 $K$ 随 $F$ & $K=\mathrm{MTF}(F)$ & \pageref{sec:typeE} & \pageref{ex:2025-2}\\
+离焦 + 对比度反转 / 弥散圆 & 离焦 OTF & \pageref{sec:typeG} & —\\
+像元间距 / 混叠 / 双折射低通 & 采样 + 抗混叠 & \pageref{sec:typeF} & —\\
+两束相干光照明 + 突破衍射极限 / 2 倍截止频率 & SIM：调制搬频谱 & \pageref{sec:sim} & \pageref{ex:2024-3}\\
+\sgrp{④ 像差}
+有像差 + MTF “不大于” + 施瓦茨不等式 + 何种波像差不降 & 自相关 + 柯西-施瓦茨；线性相位唯一 & \pageref{sec:mtfproof} & \pageref{ex:2024-1}\\
+RMS 波前误差 + $\lambda/14$ + 0.8 + 二阶展开 & Strehl 模板 A：$1-k^2\sigma_W^2$ & \pageref{ex:strehl-tplA} & \pageref{ex:2024-2}\\
+Strehl + “保留更多阶” + $\exp$ & Strehl 模板 B：$\ee^{-k^2\sigma_W^2}$ & \pageref{ex:strehl-tplB} & \pageref{ex:2025-4}\\
+给 $W(\rho,\theta)$ + 求 RMS / 最佳补偿 / Strehl 数值 & 求方差、线性回归 & \pageref{rc:rms}, \pageref{rc:balance} & —\\
+离焦量 + 焦深 / 屈光度 / 轴向位移 & 四种表示互换 & \pageref{sec:defocus-units} & —\\
+\sgrp{视光学、光度色度}
+物距 + 焦距 + 像的位置 / 大小 / 虚实 & 成像公式 & \pageref{sec:lensimg} & —\\
+眼轴 / 远点 / 近点 / 度数 / 配镜 & 屈光不正与矫正 & \pageref{sec:farpoint}, \pageref{sec:correct} & —\\
+孔径光阑 / 入瞳 / 出瞳 / 视场光阑 + 作图 & 光阑与光瞳 & \pageref{sec:stops} & —\\
+屏幕 ppi + 观看距离 / 视网膜屏 / CPD & PPD、CPD 换算 & \pageref{sec:screencpd} & —\\
+视力 / Snellen / 20/20 / 视标 & 视力换算 & \pageref{sec:acuity} & —\\
+灰阶 / gamma / sRGB & 灰阶 $\leftrightarrow$ 亮度 & \pageref{sec:gammacalc} & \pageref{sec:quiz2024}\\
+朗伯 + 光锥 + 光通量比例 & $\Phi=\pi L\dd S\sin^2U$ & \pageref{sec:lambert} & \pageref{sec:quiz2024}\\
+亮度 + 与放大率无关 / 阿贝正弦条件 & 缩放定理 + 能量守恒 & \pageref{sec:abbesine}, \pageref{sec:luminance} & \pageref{sec:quiz2024}\\
+\end{longtable}}
+
+\clearpage
+\section*{二、术语表（按拼音 / 字母顺序）}\phantomsection\label{tab:glossary}
+\addcontentsline{toc}{section}{术语表（按拼音 / 字母顺序）}
+\begin{idea}[怎么用这张表]
+像查字典：按术语\textbf{第一个字的拼音首字母}（英文缩写按字母）找。题干里的不同说法都收了，次要说法写“$\to$ 见××”。\\
+\textbf{“根”一列}：这个词属于哪一类操作——\textbf{①元件} = 给光乘一个复数函数；\textbf{②传播} = 自由传播 / 衍射（卷积）；\textbf{③成像} = LTI 系统（PSF、传递函数）；\textbf{④像差} = 光瞳上多出相位。另有：数 = 数学工具，几 = 几何光学，视 = 视光学，度 = 光度色度。\\
+\sig{……} 是信号与系统里的对应物。页码：斜线前是第零章入门页，斜线后是详解页，“—”表示入门章没有专讲。
+\end{idea}
+
+{\small\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}P{3.2cm}>{\centering\arraybackslash}p{0.75cm}P{6.9cm}P{3.75cm}r@{}}
+\toprule
+术语（各种说法） & 根 & 白话解释 \sig{对应物} & 关键公式 & 页码\\ \midrule
+\endfirsthead
+\toprule
+术语（各种说法） & 根 & 白话解释 \sig{对应物} & 关键公式 & 页码\\ \midrule
+\endhead
+\bottomrule
+\endfoot
+\ggrp{A}
+阿贝成像原理 & ③ & 显微镜成像 = 物 $\to$ 频谱 $\to$ 像；至少收进 $\pm1$ 级才看得出周期 \sig{基频不过滤波器，周期信号就成了直流} & $d_{\min}=\lambda/\mathrm{NA}$（相干） & \gp{sec:p-lensft}{sec:abbe}\\
+阿贝正弦条件 & 度 & 大孔径无像差成像必须满足的角度关系 \sig{缩放定理：空间放大 $M$，频率缩小 $M$} & $\frac{n\sin U}{n'\sin U'}=M$ & \gd{sec:abbesine}\\
+艾里斑 & ②③ & 圆孔远场（或理想镜头的点像）中央的亮斑 \sig{圆窗函数的频谱（jinc$^2$）} & 第一暗环 $1.22\lambda f/D$ & \gp{sec:p-diff}{sec:aperturepatterns}\\
+Alvarez 透镜（Lohmann 透镜、Split-Lohmann） & ① & 两片三次面型的玻璃错开，组成焦距可调的透镜 \sig{差分 $\approx$ 导数：三次函数错位相减 = 二次函数} & $F=-\frac{1}{4(n-1)Ad}$ & \gp{sec:p-screen}{sec:alvarez}\\
+暗场 & ③ & 4f 频谱面挡掉 0 级，只看被物体散射的光 \sig{去掉直流分量} &  & \gp{sec:p-lensft}{sec:phasecontrast}\\
+\ggrp{B}
+傍轴近似 & ② & 角度小（$\rho\ll z$），振幅里的 $\frac1r$ 当成常数 $\frac1z$ \sig{复信号的包络近似（包络慢变，容易满足）} & $\rho\ll z$，$\sin\theta\approx\theta$ & \gp{sec:p-diff}{box:approx}\\
+波长 $\lambda$ & ② & 相邻两个波峰的距离；可见光约 0.4–0.7 $\mu$m \sig{周期} & 介质中 $\lambda/n$ & \gp{sec:p-wave}{ch:wave}\\
+波前（波面） & ④ & 相位相同的点连成的面 &  & \gp{sec:p-aberr}{ch:aberr}\\
+波矢、方向余弦 & ② & 波前进的方向；方向余弦是它和坐标轴夹角的余弦 \sig{复指数的“频率矢量”} & $|\bm k|=k$，$u=\cos\alpha/\lambda$ & \gp{sec:p-spfreq}{sec:spfreq}\\
+波数 $k$ & ② & 波每走 1 米，相位转多少弧度 \sig{角频率 $\omega$ 的空间版} & $k=2\pi/\lambda$ & \gp{sec:p-wave}{ch:wave}\\
+薄透镜的相位（透镜相位因子） & ① & 透镜 = 给光乘一个二次相位 \sig{乘一个线性调频（chirp）信号} & $t_L=\ee^{-ik\frac{x^2+y^2}{2f}}$ & \gp{sec:p-screen}{sec:lensphase}\\
+波像差 $W(x,y)$（出瞳波像差、波前误差） & ④ & 出瞳上实际波面比理想球面超前 / 落后多少（单位长度） \sig{滤波器的相位失真} & 光瞳多乘 $\ee^{ikW}$ & \gp{sec:p-aberr}{ch:aberr}\\
+\ggrp{C}
+采样定理 & 数 & 采样频率至少是最高频率的 2 倍，才能无失真恢复 \sig{同信号与系统} & $f_s\ge2f_{\max}$ & \gp{sec:p-eye}{sec:sampling}\\
+超分辨 & & $\to$ 见\textbf{结构光照明} & & \\
+成像公式（高斯公式、物像公式） & 几 & 物距、像距、焦距的关系（课件约定：$l,l'$ 取正 = 实物、实像） & $\frac1l+\frac1{l'}=\frac1f$ & \gp{sec:p-geom}{sec:lensimg}\\
+成像系统 & ③ & 物 $\to$ 像的线性系统：相干时对复振幅线性，非相干时对强度线性 \sig{LTI 系统} & $g=f\conv h$ & \gp{sec:p-overview}{ch:imaging}\\
+冲激响应 & & $\to$ 见\textbf{点扩散函数} & & \\
+出射光瞳（出瞳） & ③ & 镜头最后的“出光口”：从像那边看进镜头看到的孔；光从这里奔向像点。出瞳形状 = 光瞳函数 \sig{它的形状决定系统的传递函数} &  & \gp{sec:p-geom}{sec:stops}\\
+出瞳 & & $\to$ 见\textbf{出射光瞳} & & \\
+传递函数（频率响应） & ③ & 输出频谱 / 输入频谱；相干用 CTF，非相干用 OTF \sig{$H(\omega)$} & $G=HF$ & \gp{sec:p-imaging}{ch:imaging}\\
+$\circf$、$\jinc$（圆孔函数） & 数 & 圆孔函数及其频谱（圆孔的远场就是艾里斑） \sig{二维圆形窗及其频谱} & $\circf(r)=1\ (r<1)$ & \gp{sec:p-diff}{sec:aperturepatterns}\\
+CPD（周 / 度） & 视 & 每度视角内有几个条纹周期，人眼的空间频率单位 \sig{频率单位} & 1 CPD = 2 PPD & \gp{sec:p-eye}{sec:screencpd}\\
+CSF & & $\to$ 见\textbf{对比敏感度函数} & & \\
+CTF & & $\to$ 见\textbf{相干传递函数} & & \\
+\ggrp{D}
+$\delta$ 函数（点光源） & 数 & 点光源 / 冲激；频谱是常数（含所有频率） \sig{冲激} & $\F\{\delta\}=1$ & \gp{sec:p-overview}{sec:pairs}\\
+等效透镜（等效于焦距为 $F$ 的透镜） & ① & 任何给出二次相位的元件都是透镜，对比系数读出焦距 & 对比 $-\frac{kr^2}{2F}$ & \gp{sec:p-screen}{sec:equivlens}\\
+低通 / 高通 / 带通（空间滤波器） & ③ & 频谱面只留中心（去细节）/ 挡中心（留边缘）/ 留一圈 \sig{同名滤波器} &  & \gp{sec:p-lensft}{sec:4fctf}\\
+点扩散函数 PSF（点扩展函数、强度 PSF、振幅 PSF） & ③ & 一个点物成的像；振幅 PSF $h$ = 光瞳的傅里叶变换，非相干用 $|h|^2$ \sig{冲激响应 $h(t)$} & $h\propto\F\{P\}\big(\frac{x}{\lambda z_i}\big)$ & \gp{sec:p-imaging}{sec:typeD}\\
+点扩展函数 & & $\to$ 见\textbf{点扩散函数} & & \\
+度数 & & $\to$ 见\textbf{屈光度} & & \\
+对比度（调制度、条纹对比度、可见度）$K$ & ③ & 条纹明暗的差别，1 最清楚，0 看不见 \sig{调幅信号的调制深度} & $K=\frac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}$ & \gp{sec:p-imaging}{sec:typeE}\\
+对比度反转 & ③ & 离焦时 OTF 变负，条纹黑白互换 \sig{传递函数为负 = 反相 $180^\circ$} &  & \gp{sec:p-imaging}{sec:typeG}\\
+对比敏感度函数 CSF & 视 & 人眼对各频率条纹的敏感程度（1/阈值对比度），带通，峰在几 CPD \sig{人眼的“频率响应”} &  & \gp{sec:p-eye}{sec:mtfcsf}\\
+\ggrp{E}
+二次相位（二次相位因子） & ①② & 球面波、透镜、菲涅耳传播的标志 \sig{线性调频（chirp）} & $\ee^{\pm ik\frac{x^2+y^2}{2z}}$ & \gp{sec:p-screen}{sec:phasefactors}\\
+2f–2f 成像（物距 $2f$） & 几 & 物在 2 倍焦距处，像也在 $2f$，等大倒立 & $l=l'=2f$，$M=-1$ & \gp{sec:p-geom}{sec:lensimg}\\
+\ggrp{F}
+F 数（光圈数）$F/\#$ & 几 & 焦距 / 入瞳直径；越小越亮、截止频率越高 & $F/\#=f/D$ & \gp{sec:p-geom}{sec:stops}\\
+发光强度 $I$ & 度 & 某个方向上单位立体角内的光通量，单位 cd & $I=\dd\Phi/\dd\Omega$ & \gd{sec:photounits}\\
+放大镜、望远镜、适眼距 & 视 & 目视仪器；适眼距是眼睛该放的位置（出瞳处） &  & \gd{sec:telescope}\\
+方向余弦 & & $\to$ 见\textbf{波矢} & & \\
+菲涅耳数 $N_F$ & ② & 判断近场还是远场的数 & $N_F=\frac{a^2}{\lambda z}$，$\ll1$ 为远场 & \gp{sec:p-diff}{box:approx}\\
+菲涅耳衍射（近场衍射、菲涅耳近似） & ② & 保留二次相位的衍射公式 \sig{和一个 chirp 做卷积} & $E\propto\ee^{ik\frac{x^2}{2z}}\F\{E_1\ee^{ik\frac{x_1^2}{2z}}\}$ & \gp{sec:p-diff}{sec:diffderiv}\\
+非相干（非相干照明、非相干成像） & ③ & 普通光：相位乱跳，只能叠加强度；对强度是线性系统 \sig{功率谱相加（不相关信号）} & 传递函数 OTF & \gp{sec:p-imaging}{ch:imaging}\\
+非相干照明 & & $\to$ 见\textbf{非相干} & & \\
+分辨率、瑞利判据 & ③ & 两个点刚好能分开的最小距离 & $0.61\lambda/\mathrm{NA}$ & \gp{sec:p-imaging}{sec:abbe}\\
+分块光瞳（多缝光瞳、几个孔的光瞳） & ③ & 出瞳被挡成几条缝 / 几个孔；MTF 是几个三角形叠起来，中间有零点 &  & \gp{sec:p-imaging}{sec:typeC}\\
+峰谷值 PV & ④ & 波像差最大值减最小值 \sig{峰峰值} &  & \gp{sec:p-aberr}{sec:aberrms}\\
+夫琅禾费衍射（远场衍射） & ② & 远处的衍射图样 = 屏的傅里叶变换 & $E\propto\F\{E_1\}\big(\frac{x}{\lambda z}\big)$ & \gp{sec:p-diff}{sec:fraunrecipe}\\
+傅里叶变换 FT，$\F$ & 数 & 把信号拆成各种频率的正弦（光学里是各方向的平面波），给出每个频率有多少 \sig{同信号与系统，只是变成二维、自变量是位置} & $F(u)=\int f(x)\ee^{-i2\pi ux}\dd x$ & \gp{sec:p-spfreq}{sec:pairs}\\
+复透过率（函数）、复振幅透过率 & & $\to$ 见\textbf{复透射系数} & & \\
+复透射系数 $t(x,y)$（复透过率、复透过率函数、复振幅透过率、透过率函数） & ① & 屏或元件对光场做乘法：出射 = 入射 $\times\,t$ \sig{时域乘法（调制）} & $E_{\text{出}}=t\,E_{\text{入}}$ & \gp{sec:p-screen}{sec:screens}\\
+复振幅 $E$（复振幅分布） & ② & 去掉时间因子 $\ee^{-i\omega t}$ 后的复数，同时记录强弱和相位 \sig{相量（电路相量法）} & $E=A\,\ee^{i\phi}$ & \gp{sec:p-wave}{ch:wave}\\
+\ggrp{G}
+gamma & 视 & 灰阶到亮度的幂律关系 \sig{无记忆非线性} & $L\propto V^{\gamma}$，$\gamma\approx2.2$ & \gp{sec:p-eye}{sec:gammacalc}\\
+高斯公式 & & $\to$ 见\textbf{成像公式} & & \\
+光焦度 & & $\to$ 见\textbf{屈光度} & & \\
+光栅、衍射级 & ①② & 周期透光结构；它的频谱是一排点，每个点是一个衍射级（0、$\pm1$……） \sig{周期信号 $\to$ 线谱（傅里叶级数）} & $\sin\theta_m=m\lambda/d$ & \gp{sec:p-screen}{sec:ftexamples}\\
+光瞳函数 $P$（光瞳） & ③ & 出瞳的透光形状（透光 1，不透光 0） \sig{相干时它就是传递函数（理想低通窗）} & CTF $=P(\lambda z_iu)$ & \gp{sec:p-imaging}{ch:imaging}\\
+光通量 $\Phi$ & 度 & 每秒发出的总“可见光量”，单位 lm（流明） \sig{功率} &  & \gd{sec:photounits}\\
+光线像差、Shack-Hartmann & ④ & 波面倾斜使光线偏离理想像点；用微透镜阵列测波面斜率 \sig{相位的导数 = 瞬时频率} &  & \gd{sec:rayaberr}\\
+光学传递函数 OTF & ③ & 非相干成像的频率响应 = 光瞳的归一化自相关 \sig{非相干系统的 $H$} & $\mathcal H=\frac{\F\{|h|^2\}}{\F\{|h|^2\}|_0}$ & \gp{sec:p-imaging}{sec:typeB}\\
+光学加减法 & ③ & 频谱面放余弦光栅，把两幅图像叠加或相减 &  & \gd{sec:addsub}\\
+广义光瞳（广义光瞳函数） & ④ & 光瞳形状再乘像差相位 \sig{带相位失真的滤波器} & $\mathcal P=P\,\ee^{ikW}$ & \gp{sec:p-aberr}{sec:mtfproof}\\
+光轴 & 几 & 穿过透镜中心、垂直于镜面的对称轴 &  & \gp{sec:p-geom}{sec:lensimg}\\
+\ggrp{H}
+横向放大率 $M$（垂轴放大率、$\beta$） & 几 & 像高 / 物高，负号表示倒像 \sig{空间尺度变换} & $M=-l'/l$ & \gp{sec:p-geom}{sec:lensimg}\\
+厚度 $\to$ 相位（传播相位） & ① & 光在玻璃里走得慢，多出的相位正比于厚度 & $\phi=k(n-1)\Delta$ & \gp{sec:p-screen}{sec:screens}\\
+后焦面 & & $\to$ 见\textbf{前焦面 / 后焦面；频谱面} & & \\
+惠更斯-菲涅耳原理 & ② & 波面上每一点都是新的小光源，后面的场是它们的叠加 \sig{卷积（每点的冲激响应叠加）} &  & \gp{sec:p-diff}{ch:diff}\\
+混叠 & 数 & 采样不够时，高频冒充成低频 \sig{同信号与系统} & $f_{\text{混}}=|f-nf_s|$ & \gp{sec:p-eye}{sec:alias}\\
+\ggrp{J}
+基点、主点、节点 & 几 & 厚透镜 / 透镜组等效成一片薄透镜时用的参考点 &  & \gd{sec:lenscombo}\\
+焦点、焦距 $f$ & 几 & 平行光经透镜会聚到的点；它到透镜的距离 &  & \gp{sec:p-geom}{sec:lensimg}\\
+角谱、角谱传播 & ② & 把场拆成各方向的平面波，每个平面波传播只乘一个相位（在频域算衍射） \sig{频域乘全通滤波器} & $H=\ee^{ikz}\ee^{-i\pi\lambda z(u^2+v^2)}$（傍轴） & \gp{sec:p-diff}{sec:angspec}\\
+焦深 & ④ & 像面前后挪多少仍算清楚 &  & \gd{sec:defocus-units}\\
+矫正镜片（配镜度数） & 视 & 把远点挪到无穷远所需的镜片屈光度 & 贴眼时 $\Phi_L=-V_{\text{远}}$ & \gp{sec:p-eye}{sec:correct}\\
+结构光照明 SIM（超分辨） & ③ & 用条纹光照明，把物的频谱搬移，可见频率最多翻倍 \sig{调制 = 频谱搬移（AM、外差）} & $f_{\max}=f_c+f_0\le2f_c$ & \gp{sec:p-spfreq}{sec:sim}\\
+截止频率 & ③ & 能通过系统的最高空间频率 \sig{低通滤波器的截止频率} & 相干 $\frac{\mathrm{NA}}{\lambda}$，非相干 $\frac{2\mathrm{NA}}{\lambda}$ & \gp{sec:p-imaging}{sec:typeA}\\
+近点、远点 & 视 & 眼睛最大调节 / 放松时能看清的最近 / 最远距离 &  & \gp{sec:p-eye}{sec:farpoint}\\
+近视 / 远视 / 老花 / 散光 & 视 & 远点太近 / 看远也要调节 / 调节幅度变小 / 两个方向屈光度不同 &  & \gp{sec:p-eye}{sec:ametropia}\\
+卷积 $\conv$ & 数 & 输入的每一点按冲激响应“抹开”，再全部叠加 \sig{同信号与系统} & $(f\conv h)(x)=\int f(\xi)h(x-\xi)\dd\xi$ & \gp{sec:p-diff}{sec:convcalc}\\
+卷积定理 & 数 & 空域卷积 = 频域相乘，反之亦然 \sig{同信号与系统} & $\F\{f\conv g\}=FG$ & \gp{sec:p-table}{sec:props}\\
+均匀垂直（单色相干）照明 & ① & 一束激光平面波正对着打；紧贴屏后的场就是透射系数本身 \sig{输入是常数（直流）} & $E_{\text{入}}=1\Rightarrow E=t$ & \gp{sec:p-screen}{sec:screens}\\
+\ggrp{K}
+空间光调制器 SLM & ① & 可以用电脑编程的相位片（或振幅片） \sig{可编程的乘法器} &  & \gp{sec:p-lensft}{sec:linphase}\\
+空间滤波（频谱面滤波） & ③ & 在 4f 频谱面放挡板 / 相位片，改变物的频谱 \sig{频域滤波器} & CTF = 滤波片 & \gp{sec:p-lensft}{sec:4fctf}\\
+空间频率 $u,v$ & ② & 屏上明暗条纹每毫米有几个周期；斜着走的平面波在屏上就是一个空间频率 \sig{时间频率（Hz）换成空间（周/mm）} & $u=\sin\theta/\lambda$ & \gp{sec:p-spfreq}{sec:spfreq}\\
+孔径光阑 & 几 & 限制进光多少的那个孔（相机光圈） &  & \gp{sec:p-geom}{sec:stops}\\
+孔径角 $U$ & 几 & 轴上物点到入瞳边缘的半角 & $\mathrm{NA}=n\sin U$ & \gp{sec:p-geom}{sec:stops}\\
+\ggrp{L}
+朗伯辐射体（朗伯体） & 度 & 从各方向看亮度都一样的发光面（白纸、磨砂面） & $\Phi=\pi L\dd S\sin^2U$ & \gd{sec:lambert}\\
+立体角 & 度 & 圆锥在单位球面上截出的面积，单位 sr & 环带 $\dd\Omega=2\pi\sin\theta\dd\theta$ & \gd{sec:lambert}\\
+离焦 & ④ & 接收面不在最佳焦点上 & $W=W_{020}\rho^2$ & \gp{sec:p-aberr}{sec:defocus-units}\\
+两次正变换 = 翻转（倒像） & ②③ & 透镜连做两次傅里叶变换得到倒像 \sig{$\F\F f=f(-x)$} & $\F\{\F\{f\}\}(x)=f(-x)$ & \gp{sec:p-lensft}{sec:4fderiv}\\
+亮度 $L$ & 度 & 面看起来有多亮，单位 nit = cd/m$^2$ & $L=\frac{\dd I}{\dd S\cos\theta}$ & \gd{sec:photounits}\\
+亮度守恒 & 度 & 无损系统不能让像比物更亮 \sig{能量守恒} & $\frac{L}{n^2}=\frac{L'}{n'^2}$ & \gd{sec:luminance}\\
+两束光干涉（双光束干涉） & ② & 两束平面波叠加出平行的明暗条纹 \sig{两个复指数相加 $\to$ 余弦（拍）} & 对称入射 $f_0=\frac{2\sin(\theta/2)}{\lambda}$ & \gp{sec:p-spfreq}{sec:twobeam}\\
+零阶保持（像素重建） & 视 & 每个像素在一格内亮度不变，频谱乘 $\sinc$ \sig{同 DAC 的零阶保持} &  & \gd{sec:zoh}\\
+lp/mm（线对每毫米） & ② & 空间频率的单位，一黑一白算一个周期 \sig{周 / 秒 $\to$ 周 / 毫米} & 周期 $=1/u$ & \gp{sec:p-spfreq}{sec:spfreq}\\
+\ggrp{M}
+脉冲响应 & & $\to$ 见\textbf{点扩散函数} & & \\
+Maréchal 判据 & ④ & RMS 小于 $\lambda/14$ 时 $S>0.8$，算“接近完美” & $\sigma_W<\lambda/14$ & \gp{sec:p-aberr}{ex:strehl-tplA}\\
+面型（面形、面形函数、面型 $T(x,y)$） & ① & 透镜表面的高低起伏 = 各点的厚度，换成相位 $k(n-1)T$ & $t=\ee^{ik(n-1)T}$ & \gp{sec:p-screen}{sec:screens}\\
+面形 & & $\to$ 见\textbf{面型} & & \\
+MTF & & $\to$ 见\textbf{调制传递函数} & & \\
+\ggrp{N}
+NA & & $\to$ 见\textbf{数值孔径} & & \\
+逆傅里叶变换 $\IF$ & 数 & 用各频率分量重新拼回原信号 \sig{同信号与系统} & $f(x)=\int F(u)\ee^{i2\pi ux}\dd u$ & \gp{sec:p-spfreq}{sec:props}\\
+\ggrp{O}
+OTF & & $\to$ 见\textbf{光学传递函数} & & \\
+\ggrp{P}
+频谱面（傅里叶面、后焦面） & ①② & 傅里叶变换透镜的后焦面；位置 $\xi$ 对应频率 $\xi/\lambda f$ \sig{频域} & $u=\frac{\xi}{\lambda f}$ & \gp{sec:p-lensft}{sec:focalplane}\\
+平面波（单色平面波） & ② & 波面是平面、沿一个方向笔直前进的波 \sig{单一频率的复指数} & $\ee^{i\bm k\cdot\bm r}$ & \gp{sec:p-spfreq}{ch:wave}\\
+平移定理（位移定理） & 数 & 空域平移 = 频域乘线性相位；频域平移 = 空域乘线性相位 \sig{时移 / 频移定理} & $\F\{f(x-a)\}=\ee^{-i2\pi au}F(u)$ & \gp{sec:p-lensft}{sec:props}\\
+piston & & $\to$ 见\textbf{倾斜、平移常数} & & \\
+PPD（像素 / 度） & 视 & 每度视角内有几个像素 \sig{采样率} & $\mathrm{PPD}=\frac{\pi L}{180p}$ & \gp{sec:p-eye}{sec:screencpd}\\
+PSF & & $\to$ 见\textbf{点扩散函数} & & \\
+PTF & & $\to$ 见\textbf{相位传递函数} & & \\
+\ggrp{Q}
+前焦面 / 后焦面 & 几 & 透镜前方 / 后方一个焦距处的平面 &  & \gp{sec:p-geom}{sec:lensFT}\\
+强度 $I$（光强） & ② & 探测器、眼睛真正测到的量；相位看不见 \sig{功率} & $I=|E|^2$ & \gp{sec:p-wave}{ch:wave}\\
+强度透过率 $T$ & ① & 物体对光强（不是复振幅）的乘法 & $I_{\text{出}}=T I_{\text{入}}$ & \gp{sec:p-screen}{sec:screens}\\
+倾斜、平移常数（tilt、piston） & ④ & 线性的波像差只让像平移，不降低 MTF 和 Strehl \sig{线性相位 = 纯延时，不失真} & $W=ax+by+c$ & \gp{sec:p-aberr}{sec:mtfproof}\\
+球差、彗差、像散（Seidel 像差） & ④ & 三种常见像差 &  & \gp{sec:p-aberr}{sec:aberrms}\\
+球面波 & ② & 从一点发出（或会聚到一点）的波 & $\frac{A}{r}\ee^{ikr}$，傍轴 $\ee^{ik\frac{x^2+y^2}{2z}}$ & \gp{sec:p-wave}{sec:phasefactors}\\
+屈光度 D（光焦度 $\Phi$、屈光能力、度数） & 视 & 透镜会聚能力，等于焦距（米）的倒数；眼镜“度数” = 屈光度 $\times100$ & $\Phi=1/f$ & \gp{sec:p-eye}{sec:lenscombo}\\
+屈光能力 & & $\to$ 见\textbf{屈光度} & & \\
+缺级 & ② & 多缝图样中，单缝包络的零点正好落在某级主极大上，这一级消失 \sig{包络零点压掉一根谱线} &  & \gp{sec:p-diff}{sec:ftexamples}\\
+\ggrp{R}
+$\rect$ 矩形函数 & 数 & 宽为 1 的“门”，用来写缝、方孔 \sig{矩形窗} & $\rect(x)=1\ (|x|<\tfrac12)$ & \gp{sec:p-screen}{sec:pairs}\\
+RMS 波前误差 $\sigma_W$（均方根波前误差） & ④ & 波像差在光瞳上的标准差 \sig{相位噪声的标准差} & $\sigma_W^2=\E[W^2]-\E^2[W]$ & \gp{sec:p-aberr}{sec:aberrms}\\
+入射光瞳（入瞳） & 几 & 从物方看进镜头看到的孔径光阑（的像） &  & \gp{sec:p-geom}{sec:stops}\\
+入瞳 & & $\to$ 见\textbf{入射光瞳} & & \\
+瑞利判据 & & $\to$ 见\textbf{分辨率} & & \\
+\ggrp{S}
+三角函数 $\tri$ & 数 & 矩形和自己相关的结果，方瞳 OTF 的形状 \sig{两个矩形窗卷积} & $\tri(x)=1-|x|\ (|x|<1)$ & \gp{sec:p-imaging}{sec:typeB}\\
+CIE XYZ、色彩空间 & 度 & 设备无关的标准颜色坐标；HSV 等依赖设备 &  & \gd{sec:color}\\
+色品坐标 $(x,y)$ & 度 & 去掉亮度后表示“什么颜色”的两个数 \sig{归一化} & $x=\frac{X}{X+Y+Z}$ & \gd{sec:color}\\
+Shack-Hartmann & & $\to$ 见\textbf{光线像差} & & \\
+视场光阑 & 几 & 限制能看到多大范围的孔 &  & \gp{sec:p-geom}{sec:stops}\\
+视角 & 视 & 物体两端对眼睛的张角 &  & \gp{sec:p-eye}{sec:cpd}\\
+视力（小数视力、Snellen） & 视 & 能分辨的最小视角的倒数；1.0 = 1 角分 = 30 CPD & $V=1/\alpha_{\min}[']$ & \gp{sec:p-eye}{sec:acuity}\\
+施瓦茨不等式 & 数 & 两个函数“内积”的模不超过各自“长度”之积；两者成比例时取等号 \sig{柯西-施瓦茨} & $\big|\!\iint fg\big|^2\le\iint|f|^2\iint|g|^2$ & \gp{sec:p-aberr}{sec:mtfproof}\\
+视网膜像 & 视 & 物在视网膜上成的像，大小由视角决定 &  & \gp{sec:p-eye}{sec:retimg}\\
+实像 / 虚像 & 几 & 光真的会聚成的像（屏上接得到）/ 光线反向延长线的交点（屏上接不到） &  & \gp{sec:p-geom}{sec:lensimg}\\
+视锥 / 视杆 & 视 & 视网膜上的感光细胞；视锥间距决定采样极限 \sig{采样间隔} &  & \gp{sec:p-eye}{sec:eyediff}\\
+倏逝波 & ② & 空间频率超过 $1/\lambda$ 的分量，离开屏就迅速衰减，传不远 \sig{超出通带的分量} & $u^2+v^2>1/\lambda^2$ & \gp{sec:p-diff}{sec:angspec}\\
+数值孔径 NA & 几 & 镜头收光锥半角的正弦（乘折射率），越大看得越细 \sig{决定截止频率} & $\mathrm{NA}=n\sin\theta$ & \gp{sec:p-geom}{sec:stops}\\
+4f 系统（4f 系统级联） & ③ & 两片透镜做两次傅里叶变换，输出倒像；中间是频谱面 \sig{“FT $\to$ 乘 $H$ $\to$ FT”的滤波器} & $M=-f_2/f_1$ & \gp{sec:p-lensft}{sec:4f}\\
+斯特列尔比 & & $\to$ 见\textbf{Strehl 比} & & \\
+SIM & & $\to$ 见\textbf{结构光照明} & & \\
+$\sinc$ 函数 & 数 & 矩形的频谱，单缝衍射的振幅形状 \sig{同信号与系统} & $\sinc x=\frac{\sin\pi x}{\pi x}$ & \gp{sec:p-diff}{sec:pairs}\\
+SLM & & $\to$ 见\textbf{空间光调制器} & & \\
+sRGB & 视 & 显示器通用的颜色和灰阶编码标准 &  & \gp{sec:p-eye}{sec:gammacalc}\\
+Strehl 比 $S$（Strehl Ratio、斯特列尔比） & ④ & 有像差时像点中心亮度 / 完美时，1 最好 \sig{冲激响应峰值之比} & $S\approx1-k^2\sigma_W^2\approx\ee^{-k^2\sigma_W^2}$ & \gp{sec:p-aberr}{sec:strehl}\\
+缩放定理（相似定理、尺度缩放性质） & 数 & 空间拉宽 $a$ 倍，频谱变窄 $a$ 倍（孔越小，衍射斑越大） \sig{时宽带宽积} & $\F\{f(x/a)\}=|a|F(au)$ & \gp{sec:p-diff}{sec:props}\\
+\ggrp{T}
+Talbot 自成像 & ② & 周期物传播一定距离后自己重新出现 \sig{线谱各分量相位同时回到整数周期} & $z_T=2d^2/\lambda$ & \gp{sec:p-diff}{ex:talbot}\\
+调节、调节幅度 & 视 & 晶状体变胖增加屈光度，看清近处；能增加的最大量 & $A=V_{\text{近}}-V_{\text{远}}$ & \gp{sec:p-eye}{sec:ametropia}\\
+调制传递函数 MTF & ③ & OTF 的模：每个频率的条纹对比度剩几成（0.6 = 剩六成） \sig{幅频响应 $|H|$} & $\mathrm{MTF}=|\mathcal H|$，$K_{\text{像}}=\mathrm{MTF}\cdot K_{\text{物}}$ & \gp{sec:p-imaging}{sec:typeE}\\
+调制度 & & $\to$ 见\textbf{对比度} & & \\
+透过率函数 & & $\to$ 见\textbf{复透射系数} & & \\
+透镜的傅里叶变换性质 & ①② & 物放在前焦面，后焦面上就是它的频谱 \sig{透镜 = 做傅里叶变换的“硬件”} & $U_f\propto\hat E\big(\frac{\xi}{\lambda f},\frac{\eta}{\lambda f}\big)$ & \gp{sec:p-lensft}{sec:lensFT}\\
+透镜组 & 几 & 两片透镜合起来的光焦度 & $\Phi=\Phi_1+\Phi_2-d\Phi_1\Phi_2$ & \gp{sec:p-eye}{sec:lenscombo}\\
+凸透镜 / 凹透镜（正透镜 / 负透镜） & 几 & 会聚光（$f>0$）/ 发散光（$f<0$） &  & \gp{sec:p-geom}{sec:lensimg}\\
+\ggrp{X}
+线性空不变系统 & 数 & 输出 = 输入 $\conv$ 冲激响应，频域乘传递函数 \sig{LTI 系统} & $g=f\conv h$，$G=FH$ & \gp{sec:p-overview}{ch:imaging}\\
+线性相位（线性倾斜相位、倾斜相位） & ① & 相位随位置线性变化 = 光往斜方向走；放在频谱面上则使像平移 \sig{时移 / 频移} & $\ee^{i2\pi ax}$，$\ee^{ikQ\xi}$ & \gp{sec:p-spfreq}{sec:linphase}\\
+像差 & ④ & 实际镜头和理想镜头的偏差，使像变模糊 \sig{相位失真} &  & \gp{sec:p-aberr}{ch:aberr}\\
+相衬（泽尼克相衬） & ③ & 给频谱面的 0 级加 $\pi/2$ 相位，让看不见的相位物体变成明暗 \sig{把相位调制变成幅度调制} &  & \gp{sec:p-wave}{sec:phasecontrast}\\
+相干（相干照明、相干成像） & ③ & 激光：相位关系固定，叠加复振幅，能干涉；对复振幅是线性系统 & 传递函数 CTF & \gp{sec:p-imaging}{ch:imaging}\\
+相干传递函数 CTF & ③ & 相干成像的频率响应 = 光瞳本身（理想低通） \sig{相干系统的 $H$} & $H_c=P(\lambda z_iu,\lambda z_iv)$ & \gp{sec:p-imaging}{sec:typeA}\\
+相关、自相关 $\corr$ & 数 & 一个函数和平移后的另一个（或自己）重叠了多少；OTF 就是光瞳的自相关 \sig{同信号与系统} & $\int f^*(\xi)\,g(\xi+x)\dd\xi$ & \gp{sec:p-imaging}{sec:convcalc}\\
+相关色温 & 度 & 和这个颜色最接近的黑体温度 &  & \gd{sec:color}\\
+相位 & ② & 波此刻走到一个周期的哪个位置；探测器看不见 \sig{相量的辐角} & $\ee^{i\phi}$ 中的 $\phi$ & \gp{sec:p-wave}{ch:wave}\\
+相位传递函数 PTF & ③ & OTF 的相位：条纹平移多少；OTF 为负 = 黑白反转 \sig{相频响应} & $\mathrm{PTF}=\arg\mathcal H$ & \gp{sec:p-imaging}{sec:typeG}\\
+相位调制函数（相位分布 $\varphi(\xi,\eta)$） & ① & 元件只改相位、不改强弱时，给光乘 $\ee^{i\varphi}$ \sig{相位调制} & $t=\ee^{i\varphi}$ & \gp{sec:p-screen}{sec:phasefactors}\\
+像元采样、光学低通滤波器 OLPF & ③ & 传感器像素是采样；双折射低通滤波器防混叠 \sig{采样 + 抗混叠滤波} &  & \gp{sec:p-eye}{sec:typeF}\\
+\ggrp{Y}
+衍射 & ② & 光遇到孔或边缘后向各方向散开，孔越小散得越开 \sig{时宽带宽积} & 散开角 $\sim\lambda/a$ & \gp{sec:p-diff}{ch:diff}\\
+衍射级 & & $\to$ 见\textbf{光栅} & & \\
+衍射极限 & & $\to$ 见\textbf{衍射受限} & & \\
+衍射屏 / 观察屏（接收面） & ② & 带孔或图案的屏（输入）/ 接收图样的屏（输出） \sig{输入端 / 输出端} &  & \gp{sec:p-diff}{ch:diff}\\
+衍射受限（衍射极限） & ③ & 镜头无像差，只受孔径衍射限制，是能做到的最好 \sig{理想低通（无相位失真）} &  & \gp{sec:p-imaging}{ch:imaging}\\
+远场近似 & ② & 连相位里的二次项也丢掉；比傍轴难满足得多 \sig{相位（载波）近似，难满足} & $z\gg a^2/\lambda$ & \gp{sec:p-diff}{box:approx}\\
+远点 & & $\to$ 见\textbf{近点、远点} & & \\
+远视、老花、散光 & & $\to$ 见\textbf{近视} & & \\
+\ggrp{Z}
+Zernike 多项式 & ④ & 描述像差的一组标准“基函数”，各项互相正交 \sig{正交基展开} & $\sigma_W^2=\sum c_j^2$ & \gd{sec:zernike}\\
+照度 $E$ & 度 & 落到单位面积上的光通量，单位 lx & $E=\dd\Phi/\dd S$ & \gd{sec:photounits}\\
+折射率 $n$ & ① & 光在介质中慢 $n$ 倍，波长变成 $\lambda/n$ &  & \gp{sec:p-wave}{sec:screens}\\
+振幅型 / 相位型光屏 & ① & 改光的强弱（光栅、孔）/ 只改相位（玻璃片、透镜） \sig{幅度调制 / 相位调制} & $|t|\ne$ 常数 / $t=\ee^{i\phi}$ & \gp{sec:p-screen}{sec:screens}\\
+主点、节点 & & $\to$ 见\textbf{基点} & & \\
+子午面 & 几 & 包含光轴的那个平面（画光路图的纸面） &  & \gp{sec:p-geom}{sec:abbesine}\\
+自相关 & & $\to$ 见\textbf{相关} & & \\
+纵向放大率（轴向放大率） & 几 & 物沿光轴挪 $\Delta$，像沿光轴挪 $M^2\Delta$ & $\alpha=\beta^2$ & \gp{sec:p-geom}{sec:4foffset}\\
+\end{longtable}}

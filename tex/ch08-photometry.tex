@@ -1,0 +1,179 @@
+\chapter{光度学与色度学（速查，不定量考）}\label{ch:photo}
+
+\begin{idea}[这一章为什么在]
+老师说光度色度“不会定量考察”，但 2024 年的小测把\textbf{朗伯体光通量}、\textbf{阿贝正弦条件}、\textbf{亮度守恒}与傅里叶光学的缩放定理放在一起考，选择题考了单位、gamma、色彩空间。
+本章按题型写：每类给推导、可抄的答卷、变式和数值例。小测的完整答卷在第 \pageref{sec:quiz2024} 页。
+\end{idea}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{光度学量与单位}\label{sec:photounits}
+\begin{idea}[四个量怎么区分]
+想象一盏灯：\textbf{光通量} $\Phi$ 是它每秒发出的“光的总量”（lm）；\textbf{发光强度} $I$ 是某个方向上每单位立体角的光通量（cd），描述“点光源朝这边有多亮”；
+\textbf{照度} $E$ 是落在接收面上每单位面积的光通量（lx），描述“桌面被照得多亮”；\textbf{亮度} $L$ 是发光面每单位\textbf{投影}面积、每单位立体角的光通量（nit），描述“眼睛看这个面有多亮”。
+眼睛和相机感受的是亮度；亮度经过无损光学系统不会增加（§\ref{sec:luminance}）。
+\end{idea}
+
+\begin{formula}{光度学量}\ix{光通量}\ix{发光强度}\ix{照度}\ix{亮度}\ix{nit}
+\par\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}llll@{}}
+\toprule
+量 & 定义 & 单位 & 辐射学对应\\ \midrule
+光通量 $\Phi$ & $683\int V(\lambda)\Phi_e(\lambda)\dd\lambda$ & lm & W\\
+发光强度 $I$ & $\dd\Phi/\dd\Omega$ & cd = lm/sr & W/sr\\
+照度 $E$ & $\dd\Phi/\dd S$（接收面）& lx = lm/m$^2$ & W/m$^2$\\
+亮度 $L$ & $\dfrac{\dd^2\Phi}{\dd S\cos\theta\,\dd\Omega}$ & cd/m$^2$ = nit & W/(m$^2\cdot$sr)\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+$V(\lambda)$：明视觉光谱光视效率，555 nm 处为 1，此处 683 lm/W。典型亮度：手机 200–400 nit（HDR 可上千），SDR 电视 100 nit，晴天室外约 $10^4$ nit，太阳约 $1.6\times10^9$ nit。
+\end{formula}
+
+\begin{formula}{常用关系}\ix{距离平方反比}
+\begin{itemize}
+\item 点光源照度（距离平方反比 + 余弦）：$E=\dfrac{I\cos\theta}{r^2}$，$\theta$ 是光线与接收面法线的夹角。
+\item 各向同性点光源（$I$ 与方向无关）：总光通量 $\Phi=4\pi I$；半角 $U$ 锥内 $\Phi=2\pi I(1-\cos U)$。
+\item 亮度 $L$ 的面元 $\dd S$ 在 $\theta$ 方向的强度 $\dd I=L\dd S\cos\theta$（投影面积 $\dd S\cos\theta$）。
+\item 立体角：半角 $U$ 的圆锥 $\Omega=2\pi(1-\cos U)\approx\pi U^2$（小角）；全空间 $4\pi$ sr，半空间 $2\pi$ sr。
+\end{itemize}
+\end{formula}
+
+\begin{exam}{数值例：单位换算}
+(1) 100 cd 的点光源正下方 2 m 处桌面：$E=\frac{100}{2^2}=25$ lx；偏离 $60^\circ$ 方向、同样距离 2 m：$E=\frac{100\cos60^\circ}{4}=12.5$ lx。\\
+(2) 亮度 300 nit、面积 $0.01$ m$^2$ 的朗伯屏，法向强度 $I_0=LS=3$ cd，总光通量 $\pi LS=9.4$ lm。\\
+(3) 小测选择 5：问“亮度”，单位必须是 nit（cd/m$^2$），cd 是强度单位，排除 C、D；晴天室外约 $10^4$ nit，选 A。
+\end{exam}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{朗伯体的光通量}\label{sec:lambert}
+\textbf{【题型】}“朗伯辐射体（面元 $\dd S$、亮度 $L$）向半角 $U$ 的光锥内发出的光通量是多少 / 占总光通量的比例？”（2024 小测选择 2、计算 1）
+
+\begin{formula}{朗伯辐射体的光通量（2024 小测选择 2、计算 1）}\ix{朗伯体}
+朗伯体：亮度 $L$ 与方向无关，$I(\theta)=I_0\cos\theta$。面元 $\dd S$ 向半角 $U$ 的圆锥内发出：
+\[
+\Phi=\int_0^U L\,\dd S\cos\theta\cdot2\pi\sin\theta\dd\theta=\pi L\,\dd S\sin^2U
+\]
+占总光通量（$U=90^\circ$ 时 $\pi L\dd S$）的比例 $=\sin^2U$（选 B）。像方同理：$\Phi'=\pi L'\dd S'\sin^2U'$。
+\end{formula}
+
+\begin{recipe}{求某个光锥内的光通量（逐步推导，可抄）}
+\begin{enumerate}
+\item 写出 $\theta$ 方向的强度：朗伯体 $\dd I(\theta)=L\dd S\cos\theta$（依据：亮度定义中的投影面积 $\dd S\cos\theta$）。
+\item 取 $\theta\sim\theta+\dd\theta$ 的环带，立体角 $\dd\Omega=2\pi\sin\theta\dd\theta$（依据：球面上环带面积 $2\pi r\sin\theta\cdot r\dd\theta$ 除以 $r^2$）。
+\item 积分：$\Phi=\displaystyle\int_0^U L\dd S\cos\theta\cdot2\pi\sin\theta\dd\theta$。令 $t=\sin\theta$，$\dd t=\cos\theta\dd\theta$：$=2\pi L\dd S\displaystyle\int_0^{\sin U}t\dd t=\pi L\dd S\sin^2U$。
+\item 比例：除以 $U=\frac\pi2$ 的总量 $\pi L\dd S$，得 $\sin^2U$。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[变式]
+\begin{itemize}
+\item \textbf{环带}（$U_1$ 到 $U_2$）：$\Phi=\pi L\dd S(\sin^2U_2-\sin^2U_1)$。
+\item \textbf{各向同性点光源}（不是朗伯体）：$I$ 为常数，$\Phi=\int_0^U I\cdot2\pi\sin\theta\dd\theta=2\pi I(1-\cos U)$，比例 $\frac{1-\cos U}{2}$（对全空间 $4\pi I$）。选择题若说“朗伯”就选 $\sin^2$。
+\item \textbf{用数值孔径表示}：$n\sin U=\mathrm{NA}$，$\Phi=\pi L\dd S\,\frac{\mathrm{NA}^2}{n^2}$。
+\item \textbf{数值}：$U=30^\circ$：$\sin^2U=0.25$，只有 1/4 的光进入；$U=60^\circ$：0.75。（若是各向同性点光源，$U=30^\circ$ 只有 $\frac{1-0.866}{2}=6.7\%$，对全空间计。）
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{阿贝正弦条件（傅里叶证法）}\label{sec:abbesine}
+\textbf{【题型】}“证明小视场、大孔径的无像差系统满足 $\dfrac{n\sin U}{n'\sin U'}=M$。可按：2.1 写出孔径角对应的空间频率；2.2 由缩放性质求频率域放大率；2.3 证明。”（2024 小测计算 2）
+
+\begin{idea}[一句话]
+孔径角 $U$ 的光就是空间频率 $\frac{n\sin U}{\lambda_0}$ 的平面波；成像把物放大 $M$ 倍，频谱就缩小 $M$ 倍；孔径边缘（最高频率）也必须照这个比例对应，于是 $n'\sin U'=\frac{n\sin U}{M}$。
+\end{idea}
+
+\begin{formula}{阿贝正弦条件：傅里叶证法（2024 小测计算 2）}\ix{阿贝正弦条件}\ix{亮度守恒}
+\textbf{2.1} 介质折射率 $n$ 中波长 $\lambda_0/n$，孔径角 $U$ 的平面波在横向的空间频率：
+$f_x=\dfrac{n\sin U}{\lambda_0}$；像方 $f_x'=\dfrac{n'\sin U'}{\lambda_0}$。
+
+\textbf{2.2} 缩放定理：$\F\{g(x/M)\}=|M|G(Mu)$，空域放大 $M$ 倍 $\Rightarrow$ 频域缩小 $M$ 倍，$f_x'=f_x/M$。
+
+\textbf{2.3} 孔径边缘是系统能传递的最高频率，物方的它必须对应像方的它（大孔径、小视场、无像差都要求每个频率一一对应），所以
+\[
+\frac{n'\sin U'}{\lambda_0}=\frac{1}{M}\cdot\frac{n\sin U}{\lambda_0}\quad\Longrightarrow\quad\boxed{\frac{n\sin U}{n'\sin U'}=M}
+\]
+\textbf{3（亮度守恒）}：无损 $\Phi=\Phi'$，面积比 $\dd S'/\dd S=M^2$：
+\[
+L\dd S\sin^2U=L'\dd S'\sin^2U'\ \Rightarrow\ L'=L\cdot\frac{\sin^2U}{M^2\sin^2U'}=L\cdot\frac{n'^2}{n^2}
+\]
+即 $\dfrac{L}{n^2}=\dfrac{L'}{n'^2}$，与放大率无关；$n=n'$ 时像亮度等于物亮度。（所以放大镜不能让物体“更亮”。）
+\end{formula}
+
+\begin{recipe}{2.1 为什么 $f_x=\frac{n\sin U}{\lambda_0}$（不会时这样推）}
+\begin{enumerate}
+\item 介质中波长 $\lambda=\lambda_0/n$，波矢大小 $|\bm k|=\frac{2\pi}{\lambda}=\frac{2\pi n}{\lambda_0}$。
+\item 与光轴夹角 $U$ 的平面波 $\exp[i|\bm k|(x\sin U+z\cos U)]$，在 $z=$ 常数的面上是 $\exp[i2\pi\frac{n\sin U}{\lambda_0}x]$。
+\item 对照 $\exp[i2\pi f_xx]$（第 \ref{ch:wave} 章空间频率定义），得 $f_x=\frac{n\sin U}{\lambda_0}$。同理像方 $f_x'=\frac{n'\sin U'}{\lambda_0}$。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[变式与易错]
+\begin{itemize}
+\item \textbf{傍轴形式}：$\sin U\approx u$，得 $nuy=n'u'y'$（拉格朗日-亥姆霍兹不变量），正弦条件是它在大孔径下的推广。
+\item \textbf{显微物镜数例}：$M=-40$，物方 $\mathrm{NA}=n\sin U=0.65$，像方空气：$|\sin U'|=\frac{0.65}{40}=0.0163$，像方孔径角约 $0.93^\circ$——像方几乎是傍轴的。
+\item \textbf{只问 2.2 的“频率域放大率”}：答 $\frac1M$（空间放大 $M$，频率缩小 $M$）。
+\item \textbf{为什么“小视场”}：证明用到成像是平移不变的缩放（同一个 $M$ 对所有频率），只在视场中心附近成立。
+\item 正负号：$M<0$（倒像）时把 $U'$ 也取带号的角，比值仍为 $M$；只求大小就写 $|M|$。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{亮度守恒与像面照度}\label{sec:luminance}
+\textbf{【题型】}“证明物面与像面亮度相等，或仅差折射率决定的系数，与横向放大率无关。”（2024 小测计算 3）；延伸：“像面照度多大 / 光圈数变化后曝光怎么变。”
+
+\begin{exam}{答卷：亮度守恒（照抄）}
+由朗伯体光通量（§\ref{sec:lambert}）：物方进入入瞳 $\Phi=\pi L\dd S\sin^2U$，像方从出瞳接收 $\Phi'=\pi L'\dd S'\sin^2U'$。\\
+光能无损：$\Phi=\Phi'$。横向放大率 $M$，面积比 $\frac{\dd S'}{\dd S}=M^2$（面积比为长度比的平方）。\\
+由阿贝正弦条件 $\frac{\sin U}{\sin U'}=\frac{Mn'}{n}$。代入：
+\[
+L'=L\cdot\frac{\dd S}{\dd S'}\cdot\frac{\sin^2U}{\sin^2U'}=L\cdot\frac{1}{M^2}\cdot\frac{M^2n'^2}{n^2}=\frac{n'^2}{n^2}L .
+\]
+即 $\frac{L}{n^2}=\frac{L'}{n'^2}$，与 $M$ 无关；$n=n'$ 时 $L'=L$。证毕。
+\end{exam}
+
+\begin{formula}{像面照度与光圈数}\ix{像面照度}\ix{光圈数}
+像面照度 $E'=\dfrac{\dd\Phi'}{\dd S'}=\pi L'\sin^2U'=\pi L\Big(\dfrac{n'}{n}\Big)^2\sin^2U'$。\\
+像方在空气中、物在无穷远附近：$\sin U'\approx\dfrac{D}{2f}=\dfrac{1}{2F/\#}$，
+\[
+E'\approx\frac{\pi L}{4(F/\#)^2}.
+\]
+光圈数每增大 $\sqrt2$ 倍（一档：$F/2\to F/2.8$），像面照度减半。
+\end{formula}
+
+\begin{warn}[变式与常见问法]
+\begin{itemize}
+\item \textbf{放大镜 / 望远镜能让物体“更亮”吗？}不能，像的亮度 $\le$ 物的亮度（有损耗时更小）。它们增大的是视角（像更大），不是亮度。
+\item \textbf{会聚太阳光能点燃纸}：增大的是\textbf{照度}（光通量集中到小面积），不是亮度；焦点处照度 $E'=\pi L_\odot\sin^2U'$，上限是太阳表面亮度。
+\item \textbf{油浸物镜}：物方 $n=1.5$，像方空气 $n'=1$：$L'=L/2.25$（物方亮度按 $n^2$ 计）。
+\item \textbf{数值}：$L=10^4$ nit，$F/2.8$：$E'=\frac{\pi\times10^4}{4\times7.84}\approx1.0\times10^3$ lx。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{色度学要点}\label{sec:color}
+\begin{formula}{色度学要点}\ix{色度坐标}\ix{XYZ}\ix{相关色温}\ix{色彩空间}
+\begin{itemize}
+\item CIE XYZ 三刺激值；色度坐标 $x=\frac{X}{X+Y+Z}$，$y=\frac{Y}{X+Y+Z}$，$z=1-x-y$；$Y$ 即亮度。
+\item 色度坐标相同 $\Rightarrow$ 颜色（色调、饱和度）相同，相关色温相同；亮度、光谱可以不同（同色异谱）（小测选择 4 选 C）。
+\item 设备相关色彩空间：RGB、HSV、CMYK；设备无关：XYZ、$L^*a^*b^*$、$L^*u^*v^*$（小测选择 3 选 A）。
+\item $L^*=116(Y/Y_n)^{1/3}-16$（感知均匀的明度）。
+\end{itemize}
+\end{formula}
+
+\begin{recipe}{色度计算的几种问法}
+\begin{enumerate}
+\item \textbf{给 $X,Y,Z$ 求色度坐标}：$x=\frac{X}{X+Y+Z}$，$y=\frac{Y}{X+Y+Z}$。例：$X=Y=Z$ $\Rightarrow$ $x=y=\frac13$（等能白点 E）；$(X,Y,Z)=(41,21,2)$ $\Rightarrow$ $x=\frac{41}{64}=0.64$，$y=\frac{21}{64}=0.33$（接近 sRGB 红基色）。
+\item \textbf{给 $(x,y,Y)$ 反求}：$X=\frac{x}{y}Y$，$Z=\frac{1-x-y}{y}Y$。
+\item \textbf{两色光混合}：三刺激值相加 $X=X_1+X_2$，\dots；色度坐标不能直接相加。混合色落在两点连线上，按 $X+Y+Z$ 加权（杠杆原理）。
+\item \textbf{明度}：$Y/Y_n=0.18$ $\Rightarrow$ $L^*=116\times0.565-16\approx50$（18\% 灰是感知上的中灰）。
+\item \textbf{gamma / 灰阶换算}见第 \pageref{sec:gamma} 页（小测选择 1：灰阶 128 $\to$ 21.6\%）。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[易混概念]
+\begin{itemize}
+\item \textbf{同色异谱}：光谱不同但 $X,Y,Z$ 相同，看起来颜色一样。色度坐标相同只说明 $X:Y:Z$ 相同，亮度可以不同。
+\item \textbf{设备相关}：同一组 RGB/HSV 数值在不同显示器上颜色不同；XYZ、Lab、Luv 由 CIE 标准观察者定义，与设备无关。
+\item \textbf{相关色温}：与某温度黑体辐射颜色最接近时的温度（K），由色度坐标决定。
+\end{itemize}
+\end{warn}
