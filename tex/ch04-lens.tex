@@ -329,13 +329,13 @@ H(u,v)=T(u,v);
 \item \textbf{非相干照明}的 4f：不是本节内容，OTF = CTF 的归一化自相关（第 5 章）。
 \end{itemize}
 
-\begin{formula}{多级 4f 级联}\ix{4f 系统!级联}
+\begin{formula}{多级 4f 级联 [F3-s80,82]}\ix{4f 系统!级联}
 $N$ 级：$M=\prod_j\left(-\dfrac{f_{2j}}{f_{2j-1}}\right)$。两级时 $M=\dfrac{f_2f_4}{f_1f_3}>0$，正立。
 \[
 \tilde E_{\text{out}}(x,y)=\ee^{i2k(f_1+f_2+f_3+f_4)}\frac{f_1f_3}{f_2f_4}\tilde E\!\left(\frac{f_1f_3}{f_2f_4}x,\frac{f_1f_3}{f_2f_4}y\right)
 \]
-推导：第一级输出（中间像）$\tilde E_2(x)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\tilde E(-\frac{f_1}{f_2}x)$；把 $\tilde E_2$ 当输入再套一次 4f 公式（$f_1\to f_3,f_2\to f_4$）：
-$\tilde E_{\text{out}}(x)=-\ee^{i2k(f_3+f_4)}\frac{f_3}{f_4}\tilde E_2(-\frac{f_3}{f_4}x)$，两个负号相乘为正，自变量 $-\frac{f_1}{f_2}\cdot(-\frac{f_3}{f_4}x)=\frac{f_1f_3}{f_2f_4}x$（一维写法，二维振幅系数同样为 $\frac{f_1f_3}{f_2f_4}$）。完整答案见 2024-4（第 9 章）。
+推导：记二维坐标 $\bm r=(x,y)$。第一级中间像为 $\tilde E_2(\bm r)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\tilde E(-\frac{f_1}{f_2}\bm r)$；把 $\tilde E_2$ 当输入再用一次二维 4f 公式：
+$\tilde E_{\text{out}}(\bm r)=-\ee^{i2k(f_3+f_4)}\frac{f_3}{f_4}\tilde E_2(-\frac{f_3}{f_4}\bm r)$。两个负号相乘为正，振幅系数相乘为 $f_1f_3/(f_2f_4)$，两个坐标均缩放为 $f_1f_3/(f_2f_4)$ 倍。完整答案见 2024-4（第 9 章）。
 \end{formula}
 
 \begin{formula}{频谱面常见操作对照表}\ix{空间滤波}\ix{相衬}\ix{4f 系统!线性相位}
