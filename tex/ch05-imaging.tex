@@ -7,7 +7,7 @@
 \node[box,fill=blue!6] (P) {光瞳 $P(x,y)$\\（含像差 $P\ee^{ikW}$）};
 \node[box,right=of P,fill=green!6] (h) {振幅 PSF $h$\\$=\F\{P\}$ 缩放};
 \node[box,right=of h,fill=orange!8] (I) {强度 PSF $|h|^2$};
-\node[box,below=1.2cm of P,fill=green!6] (Hc) {相干 CTF\\$H_c=P(\lambda z_iu)$};
+\node[box,below=1.2cm of P,fill=green!6] (Hc) {相干 CTF\\$H_c=P(-\lambda z_iu)$};
 \node[box,below=1.2cm of I,fill=orange!8] (O) {OTF $=\F\{|h|^2\}$ 归一化\\$=P$ 的自相关};
 \draw[->] (P)--node[above,font=\scriptsize]{FT} (h);
 \draw[->] (h)--node[above,font=\scriptsize]{$|\cdot|^2$} (I);
@@ -82,9 +82,9 @@ h(x,y)=\frac{1}{\lambda z_i}\dint P(x_1,y_1)\exp\!\left[-i\frac{2\pi}{\lambda z_
 \needspace{8\baselineskip}\section{相干传递函数 CTF}
 \begin{formula}{CTF 与相干截止频率}\ix{相干传递函数}\ix{截止频率!相干}
 \[
-\boxed{H_c(u,v)=P(\lambda z_iu,\ \lambda z_iv)}
+\boxed{H_c(u,v)=P(-\lambda z_iu,\ -\lambda z_iv)}
 \]
-（严格为 $P(-\lambda z_iu,-\lambda z_iv)$，对称光瞳无区别。）光瞳内的点 $(x_1,y_1)$ 对应像面频率 $u=x_1/\lambda z_i$。
+这里略去共同常数因子；复光瞳为偶函数时可去掉负号。光瞳内的点 $(x_1,y_1)$ 对应像面频率 $(u,v)=(-x_1,-y_1)/(\lambda z_i)$ [F3-s24,25]。
 \begin{itemize}
 \item 圆形光瞳直径 $D$：$H_c=\circf\!\left(\dfrac{\rho}{D/2\lambda z_i}\right)$，截止 $\boxed{\rho_c=\dfrac{D}{2\lambda z_i}=\dfrac{\mathrm{NA}'}{\lambda}}$（$\mathrm{NA}'\approx\frac{D}{2z_i}$ 为像方数值孔径）。
 \item 方形光瞳边长 $L$：$u_c=\dfrac{L}{2\lambda z_i}$。
@@ -138,7 +138,7 @@ CTF 在 $\lambda l'\rho\le D/2$ 内为 1，外为 0，故像面截止频率 $\rh
 \item \textbf{给 F 数}（物在远处，$l'\approx f$）：$\rho_{\max}=\frac{D}{2\lambda f}=\frac{1}{2\lambda F/\#}$。
 \item \textbf{问非相干}：截止乘 2（像方 $\frac{D}{\lambda l'}$，物方 $\frac{D}{\lambda l}$），见题型 B。
 \item \textbf{环形光瞳}（内径 $D_1$、外径 $D_2$）：CTF 只让 $\frac{D_1}{2\lambda l'}\le\rho\le\frac{D_2}{2\lambda l'}$ 通过——是带通，低频（除直流外）被挡。
-\item \textbf{有像差}：$\mathrm{CTF}=P\,\ee^{ikW(\lambda l'u,\lambda l'v)}$，模不变、截止不变，只有相位扭曲 [F3-p46]。
+\item \textbf{有像差}：令 $\mathcal P=P\ee^{ikW}$，$\mathrm{CTF}=\mathcal P(-\lambda l'u,-\lambda l'v)$；模不变、截止不变，只有相位扭曲 [F3-s24,46]。
 \end{itemize}
 \end{exam}
 
@@ -161,17 +161,22 @@ $l'=\frac{300\times100}{300-100}=150$ mm，$|M|=0.5$。像方 $\rho_{\max}=\frac
 \end{formula}
 
 \begin{formula}{OTF = 光瞳自相关 的推导（证明题照抄）}\ix{OTF!推导}\ix{自相关}
-[F3-p31, p34] 记 $h_I=|h|^2$ 为强度 PSF，$H_I=\F\{h_I\}$。
+[F3-s24,31,34] 记 $h_I=|h|^2$ 为强度 PSF，$H_I=\F\{h_I\}$；$H_c$ 的共同常数在归一化中约去。令 $q=\lambda l'$，保留 $H_c(u,v)=P(-qu,-qv)$ 的坐标反演：
 \begin{align*}
 \mathcal H(u,v)&=\frac{H_I(u,v)}{H_I(0,0)} &&\text{(以直流归一化，使 $\mathcal H(0,0)=1$)}\\
-H_I&=\F\{h\cdot h^*\}=\F\{h\}\corr\F\{h\}=H_c\corr H_c &&\text{(自相关定理：$\F\{|f|^2\}=F\corr F$)}\\
-&=\iint H_c^*(s,t)\,H_c(s+u,t+v)\dd s\dd t &&\text{(相关的定义)}\\
-&=\iint P^*(\lambda l's,\lambda l't)\,P\big(\lambda l'(s+u),\lambda l'(t+v)\big)\dd s\dd t &&\text{(代入 CTF $=P(\lambda l'\cdot)$)}\\
-&=\frac{1}{(\lambda l')^2}\iint P^*(\xi,\eta)\,P(\xi+\lambda l'u,\eta+\lambda l'v)\dd\xi\dd\eta &&\text{(换元 $\xi=\lambda l's$)}
+&=\frac{(H_c\corr H_c)(u,v)}{(H_c\corr H_c)(0,0)} &&\text{(自相关定理)}\\
+(H_c\corr H_c)(u,v)&=\iint H_c^*(s,t)\,H_c(s+u,t+v)\dd s\dd t &&\text{(相关的定义)}\\
+&=\iint P^*(-qs,-qt)\,P\big(-q(s+u),-q(t+v)\big)\dd s\dd t\\
+&=\frac{1}{q^2}\iint P(\xi,\eta)\,P^*(\xi+qu,\eta+qv)\dd\xi\dd\eta &&\text{($\xi=-q(s+u),\ \eta=-q(t+v)$)}
 \end{align*}
-分母是同一式子在 $u=v=0$ 处的值 $\frac{1}{(\lambda l')^2}\iint|P|^2$，常数 $(\lambda l')^{-2}$ 约掉，得上框公式。
+分母是同一式子在 $u=v=0$ 处的值 $q^{-2}\iint|P|^2$，常数 $q^{-2}$ 约掉，得上框公式。偶对称光瞳可省坐标反演；一般复光瞳按 [F3-s24] 保留。
 \textbf{物理图像}：$P$ 只有 0/1 时被积函数在两个光瞳的重叠区为 1，积分 = 重叠面积，所以 $\mathcal H(u,v)=\dfrac{\text{重叠面积}(\lambda l'u,\lambda l'v)}{\text{光瞳面积}}$。
 \end{formula}
+
+\begin{exam}{符号自检：倾斜光瞳 [F3-s24,31,34]}
+取 $\mathcal P(\xi,\eta)=P_0(\xi,\eta)\ee^{ika\xi}$。由负号傅里叶核，$h(x,y)=h_0(x-az_i,y)$，PSF 沿 $+x$ 移动 $az_i$。
+因此 $\mathcal H(u,v)=\mathcal H_0(u,v)\ee^{-i2\pi az_i u}$。上框的 $\mathcal P(\xi,\eta)\mathcal P^*(\xi+\lambda z_i u,\eta+\lambda z_i v)$ 正好给出这个负号；MTF 不变，PTF 改变。
+\end{exam}
 
 \begin{formula}{常见光瞳的 OTF}\ix{OTF!圆形光瞳}\ix{OTF!方形光瞳}
 \textbf{方形光瞳}（边长 $L$）：$\mathcal H(u,v)=\tri\!\left(\dfrac{u}{2u_0}\right)\tri\!\left(\dfrac{v}{2u_0}\right)$，$2u_0=\dfrac{L}{\lambda z_i}$。沿 $u$ 轴是一个三角形，线性下降到截止。

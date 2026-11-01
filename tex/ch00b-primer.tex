@@ -832,7 +832,7 @@ x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频
  & 相干照明（激光） & 非相干照明（普通光、荧光、屏幕）\\ \midrule
 谁是线性的 & 复振幅 $E$ & 强度 $I$\\
 冲激响应 & 振幅 PSF：$h\propto\F\{P\}$ & 强度 PSF：$|h|^2$\\
-传递函数 & \textbf{CTF}（相干传递函数）$H_c(u)=P(\lambda z_iu)$：\textbf{就是光瞳本身} & \textbf{OTF}（光学传递函数）$=\F\{|h|^2\}$ 归一化 $=$ 光瞳的\textbf{自相关}；\textbf{MTF}（调制传递函数）$=|\text{OTF}|$\\
+传递函数 & \textbf{CTF}（相干传递函数）$H_c(u)=P(-\lambda z_iu)$：\textbf{光瞳的坐标反演与缩放} [F3-s24] & \textbf{OTF}（光学传递函数）$=\F\{|h|^2\}$ 归一化 $=$ 光瞳的\textbf{自相关}；\textbf{MTF}（调制传递函数）$=|\text{OTF}|$\\
 截止频率（像面） & $\dfrac{D}{2\lambda z_i}=\dfrac{\mathrm{NA}'}{\lambda}$ & $\dfrac{D}{\lambda z_i}=\dfrac{2\mathrm{NA}'}{\lambda}$（相干的 2 倍）\\
 曲线形状 & 矩形：截止内全通，外面全丢 & 从 1 逐渐降到 0（一条缝：三角形）\\
 \bottomrule
@@ -1109,7 +1109,7 @@ FFT $\to$ 乘 $H$ $\to$ FFT & 4f 系统 & 倒像，$M=-f_2/f_1$ & \pageref{sec:p
 滤波器 $H(f)$ & 频谱面挡板、相位板 & 坐标 $u=\xi/(\lambda f_1)$ & \pageref{sec:p-lensft}/\pageref{sec:4fctf}\\
 延时 $\ee^{-i2\pi f\tau}$ & 频谱面线性相位 & 输出平移 & \pageref{sec:p-lensft}/\pageref{sec:linphase}\\
 冲激响应 & 点扩散函数 PSF & 相干 $h\propto\F\{P\}$，非相干 $|h|^2$ & \pageref{sec:p-imaging}/\pageref{sec:typeD}\\
-传递函数（相干系统） & CTF & $H_c=P(\lambda z_iu)$，截止 $\frac{\mathrm{NA}}{\lambda}$ & \pageref{sec:p-imaging}/\pageref{sec:typeA}\\
+传递函数（相干系统） & CTF & $H_c=P(-\lambda z_iu)$，截止 $\frac{\mathrm{NA}}{\lambda}$ & \pageref{sec:p-imaging}/\pageref{sec:typeA}\\
 传递函数（非相干系统） & OTF & 光瞳归一化自相关，截止 $\frac{2\mathrm{NA}}{\lambda}$ & \pageref{sec:p-imaging}/\pageref{sec:typeB}\\
 幅频特性 $|H|$ & MTF & $K_{\text{像}}=\mathrm{MTF}\cdot K_{\text{物}}$ & \pageref{sec:p-imaging}/\pageref{sec:typeE}\\
 维纳-辛钦 & OTF = 自相关 & $\F\{|h|^2\}=P\corr P$ & \pageref{sec:p-imaging}/\pageref{sec:mtfproof}\\
