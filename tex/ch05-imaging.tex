@@ -38,7 +38,7 @@ SIM 超分辨（2024-3） & §\ref{sec:sim} & \pageref{sec:sim}\\
 \end{tabular}
 \end{exam}
 
-\needspace{8\baselineskip}\section{成像的波动光学描述}
+\needspace{8\baselineskip}\section{成像的波动光学描述}\label{sec:waveimg}
 \begin{formula}{有限孔径透镜成像（课件结论）}\ix{成像!有限孔径}\ix{点扩散函数}\ix{PSF}
 点物经透镜（光瞳 $P$）成像，像面复振幅：
 \[
@@ -58,7 +58,7 @@ h(x,y)=\frac{1}{\lambda z_i}\dint P(x_1,y_1)\exp\!\left[-i\frac{2\pi}{\lambda z_
 \item 从出瞳传到像面（距离 $l'$）用菲涅耳衍射：积分核里有 $\exp\!\left(+ik\frac{\xi^2+\eta^2}{2l'}\right)$，\textbf{正好和会聚波的二次相位抵消}。
 \item 剩下的就是夫琅禾费形式：$h(x',y')\propto\F\{P\}\big|_{u=x'/\lambda l',\,v=y'/\lambda l'}$，像面前的二次相位因子 $\exp(ik\frac{x'^2+y'^2}{2l'})$ 范围很小可略 [F3-p22]。
 \end{enumerate}
-\textbf{一句话}：透镜把“远场”搬到了像面上，所以像点的形状 = 光瞳形状的夫琅禾费衍射图样。
+\textbf{一句话}：出瞳射出的会聚球面波抵消了传播的二次相位，所以像面是出瞳的傅里叶面，像点的形状 = 光瞳形状的夫琅禾费衍射图样。
 \end{idea}
 
 \begin{formula}{线性空不变成像：卷积关系}\ix{线性空不变系统}\ix{理想像}

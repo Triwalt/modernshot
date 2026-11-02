@@ -265,7 +265,7 @@ $l<f$ & $l'<0$（在左边） & 正立、放大、虚像 & 放大镜（下图）
 {\small 放大镜：$f=2$，$l=1$，$\frac1{l'}=\frac12-1$，$l'=-2$（在左边 2 处），$\beta=-\frac{-2}{1}=+2$。}
 \end{center}
 
-\subsection*{光阑、孔径、入瞳、出瞳}
+\subsection*{光阑、孔径、入瞳、出瞳}\phantomsection\label{sec:p-pupil}
 \begin{itemize}
 \item \textbf{光阑}：光路里任何一个挡光的孔（镜框、光圈、镜筒）。\textbf{孔径}：孔的大小（直径 $D$）。
 \item \textbf{孔径光阑}：这些孔里\textbf{真正限制进光多少}的那一个，相机里就是光圈。
@@ -877,7 +877,7 @@ x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频
 \end{tabular}
 \end{center}
 
-\phead{为什么透镜能做傅里叶变换：替远场扔掉那一项}
+\phead{为什么透镜能做傅里叶变换：替远场扔掉那一项}\phantomsection\label{sec:p-lensftwhy}
 §\ref{sec:p-diff} 的表里，要得到傅里叶变换，必须扔掉只和孔上坐标有关的二次相位 $\frac{k(x_1^2+y_1^2)}{2z}$，代价是 $z\gg a^2/\lambda$，常常要几米甚至更远。透镜用另一种办法去掉这一项：
 \begin{enumerate}
 \item 紧贴透镜放物，透镜乘上 $\exp\!\big(-ik\frac{x_1^2+y_1^2}{2f}\big)$（§\ref{sec:p-screen}，会聚球面波）。
@@ -893,7 +893,7 @@ x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频
 \]
 $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。\textbf{只看强度时 $d_0$ 取多少都行}；要把频谱再送进第二个透镜（4f 系统），相位必须对，所以物放在前焦面。
 
-\phead{成像也是记二次项的账}
+\phead{成像也是记二次项的账}\phantomsection\label{sec:p-imgacct}
 同一套记账也能推出成像公式 [F2-p18–20]。点光源在透镜前 $l$ 处，到透镜时是发散球面波 $+\frac{kx_1^2}{2l}$；透镜加 $-\frac{kx_1^2}{2f}$；出来要是会聚到 $l'$ 的球面波 $-\frac{kx_1^2}{2l'}$。二次项系数相加：
 \[
 \frac1l-\frac1f=-\frac1{l'}\quad\Longleftrightarrow\quad\frac1l+\frac1{l'}=\frac1f
@@ -942,24 +942,24 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 \section{成像系统是线性系统：PSF、CTF、OTF、MTF}\label{sec:p-imaging}
 \proot{根③ 成像 = LTI 系统，光瞳 = 滤波器}
 
+\textbf{讨论的模型}：物面 $\to$ 镜头 $\to$ 像面，镜头的结构图见第 \pageref{sec:p-pupil} 页「光阑、孔径、入瞳、出瞳」小节。镜头里真正限制光束粗细的孔是\textbf{孔径光阑}；从物方隔着它前面的镜片看到的孔径光阑的像是\textbf{入瞳}，从像方隔着它后面的镜片看到的像是\textbf{出瞳}。出瞳是入瞳经整个镜头所成的像，两者共轭：从入瞳进去的光正好从出瞳出来，在一处被挡住的光在另一处也被挡住。所以入瞳和出瞳描述的是同一个限制，只是分别站在物方和像方：物方由入瞳边缘的光锥半角给出 $\mathrm{NA}$，像方由出瞳直径 $D$ 和出瞳到像面的距离 $z_i$ 给出 $\mathrm{NA}'\approx D/(2z_i)$，两者相差横向放大率，$\mathrm{NA}=|M|\,\mathrm{NA}'$。傅里叶光学从像方计算光的传播，起点是出瞳，因此\textbf{光瞳函数} $P(\xi,\eta)$ 定义在出瞳上（透光处为 1、挡光处为 0，有像差时再乘 $\ee^{ikW}$，见 §\ref{sec:p-aberr}），本节说的「光瞳」都指它。单片薄透镜、光阑贴着透镜时，孔径光阑、入瞳、出瞳都是透镜的通光口，$z_i$ 就是像距，往年题都是这种情况。于是镜头可以当作黑盒，只用三个量描述：横向放大率 $M$、光瞳函数 $P$、出瞳到像面的距离 $z_i$。系统的输入是物面上的光（相干照明用复振幅，非相干照明用强度），输出是像面上的光；\textbf{理想像}是物按 $M$ 缩放后的样子（$M<0$ 即倒像）。课件的完整推导见第 \pageref{sec:waveimg} 页「成像的波动光学描述」一节。
+
 \begin{idea}[一句话]
 理想镜头把一个点成像成一个点；真实镜头因为出光口有限大，把点成像成一个小光斑，叫\textbf{点扩散函数 PSF}，就是成像系统的冲激响应。像 = 理想像 $\conv$ PSF；频域里，像的频谱 = 物的频谱 $\times$ 传递函数。
 \end{idea}
 
 \begin{itemize}
 \item \textbf{衍射受限}：没有像差，唯一的限制是光瞳有限大。往年题说“衍射受限系统”就是这个意思。
-\item \textbf{PSF 从哪来}：透镜把“远场”搬到了像面上，所以像点的振幅 = 光瞳的夫琅禾费衍射图样：$h(x,y)\propto\F\{P\}\big|_{u=\frac{x}{\lambda z_i},\,v=\frac{y}{\lambda z_i}}$。圆形光瞳的 PSF 是\textbf{艾里斑}（中心亮斑加一圈圈暗环）。光瞳越大，斑越小（时宽带宽积）。
+\item \textbf{PSF 从哪来}：对一个物点，像面是出瞳的\textbf{傅里叶面}（理由见下面的框），所以像点的振幅 = 光瞳的夫琅禾费衍射图样：$h(x,y)\propto\F\{P\}\big|_{u=\frac{x}{\lambda z_i},\,v=\frac{y}{\lambda z_i}}$。圆形光瞳的 PSF 是\textbf{艾里斑}（中心亮斑加一圈圈暗环）。光瞳越大，斑越小（时宽带宽积）。
 \item \textbf{相干还是非相干}：先判断，判断错整题全错。
 \end{itemize}
 
-\begin{idea}[思路：为什么相干传递函数就是光瞳]
-把像面上的光按频率拆开（§\ref{sec:p-spfreq}）：频率为 $u$ 的那一份，是以 $\sin\theta'=\lambda u$ 斜射到像面上的一束平面波。再看它从哪里来：
-\begin{enumerate}
-\item 出瞳到像面这一段就是 0.6 节的远场（会聚球面波替距离抵消了二次相位，和 0.7 节的透镜一样）。出瞳上离轴 $\xi$ 的一点射到像点附近的光，在像面上是一个固定方向 $\sin\theta'\approx\xi/z_i$，也就是一个固定频率 $\xi/(\lambda z_i)$。
-\item 所以像面上频率 $u$ 的那份光，只能来自出瞳上离轴 $\lambda z_i u$ 的那一点（方向相反，所以严格写有负号，见下）。那一点透光（$P=1$），这份频率就传得过去；被挡住（$P=0$），这份频率就没了。
-\item 于是“频率 $u$ 能传过去多少”等于“光瞳在 $\lambda z_iu$ 处的透过率”：$H_c(u)=P(-\lambda z_iu)$。截止频率就是光瞳边缘对应的频率：$\lambda z_iu_c=\frac D2$。换到物面，频率再乘横向放大率 $|M|$。
-\end{enumerate}
-光瞳越大，越斜的光（越细的细节）也能到达像面，所以分辨率由 NA 决定。
+\begin{idea}[相干传递函数（CTF）]
+关键的前提是：\textbf{对一个物点，像面是出瞳的傅里叶面}。它由 0.7 节的两段合起来得到。第 \pageref{sec:p-imgacct} 页「成像也是记二次项的账」说明，物点发出的光经过镜头，在出瞳上是会聚到像点的球面波，带二次相位 $\ee^{-ik\xi^2/(2z_i)}$；第 \pageref{sec:p-lensftwhy} 页「为什么透镜能做傅里叶变换」说明，这样的二次相位正好抵消从出瞳传播 $z_i$ 带出的 $\ee^{+ik\xi^2/(2z_i)}$，观察面上就是傅里叶变换。也就是说，出瞳上的会聚波相当于一片焦距为 $z_i$ 的透镜，像面就是它的后焦面，即等效的远场。所以振幅 PSF 是光瞳函数的傅里叶变换：$h(x)\propto\F\{P\}\big|_{u=x/(\lambda z_i)}$。
+
+有了这个前提，CTF 用两次傅里叶变换就能得到。CTF 是成像系统的传递函数，按定义是冲激响应（振幅 PSF）的傅里叶变换：像 $=$ 理想像 $\conv h$，由卷积定理，像的频谱 $=$ 理想像的频谱 $\times\,\F\{h\}$。于是 $H_c=\F\{h\}=\F\F\{P\}$，两次正变换等于坐标反演：
+\[H_c(u)=P(-\lambda z_iu).\]
+第一次变换是光从出瞳传播到像面，第二次只是把像面上的 $h$ 按频率分解，两者意义不同（见下表）。结果是：出瞳上的位置 $\xi$ 对应像面频率 $-\xi/(\lambda z_i)$，光瞳透光处对应的频率通过，挡光处对应的频率被滤掉；光瞳边缘 $|\xi|=D/2$ 给出截止频率 $u_c=\frac{D}{2\lambda z_i}=\frac{\mathrm{NA}'}{\lambda}$，换到物面再乘 $|M|$，即 $\frac{\mathrm{NA}}{\lambda}$。
 \end{idea}
 
 \phead{两次傅里叶变换，意义不同 [F3-p23–25]}
@@ -969,7 +969,7 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 \toprule
  & ① 光瞳 $\to$ PSF & ② PSF $\to$ CTF\\ \midrule
 公式 & $h(x')\propto\F\{P\}\big|_{x'/(\lambda z_i)}$ & $H_c(u)=\F\{h\}(u)$\\
-物理过程 & 光从出瞳\textbf{传播}到像面（夫琅禾费，0.6 节） & 没有传播，只是把像面上的信号按频率分解（信号与系统）\\
+物理过程 & 光从出瞳\textbf{传播}到像面（与 0.6 节夫琅禾费衍射同一公式） & 没有传播，只是把像面上的信号按频率分解（信号与系统）\\
 变换后的“频率” & 是\textbf{方向}，乘 $\lambda z_i$ 换成像面上的位置 $x'$ & 就是像面上的空间频率 $u$，单位 mm$^{-1}$\\
 \bottomrule
 \end{tabular}
