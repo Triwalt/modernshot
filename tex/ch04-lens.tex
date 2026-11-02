@@ -190,12 +190,52 @@ $k=\frac{2\pi}{0.55\times10^{-6}}=1.142\times10^{7}$ m$^{-1}$，$a=-\beta$，$F=
 （常数相位 $\ee^{i2kf}$ 是从屏到焦面的总光程 $2f$ 带来的，可略。）
 \end{exam}
 
+\begin{exam}{答题模板：衍射屏在透镜前或透镜后}\label{ex:screenpos}
+先看屏在透镜的哪一侧，再决定频率坐标和二次相位。观察面都是后焦面，照明在正面是平面波，在反面是会聚到后焦点的球面波。
+
+\textbf{正面：屏在透镜前}，屏到透镜的距离为 $d_0$。
+\[
+\tilde E(x,y)=\frac{\ee^{ikf}}{i\lambda f}\exp\!\left[\frac{ik}{2f}\left(1-\frac{d_0}{f}\right)(x^2+y^2)\right]T\!\left(\frac{x}{\lambda f},\frac{y}{\lambda f}\right).
+\]
+\begin{itemize}
+\item 频率始终是 $u=x/(\lambda f)$。同一块屏的亮点位置\textbf{不随 $d_0$ 改变}。
+\item $d_0=f$（前焦面）：括号为 0，二次相位消失，这是精确傅里叶变换。
+\item $d_0=0$（紧贴透镜入射面）：剩下 $\exp\!\big(ik(x^2+y^2)/(2f)\big)$。
+\item $d_0$ 为其他值：只改这个二次相位的系数。$d_0>f$ 时括号为负。
+\item 二次相位的模是 1，所以焦面\textbf{强度与 $d_0$ 无关}：$I=\dfrac{1}{\lambda^2f^2}\left|T(x/\lambda f,\,y/\lambda f)\right|^2$。
+\end{itemize}
+
+\textbf{反面：屏在透镜后}，放在后焦面之前，屏到后焦面的距离为 $d$（屏到透镜则是 $f-d$）。
+\[
+\tilde E(x,y)=\frac{\ee^{ikd}}{i\lambda d}\cdot\frac{f}{d}\exp\!\left(ik\frac{x^2+y^2}{2d}\right)T\!\left(\frac{x}{\lambda d},\frac{y}{\lambda d}\right).
+\]
+\begin{itemize}
+\item 频率改成 $u=x/(\lambda d)$。空间频率 $u_0$ 的亮点在 $x=\lambda du_0$，比放在透镜前近，比例是 $d/f$。屏越靠近后焦面，$d$ 越小，图样缩得越小。
+\item 振幅多一个 $f/d$。$d=f$ 时屏紧贴透镜出射面，这一式和正面 $d_0=0$ 重合。
+\item 二次相位 $\exp\!\big(ik(x^2+y^2)/(2d)\big)$ 还在，问复振幅时要写；问强度时取模后消失。
+\end{itemize}
+\end{exam}
+
+\begin{exam}{数值例：同一块光栅，正面和反面亮点不一样}
+$t=\frac12+\frac12\cos(2\pi u_0 x_1)$，$u_0=10$ mm$^{-1}$，$f=200$ mm，$\lambda=0.5\,\mu$m。$\pm1$ 级的频谱在 $u=\pm u_0$。
+
+正面，不论 $d_0$ 是 $0$、$f$ 还是别的数：亮点都在
+\[
+x=\lambda fu_0=5\times10^{-4}\times200\times10=1\text{ mm}.
+\]
+$d_0=f$ 时该点没有额外二次相位。$d_0=0$ 时该点的二次相位路程为 $x^2/(2f)=0.0025$ mm $=5\lambda$。$d_0=f/2=100$ mm 时系数剩一半，路程 $2.5\lambda$。三处的强度分布相同。
+
+反面，屏距后焦面 $d=100$ mm（在透镜后 $100$ mm）：同一对亮点移到
+\[
+x=\lambda du_0=5\times10^{-4}\times100\times10=0.5\text{ mm},
+\]
+振幅再乘 $f/d=2$。图样按 $d/f=1/2$ 缩小，形状仍由 $T(u)$ 决定。
+\end{exam}
+
 \textbf{【适配/变式】}
 \begin{itemize}
-\item \textbf{物不在前焦面（$d_0\neq f$）}：复振幅多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$；\textbf{强度不变}。问强度时直接说“二次相位因子取模后为 1”。
-\item \textbf{斜入射平面波照明} $\ee^{i2\pi u_0x_1}$：$\tilde E_1=t\,\ee^{i2\pi u_0x_1}$，由调制定理频谱变为 $T(u-u_0,v)$，焦面图样\textbf{整体平移} $\lambda fu_0=f\cos\alpha$（$\approx f\sin\theta$）。
+\item \textbf{斜入射平面波照明} $\ee^{i2\pi u_0x_1}$：$\tilde E_1=t\,\ee^{i2\pi u_0x_1}$，由调制定理频谱变为 $T(u-u_0,v)$，焦面图样\textbf{整体平移} $\lambda fu_0=f\cos\alpha$（$\approx f\sin\theta$）。屏在反面时，平移量用该处的频率坐标，$x=\lambda d u_0$。
 \item \textbf{屏平移} $t(x_1-a)$：频谱乘 $\ee^{-i2\pi ua}$，只是相位变化，\textbf{焦面强度不动}（夫琅禾费图样平移不变）。
-\item \textbf{屏在透镜后}（距后焦面 $d$）：把 $\lambda f$ 全换成 $\lambda d$，多乘 $\frac fd$ 和二次相位 $\exp(ik\frac{x^2+y^2}{2d})$。
 \item \textbf{点源（球面波）照明}：在点源的像面观察，频率坐标仍是 $x/\lambda f$。
 \item \textbf{有限口径透镜}：只要口径足够大不挡住要用的频谱即可忽略；否则高于 $\frac{D/2}{\lambda f}$ 的频率被截掉（见 §\ref{sec:4fctf} 低通）。
 \end{itemize}

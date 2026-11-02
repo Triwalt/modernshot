@@ -10,10 +10,11 @@
 
 \begin{idea}[本章题型一览]
 \begin{tabular}{@{}P{6.6cm}P{8.6cm}@{}}
-求单缝、矩孔、圆孔的衍射图样 & 题型 1、5（§\ref{sec:ftexamples}）\\
-多缝、阵列、偏心孔的频谱 & 题型 2\\
+求单缝、矩孔、方孔、圆孔的衍射图样 & 题型 1、5（§\ref{sec:ftexamples}）\\
+多缝、阵列、两个光孔的频谱 & 题型 2、6\\
 余弦光栅、两片光栅叠合、光栅乘物 & 题型 3\\
-黑白（矩形）光栅的各级强度、缺级 & 题型 4\\
+黑白光栅、方波、三角波的傅里叶系数 & 题型 4、7\\
+矢量点乘求 OP、写出球面波 & 题型 8、9\\
 卷积 / 相关怎么算、怎么画 & §\ref{sec:convcalc}\\
 “证明”某个傅里叶性质 & §\ref{sec:ftproofs}\\
 采样、混叠、像素、DFT 尺度 & §\ref{sec:sampling}
@@ -329,6 +330,7 @@ I(x,y)=\frac{1}{\lambda^2f^2}|T|^2=\frac{a^2b^2}{\lambda^2f^2}\sinc^2\!\left(\fr
 \item \textbf{问角度}：$\sin\theta_x=\lambda u$，第一零点 $\sin\theta=\lambda/a$。
 \item \textbf{孔不在中心}（中心在 $(x_0,y_0)$）：$T$ 多乘 $\ee^{-i2\pi(ux_0+vy_0)}$，\textbf{强度不变}（图样不随孔平移）。
 \item \textbf{斜入射}（照明 $\ee^{i2\pi u_0x_1}$，$u_0=\sin\theta_0/\lambda$）：$T(u-u_0,v)$，整个图样中心移到 $x=\lambda fu_0$。
+\item \textbf{方孔}：令 $a=b$。频谱 $a^2\sinc(au)\sinc(av)$，两个方向的第一零点都在 $\lambda f/a$。例：$a=0.2$ mm，$\lambda=0.5\,\mu$m，$f=200$ mm，第一零点 $\frac{5\times10^{-4}\times200}{0.2}=0.5$ mm，中央亮斑是边长 $1$ mm 的正方形。
 \item \textbf{一维狭缝}：只保留 $x$ 方向，$I\propto a^2\sinc^2(ax/\lambda f)$。
 \item \textbf{孔里有透过率 $\tau<1$ 或相位板 $\ee^{i\phi}$}：$T$ 乘 $\tau$ 或 $\ee^{i\phi}$，强度乘 $\tau^2$ 或不变。
 \end{enumerate}
@@ -493,6 +495,106 @@ $T(\rho)=\frac{\pi D^2}{4}\cdot\frac{2J_1(\pi D\rho)}{\pi D\rho}$，$\rho=\frac{
 \item 圆孔用直径 $D$ 还是半径 $a$：$1.22\lambda/D=0.61\lambda/a$。
 \end{itemize}
 \end{warn}
+
+\cOneQtype{题型 6：两个相同的光孔}\ix{双孔衍射}
+
+\begin{exam}{答题模板：两个边长 $a$ 的方孔，中心在 $x=\pm d/2$，平面波正入射}
+\textbf{第 1 步 拆开}：一个方孔再平移到两处，
+\[
+t(x,y)=\rect\!\left(\frac xa\right)\rect\!\left(\frac ya\right)\conv\left[\delta\!\left(x-\frac d2\right)+\delta\!\left(x+\frac d2\right)\right].
+\]
+依据：与 $\delta$ 卷积是平移。两个圆孔把方孔换成 $\circf(r_1/(D/2))$，后面的干涉因子不变。
+
+\textbf{第 2 步 查表}：方孔的频谱是 $a^2\sinc(au)\sinc(av)$；两个 $\delta$ 的频谱是 $2\cos(\pi du)$。卷积变乘积：
+\[
+T(u,v)=a^2\sinc(au)\sinc(av)\cdot 2\cos(\pi du).
+\]
+\textbf{第 3 步 强度}：线性相位在取模时消失，
+\[
+I\propto|T|^2=4a^4\sinc^2(au)\sinc^2(av)\cos^2(\pi du),\qquad u=\frac{x}{\lambda f}.
+\]
+单孔决定包络，两孔的间距决定包络里的条纹。条纹间距 $\lambda f/d$；包络第一零点 $\lambda f/a$。$d/a$ 为整数时，第 $\pm d/a,\pm 2d/a,\dots$ 级缺级，算法和双缝相同。
+\end{exam}
+
+\begin{exam}{数值例}
+$a=0.1$ mm，$d=0.4$ mm，$\lambda=0.5\,\mu$m，$f=200$ mm。
+条纹间距 $\dfrac{\lambda f}{d}=\dfrac{5\times10^{-4}\times200}{0.4}=0.25$ mm；方孔包络第一零点 $\dfrac{\lambda f}{a}=1$ mm。$d/a=4$，第 $\pm4$ 级落在包络零点上，缺级。中央包络内有 $m=0,\pm1,\pm2,\pm3$ 共 7 个主极大。
+\end{exam}
+
+\cOneQtype{题型 7：方波、三角波这类简单周期函数}\ix{方波}\ix{三角波}
+
+\begin{exam}{答题模板：由定义求一个周期内为 0/1 的方波}
+周期 $d$，一个周期内 $f(x)=1$（$|x|<d/4$），其余为 0。这就是占空比 $1/2$ 的矩形光栅，系数仍是
+\[
+c_n=\frac1d\int_{-d/4}^{d/4}\ee^{-i2\pi nx/d}\dd x=\frac12\sinc\frac n2.
+\]
+$c_0=\frac12$，$c_{\pm1}=\frac1\pi$，$c_{\pm2}=0$，$c_{\pm3}=-\frac1{3\pi}$。偶次项除直流外都是 0，因为 $\sinc$（整数）$=0$。
+
+光学题里把它乘上有限孔径 $\rect(x/L)$，各级就从 $\delta$ 变成宽 $1/L$ 的 sinc 斑，位置 $u=n/d$，强度比 $c_n^2$。完整读图用题型 4。
+\end{exam}
+
+\begin{exam}{三角波：同一个算法，单元换成 $\tri$}
+一个周期内 $f(x)=\tri(2x/d)$（中心为 1，周期两端为 0）。单周期的变换是 $\frac d2\sinc^2(du/2)$，周期采样后
+\[
+c_n=\frac12\sinc^2\frac n2.
+\]
+$c_0=\frac12$，$c_{\pm1}=\frac{2}{\pi^2}$，$c_{\pm2}=0$，$c_{\pm3}=\frac{2}{9\pi^2}$。偶次同样缺失，但高级次比方波掉得更快（$\sinc^2$ 而不是 $\sinc$）。
+
+高斯 $\ee^{-\pi x^2}$、线性相位 $\ee^{i2\pi u_0x}$、二次相位 $\ee^{i\pi ax^2}$ 不再做积分，直接查变换对表。题目说“常规函数”时，先认它是 rect、tri、cos、$\delta$ 里的哪一个，再套缩放。
+\end{exam}
+
+\needspace{8\baselineskip}\section{写光场时先算的两个量}\label{sec:opwave}
+
+\begin{idea}[这两题算的是相位，还不是衍射图样]
+课件把平面波写成 $E=A\cos(kz'-\omega t)$，再写成 $A\cos(\bm k\cdot\bm r-\omega t)$。中间那一步就是用点乘求出传播距离 $z'$。球面波则先写 $A/r\,\ee^{ikr}$，傍轴后再留下二次相位。后面的傅里叶变换都从这两个复振幅出发。
+\end{idea}
+
+\cOneQtype{题型 8：矢量点乘求 OP}\ix{平面波!OP}
+
+\begin{exam}{答题模板：已知点的坐标和传播方向，求 OP 和该点的复振幅}
+波沿单位矢量 $\bm k_0$ 传播。原点 $O$ 处的波面与传播轴相交；过观察点 $Q$ 的波面再交传播轴于 $P$。平面波在同一波面上相位相同，所以 $Q$ 与 $P$ 的相位一样。$OP$ 是位矢 $\bm r=\overrightarrow{OQ}$ 在传播方向上的投影：
+\[
+\boxed{OP=z'=\bm r\cdot\bm k_0=x\cos\alpha+y\cos\beta+z\cos\gamma}.
+\]
+因此 $E_Q=E_P=A\cos(kz'-\omega t)=A\cos(\bm k\cdot\bm r-\omega t)$，$\bm k=k\bm k_0$。某一时刻各点的 $\ee^{-i\omega t}$ 相同，复振幅只留空间部分 $\tilde E=A\exp(i\bm k\cdot\bm r)$。
+
+在固定平面 $z=z_0$ 上，$z_0\cos\gamma$ 是常数相位。剩下的横向相位决定空间频率：$u=\cos\alpha/\lambda$，$v=\cos\beta/\lambda$。传播方向在 $xz$ 面内、与 $z$ 轴夹角为 $\theta$ 时，$\cos\alpha=\sin\theta$，$u=\sin\theta/\lambda$。
+\end{exam}
+
+\begin{exam}{数值例}
+$\theta=30^\circ$（$xz$ 面内），$Q=(1,0,2)$ mm，$\lambda=0.5\,\mu$m。
+\[
+OP=1\cdot\sin30^\circ+2\cdot\cos30^\circ=0.5+\sqrt3=2.232\text{ mm}.
+\]
+在 $z=2$ mm 的平面上，$u=\sin30^\circ/\lambda=0.5/(5\times10^{-4})=1000$ mm$^{-1}$，
+$\tilde E(x)=A\exp(i2\pi\cdot1000\,x)$（$x$ 用 mm）。沿 $x$ 每移动 $1\,\mu$m，相位走一圈。
+\end{exam}
+
+\cOneQtype{题型 9：球面波表达式}\ix{球面波!表达式}
+
+\begin{exam}{答题模板：点源到平面上一点，先写精确式，再写傍轴式}
+点源在原点，观察点到源的距离 $r=\sqrt{x^2+y^2+z^2}$。精确的标量球面波是
+\[
+E=\frac{A}{r}\exp(ikr).
+\]
+$A/r$ 是振幅，$kr$ 是走过的相位。接收面在 $z$ 处、横向范围远小于 $z$ 时，
+\[
+r=z\sqrt{1+\frac{x^2+y^2}{z^2}}\approx z+\frac{x^2+y^2}{2z},
+\]
+振幅里的 $r$ 换成 $z$，相位保留这一级：
+\[
+\tilde E(x,y)\approx\frac{A}{z}\exp(ikz)\exp\!\left(ik\frac{x^2+y^2}{2z}\right).
+\]
+正号表示发散，好像从后方距离 $z$ 的点发出。会聚到前方 $R$ 则把 $z$ 换成 $R$ 并改成负号。
+
+这块二次相位会进透镜后焦面，而且取决于衍射屏在透镜的哪一侧。屏在透镜前、距离 $d_0$ 时，后焦面多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$，$d_0=f$ 时括号为 0；亮点位置仍是 $x=\lambda fu$，强度与 $d_0$ 无关。屏改到透镜后、距后焦面 $d$ 时，频率坐标改成 $x/(\lambda d)$，同一频率的亮点按 $d/f$ 向光轴靠拢，并多一个振幅因子 $f/d$。两种位置的代入模板在第 \pageref{ex:screenpos} 页。
+\end{exam}
+
+\begin{exam}{数值例}
+$z=100$ mm，平面上的点 $(x,y)=(2,0)$ mm，$\lambda=0.5\,\mu$m。
+傍轴多走的路程 $\dfrac{x^2}{2z}=\dfrac{4}{200}=0.02$ mm $=40\lambda$，对应相位 $k\cdot0.02\text{ mm}=80\pi$。
+精确距离 $r=\sqrt{100^2+2^2}=100.019998$ mm，比傍轴的 $100.02$ mm 只少 $0.002\,\mu$m。振幅比中心小 $r/z-1\approx2\times10^{-4}$，傍轴时可以当成不变。
+\end{exam}
 
 \needspace{8\baselineskip}\section{采样与 comb 函数}\label{sec:sampling}
 \begin{formula}{采样定理}\ix{采样定理}\ix{奈奎斯特}
