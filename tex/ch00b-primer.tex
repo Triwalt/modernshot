@@ -12,6 +12,7 @@
 
 \begin{idea}[这一章写给谁、怎么读]
 写给\textbf{学过信号与系统、没学过光学}的读者。读完它，后面各章和往年题题干里的词都能认出来。
+如果也没学过信号与系统，先抓住三个问题：光到每个位置时有多强、相位如何？一个点经过系统后变成什么？许多点的贡献怎样相加？下面会从这些问题出发，逐步连接卷积、频谱和传递函数。
 \begin{itemize}
 \item 顺着读一遍约 1 小时。每节同一个顺序：\textbf{一句话} $\to$ \textbf{图} $\to$ \textbf{类比} $\to$ \textbf{最少的公式} $\to$ \textbf{它在考题里长什么样} $\to$ \textbf{详细内容见第几页}。
 \item 累了就只看每节的【直觉】框（虚线框，标题前有灯泡 \icoI）和图，也能抓住大意。
@@ -447,14 +448,32 @@ E(x,y)=A\,\ee^{i2\pi ux},\qquad u=\frac{\sin\theta}{\lambda}\quad(\text{单位�
 \]
 lp/mm 读作“线对每毫米”，一黑一白算一对。二维时 $E=A\ee^{i2\pi(ux+vy)}$，$u,v$ 分别由光在 $x$、$y$ 方向的倾斜决定。
 \item 数例：$\lambda=0.5\,\mu$m，$\theta=30^\circ$：$u=\frac{0.5}{5\times10^{-4}\text{ mm}}=1000$ mm$^{-1}$，条纹周期 1 $\mu$m。
-\item 上限：$\theta$ 最大 $90^\circ$，所以能传出去的空间频率最多 $1/\lambda$（介质中 $n/\lambda$）。比这更细的细节根本传不走，这是“分辨率有极限”最根本的原因。
+\item 上限：这里的 $\lambda$ 是介质中的波长，传播平面波满足 $u^2+v^2\le1/\lambda^2$；超出的是随距离衰减的倏逝成分。若改用真空波长 $\lambda_0$，则 $\lambda=\lambda_0/n$。实际镜头只收集其中一部分方向；成像截止还要区分复振幅与强度，见 §\ref{sec:p-imaging}。
 \end{itemize}
 
+\begin{idea}[为什么是 $\sin\theta$：横着移动，沿传播方向前进多少]
+$\theta$ 从光轴 $z$ 量起，观察面上的位移沿横向 $x$。两点相隔 $\Delta x$，这段位移在传播方向上的投影为
+\[
+\Delta s=\Delta x\cos(90^\circ-\theta)=\Delta x\sin\theta.
+\]
+波面垂直于传播方向；只有这个投影会让我们跨过波面。沿传播方向相隔一个波长，相位相差 $2\pi$，所以
+\[
+\Delta\varphi=\frac{2\pi}{\lambda}\Delta x\sin\theta
+=2\pi u\Delta x
+\quad\Rightarrow\quad u=\frac{\sin\theta}{\lambda}.
+\]
+这是比较同一时刻两个位置的相位，\textbf{不是光从一个观察点横着走到另一个点}。$\theta=0$ 时横着移动不跨波面，$u=0$；$\theta=30^\circ$ 时横移 $2\lambda$ 才投影出一个波长，横向相位周期就是 $2\lambda$。
+
+还要分清\textbf{相位条纹与明暗条纹}：单束斜平面波 $E=A\ee^{i2\pi ux}$ 的相位不断变化，强度 $|E|^2=|A|^2$ 却处处相同。不同方向的相干波叠加后，才可能出现明暗条纹。这里的空间频率表示沿位置变化多快，单位是周期/mm；光的时间频率表示每秒振动多少次，单位是 Hz。
+\end{idea}
+
 \phead{任意光场 = 平面波的叠加 = 傅里叶变换}
+先把「频谱」理解成成分清单：位置表示告诉我们各处的值；频谱表示告诉我们每种周期变化占多少、相位如何。例如 $1+0.6\cos(2\pi\cdot2x)+0.2\cos(2\pi\cdot8x)$（$x$ 用 mm）由背景 1、每毫米 2 个周期和 8 个周期的起伏组成。傅里叶变换就是把合成的分布拆回这些成分；对复振幅作分解时，基本成分换成下面的复指数平面波。
 傅里叶逆变换 $E(x,y)=\dint\hat E(u,v)\,\ee^{i2\pi(ux+vy)}\dd u\dd v$ 在这里有了物理意义：
 平面上任意一个光场，都可以拆成许多\textbf{往不同方向走的平面波}；方向 $(u,v)$ 那一束的振幅和相位，就是频谱 $\hat E(u,v)=\F\{E\}$。
 \textbf{细节越细（变化越快）$\Rightarrow$ 需要的 $u$ 越大 $\Rightarrow$ 那部分光走得越斜}。这是整个傅里叶光学的基石。
 
+\needspace{12\baselineskip}
 \phead{两束光干涉出条纹（2024 期中第 3 题的照明）}
 \begin{center}
 \begin{tikzpicture}[>=Stealth,font=\footnotesize]
@@ -637,7 +656,18 @@ $r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}$ 是孔上一点到屏上一点的距离。根
 \[
 E_{\text{出}}(x,y)=\iint E_{\text{入}}(x_1,y_1)\,h(x-x_1,y-y_1)\dd x_1\dd y_1=E_{\text{入}}\conv h
 \]
-$h$ 就是“一个点光源走了距离 $z$ 以后的样子”，即自由空间的冲激响应。频域里每个平面波分量只多一个相位，传递函数是一个\textbf{全通}滤波器 $H(u,v)=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]$。
+$h$ 是输入平面上一个单位点对输出平面的复振幅响应，即自由空间的冲激响应。卷积就是把这份响应按输入值加权、按输入位置平移，再把贡献相加。换到频域，同一过程变成每个频率乘自己的系数：$\widehat E_{\text{出}}=\widehat E_{\text{入}}H$，其中 $H=\F\{h\}$。
+
+\needspace{16\baselineskip}
+\begin{idea}[全通为什么还会出现衍射图样]
+在均匀、无损介质中，不额外加入孔径截断时，\textbf{菲涅耳近似}下的复振幅传递函数为
+\[
+H(u,v)=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)],\qquad |H|=1.
+\]
+在该模型适用的傍轴频率范围内，每个光场频率成分只改变相位，幅度不变，这就是此处\textbf{全通}的含义。不同成分转过不同的相位，重新叠加时，相长和相消的位置会变化，所以\textbf{频谱幅度不变，空间中的强度分布仍能改变}。
+
+更一般的角谱传递函数是 $H_{\mathrm{AS}}=\exp[ikz\sqrt{1-\lambda^2(u^2+v^2)}]$。传播波部分的模为 1；超过 $u^2+v^2=1/\lambda^2$ 的倏逝成分随正向传播距离衰减。有限镜头还会限制收光方向，因此本节的自由传播全通，与 §\ref{sec:p-imaging} 的成像截止频率并不矛盾。
+\end{idea}
 
 \phead{两个近似：傍轴与远场（2025 随堂第 1 题的情境）}
 先用最简单的情形把两个近似看清楚：一个点光源，正前方 $z$ 处立着一块半径 $\rho$ 的接收面。
@@ -813,6 +843,11 @@ E(x,y)\propto\F\{E_{\text{入}}\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lamb
 透镜把\textbf{同一方向}来的平行光会聚到\textbf{焦面上同一点}，而一个方向就是一个空间频率。所以透镜后焦面上的光分布 = 物的\textbf{频谱}，透镜是一台不用通电的傅里叶变换器。
 \end{idea}
 
+\phead{接上上一节：透镜表面改相位，传播把方向分到不同位置}
+刚穿过薄透镜时，光场只是逐点乘透过率 $t(x,y)$；再传播到后焦面，才得到这里的傅里叶变换关系。在傍轴条件下，光场频率 $u$ 对应焦面位置 $X=\lambda fu$。例如 $\lambda=0.0005\,\mathrm{mm}$、$f=100\,\mathrm{mm}$、$u=20\,\mathrm{mm}^{-1}$，得到 $X=1\,\mathrm{mm}$：这是\textbf{某个方向成分的位置}，不是物体某一点的像位置。
+
+本节标准 2f 布置是「输入面到透镜 $f$、透镜到输出面 $f$」，两面分别为前、后焦面。几何光学中的「物距 $2f$、像距 $2f$」则是等大倒像，总距离为 $4f$。先画出各平面间距，再判断哪一面是频谱、哪一面是像，便能接到下一节的成像模型。
+
 \begin{center}
 \begin{tikzpicture}[>=Stealth,font=\footnotesize]
 \draw[->] (-3,0)--(4.6,0) node[right]{光轴};
@@ -943,8 +978,25 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 \proot{根③ 成像 = LTI 系统，光瞳 = 滤波器}
 
 \begin{idea}[一句话]
-理想镜头把一个点成像成一个点；真实镜头因为出光口有限大，把点成像成一个小光斑，叫\textbf{点扩散函数 PSF}，就是成像系统的冲激响应。像 = 理想像 $\conv$ PSF；频域里，像的频谱 = 物的频谱 $\times$ 传递函数。
+几何光学把理想点像画成一个点；加入波动性和有限光瞳后，即使没有像差，点像也会成为衍射光斑。描述这份点响应的函数叫\textbf{点扩散函数 PSF}。许多物点各自留下点响应，再按相干性选择复振幅或强度相加，就形成整幅像。
 \end{idea}
+
+\needspace{14\baselineskip}
+\phead{先把缩写接成一个过程：一个点、许多点、不同粗细的条纹}
+先把放大率和倒像关系计入，得到与像面使用同一坐标的「理想像」。在点响应近似只随物点平移、形状不变的视场内，记振幅点响应为 $h$，归一化强度点响应为
+\[
+p(x,y)=\frac{|h(x,y)|^2}{\iint |h|^2\dd x\dd y},\qquad \iint p\dd x\dd y=1.
+\]
+归一化把总透光量另行计算，让我们专心比较光怎样分散。于是同一系统有两条计算路线：
+\[
+\begin{aligned}
+\text{相干：}\quad&E_{\text{像}}=E_{\text{理想像}}\conv h,
+& H_c&=\F\{h\},\quad I_{\text{像}}=|E_{\text{像}}|^2;\\
+\text{非相干：}\quad&I_{\text{像}}=I_{\text{理想像}}\conv p,
+& \mathrm{OTF}&=\F\{p\},\quad \mathrm{MTF}=|\mathrm{OTF}|.
+\end{aligned}
+\]
+按位置看，PSF 回答「一个点的光分散到哪里」；按频率看，传递函数回答「每种粗细的变化还剩多少、相位怎样改变」。\textbf{它们描述同一个系统，傅里叶变换把两种观察方式连接起来。}如果输入是明暗条纹，亮区的光扩散进暗区，就会降低对比度；MTF 正是用频率描述这件事。
 
 \begin{itemize}
 \item \textbf{衍射受限}：没有像差，唯一的限制是光瞳有限大。往年题说“衍射受限系统”就是这个意思。
@@ -978,6 +1030,7 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 
 \phead{为什么要分相干和非相干}
 系统对谁线性，就在谁身上做卷积。激光照明时，物上各点的相位关系固定，像面上各点的\textbf{复振幅}相加，所以对复振幅是 LTI，传递函数是 CTF。普通光照明时，各点相位乱跳，干涉项平均为零，只有\textbf{强度}相加，所以对强度是 LTI。强度 PSF 是 $|h|^2$，它的频谱不再是光瞳本身，而是光瞳的自相关（下面一段）。
+这里讨论完全相干与空间非相干两个端点模型，具体照明也可能部分相干。\textbf{不同物点之间非相干，不等于同一个物点经过光瞳不同部分的光不能干涉}；后者仍共同形成这个物点的衍射光斑。
 
 
 \begin{center}\small\renewcommand{\arraystretch}{1.45}
@@ -987,12 +1040,30 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 谁是线性的 & 复振幅 $E$ & 强度 $I$\\
 冲激响应 & 振幅 PSF：$h\propto\F\{P\}$ & 强度 PSF：$|h|^2$\\
 传递函数 & \textbf{CTF}（相干传递函数）$H_c(u)=P(-\lambda z_iu)$：\textbf{光瞳的坐标反演与缩放} [F3-s24] & \textbf{OTF}（光学传递函数）$=\F\{|h|^2\}$ 归一化 $=$ 光瞳的\textbf{自相关}；\textbf{MTF}（调制传递函数）$=|\text{OTF}|$\\
-截止频率（像面） & $\dfrac{D}{2\lambda z_i}=\dfrac{\mathrm{NA}'}{\lambda}$ & $\dfrac{D}{\lambda z_i}=\dfrac{2\mathrm{NA}'}{\lambda}$（相干的 2 倍）\\
+截止频率（像面） & $\dfrac{D}{2\lambda z_i}\approx\dfrac{\mathrm{NA}'}{\lambda_0}$ & $\dfrac{D}{\lambda z_i}\approx\dfrac{2\mathrm{NA}'}{\lambda_0}$（相干的 2 倍）\\
 曲线形状 & 矩形：截止内全通，外面全丢 & 从 1 逐渐降到 0（一条缝：三角形）\\
 \bottomrule
 \end{tabular}
 \end{center}
-$D$：出瞳宽度（缝）或直径（圆）；$z_i$：出瞳到像面的距离；$\mathrm{NA}'$：像方数值孔径。换成\textbf{物面}的截止频率，把 $\mathrm{NA}'$ 换成物方 NA：相干 $\frac{\mathrm{NA}}{\lambda}$，非相干 $\frac{2\mathrm{NA}}{\lambda}$。
+$D$：出瞳宽度（缝）或直径（圆）；$z_i$：出瞳到像面的距离。表中的 $D/z_i$ 写法采用空气中的傍轴近似；曲线形状针对均匀、无像差的缝或圆形光瞳。$\mathrm{NA}'=n'\sin\alpha'$ 是像方数值孔径，$\alpha'$ 为像方收光半角。\textbf{带 NA 的公式统一使用真空波长 $\lambda_0$}，即 $u_{c,\text{相干}}=\mathrm{NA}'/\lambda_0$、$u_{c,\text{非相干}}=2\mathrm{NA}'/\lambda_0$；本章空气数例中 $\lambda\approx\lambda_0$。
+
+换成\textbf{物面}频率，应同时换成物方 NA。若横向放大率为 $M$，条纹在像面放宽 $|M|$ 倍，频率就变为物面的 $1/|M|$：$u_{\text{物}}=|M|u_{\text{像}}$。比较频率和光斑大小时，必须使用同一侧的坐标。
+
+\begin{idea}[截止频率为什么差一倍：方向的范围与方向之间的差]
+把 §\ref{sec:p-spfreq} 的方向公式接过来：透镜只接收一定角度内的光，所以像面光场的最大横向频率是
+\[
+u_{\max}=\frac{n'\sin\alpha'}{\lambda_0}=\frac{\mathrm{NA}'}{\lambda_0}.
+\]
+这是\textbf{复振幅}的频率范围。强度则由复振幅取模平方得到。两束单位振幅的相干平面波给出
+\[
+E(x)=\ee^{i2\pi u_1x}+\ee^{i2\pi u_2x}
+\quad\Rightarrow\quad
+|E(x)|^2=2+2\cos[2\pi(u_1-u_2)x].
+\]
+明暗条纹的频率是 $|u_1-u_2|$。若光场允许 $-u_{\max}$ 到 $+u_{\max}$，最大频率差就是 $2u_{\max}$。这解释了强度 PSF 的频谱为何能延伸到两倍范围，也就是非相干 OTF 的截止。有限连续光瞳在该边界的重叠面积为零，MTF 也降到零。
+
+这里的两束波解释的是\textbf{同一物点内部}的干涉；非相干成像再把不同物点的强度 PSF 相加。两个截止针对的输入量不同，不能直接解释成非相干成像在所有情况下都「清楚两倍」。
+\end{idea}
 
 \begin{center}
 \begin{tikzpicture}[font=\footnotesize]
@@ -1015,11 +1086,21 @@ $D$：出瞳宽度（缝）或直径（圆）；$z_i$：出瞳到像面的距离
 \end{axis}
 \end{tikzpicture}
 
-{\small 横轴以相干截止 $u_c$ 为单位。非相干截止在 $2u_c$，但高频处 MTF 已经很小。像差只会把曲线往下压（§\ref{sec:p-aberr}）。}
+{\small 横轴以相干截止 $u_c$ 为单位。非相干截止在 $2u_c$。像差只会把曲线往下压（§\ref{sec:p-aberr}）。}
 \end{center}
 
-\phead{为什么非相干的传递函数是“自相关”}
-强度 PSF 是 $|h|^2=h\cdot h^*$。时域相乘 $\leftrightarrow$ 频域卷积，$h$ 的频谱就是光瞳 $P$，所以 $|h|^2$ 的频谱 = $P$ 和自己的相关。直观地说：光瞳上相距 $\Delta$ 的两个小孔发出的光在像面上干涉，产生频率 $\Delta/(\lambda z_i)$ 的条纹；这样的“孔对”越多（光瞳和自己平移 $\Delta$ 后的重叠面积越大），这个频率传得越好。光瞳宽 $D$，最远的孔对相距 $D$，所以截止是 $\frac{D}{\lambda z_i}$，比相干多一倍。
+\needspace{14\baselineskip}
+\phead{为什么缝的 MTF 是斜线}
+左图的 CTF 描的是光瞳本身。均匀缝在截止以内透过率是 1，以外是 0，所以画出来是矩形：每一个点代表一个传播方向，那个方向的平面波要么穿过光瞳，要么被挡住。
+
+右图记录的是强度条纹还能留下多少对比度。无像差、透过率只有 0 和 1 时，OTF 等于光瞳与平移后的自己相重叠的长度，再除以原来的宽度。缝宽 $D$，平移 $\Delta=\lambda z_i u$：
+\[
+\mathrm{OTF}(u)=\frac{D-|\Delta|}{D}=1-\frac{\lambda z_i|u|}{D}=1-\frac{|u|}{2u_c},
+\qquad |u|\le 2u_c=\frac{D}{\lambda z_i}.
+\]
+缝的两条边是直的，每多错开一截，重叠就少掉同样的一截，所以下降是直线。横轴用相干截止 $u_c=D/(2\lambda z_i)$ 做单位时，直线在 $2$ 处降到 0。频率越低，两份光瞳重叠越多，对比度越接近 1。
+
+光瞳上相距 $\Delta$ 的两个小孔在像面上干涉，条纹频率就是 $\Delta/(\lambda z_i)$。重叠越长，这样的孔对越多，这个频率传得越好。圆孔比的是两圆的重叠面积，边界是圆弧，所以是虚线那条向下弯的曲线。有像差时，重叠区域里的相位不再对齐，曲线再降低。这条直线只属于均匀、无像差的一维缝；方瞳沿一条轴同样是三角形。强度 PSF 是 $|h|^2$，它的频谱是光瞳的自相关，上面的重叠长度就是这个自相关在一维缝上的结果。
 
 \phead{MTF 的物理意义：条纹对比度剩下多少}
 拿一张正弦条纹做物：$I_{\text{物}}=1+\cos(2\pi Fx)$，最亮 2、最暗 0。\textbf{对比度}（调制度）
@@ -1044,6 +1125,29 @@ I_{\text{像}}=1+\mathrm{MTF}(F)\cos(2\pi Fx+\text{相移})\quad\Rightarrow\quad
 \end{center}
 条纹越细（$F$ 越大），MTF 越小；过了截止频率，像就是一片均匀的灰，$K=0$。
 
+\begin{idea}[光斑大小与截止频率：同一孔径的两种尺度]
+对\textbf{均匀、无像差圆形光瞳}，像面艾里斑的中央峰到第一暗环的半径和非相干截止分别是
+\[
+r_{\mathrm A}\approx0.61\frac{\lambda_0}{\mathrm{NA}'},\qquad
+u_{c,\text{非相干}}=\frac{2\mathrm{NA}'}{\lambda_0},\qquad
+r_{\mathrm A}u_{c,\text{非相干}}\approx1.22.
+\]
+因此，在这一理想模型中：\textbf{收光角增大 $\to$ 能组合的方向更多 $\to$ 中央光斑更窄 $\to$ 可传递的条纹频率范围更宽}。$r_{\mathrm A}$ 是第一暗环半径，外面仍有衍射环；$1/u_c$ 是截止对应的正弦条纹周期，\textbf{不是光斑直径，也不是两点分辨距离的通用定义}。
+
+例如像方 $\mathrm{NA}'=0.1$、$\lambda_0=0.5\,\mu\mathrm m$ 时，$r_{\mathrm A}\approx3.05\,\mu\mathrm m$，非相干截止为 $0.4\,\mu\mathrm m^{-1}=400\,\mathrm{mm}^{-1}$，对应条纹周期 $2.5\,\mu\mathrm m$。在截止处，MTF 已为零；接近截止时也只有很低的对比度，不能把「尚未超过截止」当成「看得清」。
+
+这个乘积关系依赖圆形光瞳与半径定义。理想高斯强度光斑的傅里叶变换仍为高斯函数，逐渐衰减而没有有限的硬截止；可按指定阈值定义有效带宽。离焦也能使光斑变宽、MTF 变差，而保持孔径决定的最高频率边界不变。\textbf{比较清晰度要看整条 MTF，不能只看截止或单个光斑宽度。}
+\end{idea}
+
+\needspace{9\baselineskip}
+\phead{把点像、频率和对比度算成同一个结果（自编例）}
+空气中一维均匀缝光瞳宽 $D=2\,\mathrm{mm}$，出瞳到像面 $z_i=100\,\mathrm{mm}$，$\lambda=0.0005\,\mathrm{mm}$。采用无像差、非相干成像，输入已换到理想像坐标。
+\begin{enumerate}
+\item \textbf{点像有多宽？}强度为平方 sinc 形，中心到第一暗纹 $x_1=\lambda z_i/D=0.025\,\mathrm{mm}$。这是缝光瞳，不能套圆孔的 $0.61$ 系数。
+\item \textbf{哪些条纹能传递？}截止 $u_c=D/(\lambda z_i)=40\,\mathrm{mm}^{-1}$。缝光瞳的 MTF 是三角形，在 $F=20\,\mathrm{mm}^{-1}$ 处，$\mathrm{MTF}=1-F/u_c=0.5$。
+\item \textbf{最后看见什么？}输入平均强度 1、对比度 1，最亮 2、最暗 0；输出对比度变为 0.5，最亮 1.5、最暗 0.5。空间上是亮区的光扩散进暗区，频域上是条纹幅度乘了 0.5，两种算法描述同一个结果。
+\end{enumerate}
+
 \begin{idea}[类比]
 \begin{itemize}
 \item PSF $\leftrightarrow$ 冲激响应；像 $=$ 物 $\conv$ PSF $\leftrightarrow$ $y=x\conv h$。
@@ -1062,6 +1166,7 @@ I_{\text{像}}=1+\mathrm{MTF}(F)\cos(2\pi Fx+\text{相移})\quad\Rightarrow\quad
 
 \psee 成像总览第 \pageref{ch:imaging} 页；相干截止第 \pageref{sec:typeA} 页；规则光瞳 OTF 第 \pageref{sec:typeB} 页；分块光瞳 MTF 第 \pageref{sec:typeC} 页；对比度传递第 \pageref{sec:typeE} 页；三缝完整例题第 \pageref{ex:3slit} 页；SIM 第 \pageref{sec:sim} 页。
 
+\needspace{7\baselineskip}
 \phead{自测}
 \begin{enumerate}[label=\arabic*.]
 \item 物的条纹对比度为 1，拍出来对比度 0.3，这个频率上 MTF 是多少？
@@ -1151,6 +1256,11 @@ I_{\text{像}}=1+\mathrm{MTF}(F)\cos(2\pi Fx+\text{相移})\quad\Rightarrow\quad
 \end{tikzpicture}
 \end{center}
 $S=\dfrac{|\text{有像差时的和}|^2}{|\text{无像差时的和}|^2}$。MTF 同理：某个频率的 MTF 是光瞳上一对对点的箭头之和（自相关），像差让它们互相抵消，所以只降不升（2024 期中第 1 题）。
+
+\phead{接回上一节：为什么还需要 Strehl，而不能只报截止频率}
+固定光瞳的振幅透过率，只加入相位误差时，允许的方向范围并没有扩大，但这些方向的波可能不能在目标点同相叠加。截止边界仍由孔径限制，光却可能从中央峰分散到周围。Strehl 用一个数比较相同总能量、相同光瞳条件下的峰值；MTF 用一条曲线比较各频率的对比度，二者不能互相代替。
+
+例如残余 RMS 为 $\lambda/20$，小像差近似给出 $S\approx0.90$，但这并不表示所有频率的 MTF 都乘 0.90；求新 MTF 还需要具体的波像差分布。比较峰值时应先处理像的位置与焦面：纯倾斜只使点像平移，追踪平移后的峰值，形状和峰高都不变。上述 MTF 不升高的比较也以\textbf{固定振幅光瞳、只改变相位}为前提。
 
 \begin{idea}[类比]
 \begin{itemize}
