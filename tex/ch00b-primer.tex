@@ -977,7 +977,7 @@ $d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。
 \section{成像系统是线性系统：PSF、CTF、OTF、MTF}\label{sec:p-imaging}
 \proot{根③ 成像 = LTI 系统，光瞳 = 滤波器}
 
-\textbf{讨论的模型}：物面 $\to$ 镜头 $\to$ 像面，镜头的结构图见第 \pageref{sec:p-pupil} 页「光阑、孔径、入瞳、出瞳」小节。镜头里真正限制光束粗细的孔是\textbf{孔径光阑}；从物方隔着它前面的镜片看到的孔径光阑的像是\textbf{入瞳}，从像方隔着它后面的镜片看到的像是\textbf{出瞳}。出瞳是入瞳经整个镜头所成的像，两者共轭：从入瞳进去的光正好从出瞳出来，在一处被挡住的光在另一处也被挡住。所以入瞳和出瞳描述的是同一个限制，只是分别站在物方和像方：物方由入瞳边缘的光锥半角给出 $\mathrm{NA}$，像方由出瞳直径 $D$ 和出瞳到像面的距离 $z_i$ 给出 $\mathrm{NA}'\approx D/(2z_i)$，两者相差横向放大率，$\mathrm{NA}=|M|\,\mathrm{NA}'$。傅里叶光学从像方计算光的传播，起点是出瞳，因此\textbf{光瞳函数} $P(\xi,\eta)$ 定义在出瞳上（透光处为 1、挡光处为 0，有像差时再乘 $\ee^{ikW}$，见 §\ref{sec:p-aberr}），本节说的「光瞳」都指它。单片薄透镜、光阑贴着透镜时，孔径光阑、入瞳、出瞳都是透镜的通光口，$z_i$ 就是像距，往年题都是这种情况。于是镜头可以当作黑盒，只用三个量描述：横向放大率 $M$、光瞳函数 $P$、出瞳到像面的距离 $z_i$。系统的输入是物面上的光（相干照明用复振幅，非相干照明用强度），输出是像面上的光；\textbf{理想像}是物按 $M$ 缩放后的样子（$M<0$ 即倒像）。课件的完整推导见第 \pageref{sec:waveimg} 页「成像的波动光学描述」一节。
+\textbf{讨论的模型}：物面 $\to$ 镜头 $\to$ 像面，镜头的结构图见第 \pageref{sec:p-pupil} 页「光阑、孔径、入瞳、出瞳」小节。镜头里真正限制光束粗细的孔是\textbf{孔径光阑}；从物方隔着它前面的镜片看到的孔径光阑的像是\textbf{入瞳}，从像方隔着它后面的镜片看到的像是\textbf{出瞳}。出瞳是入瞳经整个镜头所成的像，两者共轭：从入瞳进去的光正好从出瞳出来，在一处被挡住的光在另一处也被挡住。所以入瞳和出瞳描述的是同一个限制，只是分别站在物方和像方：物方由入瞳边缘的光锥半角给出 $\mathrm{NA}$，像方由出瞳直径 $D$ 和出瞳到像面的距离 $z_i$ 给出 $\mathrm{NA}'\approx D/(2z_i)$（空气中），两者相差横向放大率，$\mathrm{NA}=|M|\,\mathrm{NA}'$。傅里叶光学从像方计算光的传播，起点是出瞳，因此\textbf{光瞳函数} $P(\xi,\eta)$ 定义在出瞳上（透光处为 1、挡光处为 0，有像差时再乘 $\ee^{ikW}$，见 §\ref{sec:p-aberr}），本节说的「光瞳」都指它。单片薄透镜、光阑贴着透镜时，孔径光阑、入瞳、出瞳都是透镜的通光口，$z_i$ 就是像距，往年题都是这种情况。于是镜头可以当作黑盒，只用三个量描述：横向放大率 $M$、光瞳函数 $P$、出瞳到像面的距离 $z_i$。系统的输入是物面上的光（相干照明用复振幅，非相干照明用强度），输出是像面上的光；\textbf{理想像}是物按 $M$ 缩放后的样子（$M<0$ 即倒像）。课件的完整推导见第 \pageref{sec:waveimg} 页「成像的波动光学描述」一节。
 
 \begin{idea}[一句话]
 几何光学把理想点像画成一个点；加入波动性和有限光瞳后，即使没有像差，点像也会成为衍射光斑。描述这份点响应的函数叫\textbf{点扩散函数 PSF}。许多物点各自留下点响应，再按相干性选择复振幅或强度相加，就形成整幅像。
@@ -1009,9 +1009,9 @@ p(x,y)=\frac{|h(x,y)|^2}{\iint |h|^2\dd x\dd y},\qquad \iint p\dd x\dd y=1.
 \begin{idea}[相干传递函数（CTF）]
 关键的前提是：\textbf{对一个物点，像面是出瞳的傅里叶面}。它由 0.7 节的两段合起来得到。第 \pageref{sec:p-imgacct} 页「成像也是记二次项的账」说明，物点发出的光经过镜头，在出瞳上是会聚到像点的球面波，带二次相位 $\ee^{-ik\xi^2/(2z_i)}$；第 \pageref{sec:p-lensftwhy} 页「为什么透镜能做傅里叶变换」说明，这样的二次相位正好抵消从出瞳传播 $z_i$ 带出的 $\ee^{+ik\xi^2/(2z_i)}$，观察面上就是傅里叶变换。也就是说，出瞳上的会聚波相当于一片焦距为 $z_i$ 的透镜，像面就是它的后焦面，即等效的远场。所以振幅 PSF 是光瞳函数的傅里叶变换：$h(x)\propto\F\{P\}\big|_{u=x/(\lambda z_i)}$。
 
-有了这个前提，CTF 用两次傅里叶变换就能得到。CTF 是成像系统的传递函数，按定义是冲激响应（振幅 PSF）的傅里叶变换：像 $=$ 理想像 $\conv h$，由卷积定理，像的频谱 $=$ 理想像的频谱 $\times\,\F\{h\}$。于是 $H_c=\F\{h\}=\F\F\{P\}$，两次正变换等于坐标反演：
+有了这个前提，CTF 用两次傅里叶变换就能得到。上面已经写出相干成像的传递函数 $H_c=\F\{h\}$，代入 $h\propto\F\{P\}$，就是对 $P$ 连做两次正变换，而两次正变换等于坐标反演：
 \[H_c(u)=P(-\lambda z_iu).\]
-第一次变换是光从出瞳传播到像面，第二次只是把像面上的 $h$ 按频率分解，两者意义不同（见下表）。结果是：出瞳上的位置 $\xi$ 对应像面频率 $-\xi/(\lambda z_i)$，光瞳透光处对应的频率通过，挡光处对应的频率被滤掉；光瞳边缘 $|\xi|=D/2$ 给出截止频率 $u_c=\frac{D}{2\lambda z_i}=\frac{\mathrm{NA}'}{\lambda}$，换到物面再乘 $|M|$，即 $\frac{\mathrm{NA}}{\lambda}$。
+第一次变换是光从出瞳传播到像面，第二次只是把像面上的 $h$ 按频率分解，两者意义不同（见下表）。结果是：出瞳上的位置 $\xi$ 对应像面频率 $-\xi/(\lambda z_i)$，光瞳透光处对应的频率通过，挡光处对应的频率被滤掉；光瞳边缘 $|\xi|=D/2$ 给出截止频率 $u_c=\frac{D}{2\lambda z_i}\approx\frac{\mathrm{NA}'}{\lambda_0}$，换到物面再乘 $|M|$，即 $\frac{\mathrm{NA}}{\lambda_0}$。
 \end{idea}
 
 \phead{两次傅里叶变换，意义不同 [F3-p23–25]}
@@ -1093,14 +1093,14 @@ E(x)=\ee^{i2\pi u_1x}+\ee^{i2\pi u_2x}
 \phead{为什么缝的 MTF 是斜线}
 左图的 CTF 描的是光瞳本身。均匀缝在截止以内透过率是 1，以外是 0，所以画出来是矩形：每一个点代表一个传播方向，那个方向的平面波要么穿过光瞳，要么被挡住。
 
-右图记录的是强度条纹还能留下多少对比度。无像差、透过率只有 0 和 1 时，OTF 等于光瞳与平移后的自己相重叠的长度，再除以原来的宽度。缝宽 $D$，平移 $\Delta=\lambda z_i u$：
+右图记录的是强度条纹还能留下多少对比度。强度 PSF 是 $|h|^2=h\cdot h^*$，空间域相乘对应频率域卷积，而 $h$ 的频谱就是光瞳，所以 $|h|^2$ 的频谱是光瞳的自相关，归一化后就是 OTF。无像差、透过率只有 0 和 1 时，自相关就是光瞳与平移后的自己相重叠的长度，再除以原来的宽度。缝宽 $D$，平移 $\Delta=\lambda z_i u$：
 \[
 \mathrm{OTF}(u)=\frac{D-|\Delta|}{D}=1-\frac{\lambda z_i|u|}{D}=1-\frac{|u|}{2u_c},
 \qquad |u|\le 2u_c=\frac{D}{\lambda z_i}.
 \]
 缝的两条边是直的，每多错开一截，重叠就少掉同样的一截，所以下降是直线。横轴用相干截止 $u_c=D/(2\lambda z_i)$ 做单位时，直线在 $2$ 处降到 0。频率越低，两份光瞳重叠越多，对比度越接近 1。
 
-光瞳上相距 $\Delta$ 的两个小孔在像面上干涉，条纹频率就是 $\Delta/(\lambda z_i)$。重叠越长，这样的孔对越多，这个频率传得越好。圆孔比的是两圆的重叠面积，边界是圆弧，所以是虚线那条向下弯的曲线。有像差时，重叠区域里的相位不再对齐，曲线再降低。这条直线只属于均匀、无像差的一维缝；方瞳沿一条轴同样是三角形。强度 PSF 是 $|h|^2$，它的频谱是光瞳的自相关，上面的重叠长度就是这个自相关在一维缝上的结果。
+光瞳上相距 $\Delta$ 的两个小孔在像面上干涉，条纹频率就是 $\Delta/(\lambda z_i)$。重叠越长，这样的孔对越多，这个频率传得越好。圆孔比的是两圆的重叠面积，边界是圆弧，所以是虚线那条向下弯的曲线。有像差时，重叠区域里的相位不再对齐，曲线再降低。这条直线只属于均匀、无像差的一维缝；方瞳沿一条轴同样是三角形。
 
 \phead{MTF 的物理意义：条纹对比度剩下多少}
 拿一张正弦条纹做物：$I_{\text{物}}=1+\cos(2\pi Fx)$，最亮 2、最暗 0。\textbf{对比度}（调制度）
@@ -1144,7 +1144,7 @@ r_{\mathrm A}u_{c,\text{非相干}}\approx1.22.
 空气中一维均匀缝光瞳宽 $D=2\,\mathrm{mm}$，出瞳到像面 $z_i=100\,\mathrm{mm}$，$\lambda=0.0005\,\mathrm{mm}$。采用无像差、非相干成像，输入已换到理想像坐标。
 \begin{enumerate}
 \item \textbf{点像有多宽？}强度为平方 sinc 形，中心到第一暗纹 $x_1=\lambda z_i/D=0.025\,\mathrm{mm}$。这是缝光瞳，不能套圆孔的 $0.61$ 系数。
-\item \textbf{哪些条纹能传递？}截止 $u_c=D/(\lambda z_i)=40\,\mathrm{mm}^{-1}$。缝光瞳的 MTF 是三角形，在 $F=20\,\mathrm{mm}^{-1}$ 处，$\mathrm{MTF}=1-F/u_c=0.5$。
+\item \textbf{哪些条纹能传递？}非相干截止 $u_{c,\text{非相干}}=D/(\lambda z_i)=40\,\mathrm{mm}^{-1}$。缝光瞳的 MTF 是三角形，在 $F=20\,\mathrm{mm}^{-1}$ 处，$\mathrm{MTF}=1-F/u_{c,\text{非相干}}=0.5$。
 \item \textbf{最后看见什么？}输入平均强度 1、对比度 1，最亮 2、最暗 0；输出对比度变为 0.5，最亮 1.5、最暗 0.5。空间上是亮区的光扩散进暗区，频域上是条纹幅度乘了 0.5，两种算法描述同一个结果。
 \end{enumerate}
 
@@ -1160,7 +1160,7 @@ r_{\mathrm A}u_{c,\text{非相干}}\approx1.22.
 \pkao
 \begin{itemize}
 \item 2025 随堂第 2 题：i “像面上的\textbf{点扩展函数}（二维形式）”= 三缝光瞳的夫琅禾费图样的模平方；ii “画出 $x$ 方向的\textbf{调制传递函数（MTF）}，需定量标注\textbf{截止频率}”= 画三缝光瞳的归一化自相关，截止 $\frac{D}{\lambda z_i}=\frac{D}{2\lambda f}$；iii “画出像面条纹\textbf{对比度} $K$ 随 $F$ 的变化”：物 $1+\cos(2\pi Fx)$ 的对比度是 1，$\beta=-1$ 频率不变，所以 $K(F)$ 就是 MTF 曲线本身。
-\item 2024 期中第 3 题 i：“物面上由衍射决定的\textbf{非相干成像截止频率}”= $\frac{2\mathrm{NA}}{\lambda}$。
+\item 2024 期中第 3 题 i：“物面上由衍射决定的\textbf{非相干成像截止频率}”= $\frac{2\mathrm{NA}}{\lambda_0}$。
 \item 2024 期中第 1 题：“证明有像差时的 MTF 必不大于无像差时”：MTF 是光瞳的自相关，像差让参与自相关的箭头方向参差不齐（§\ref{sec:p-aberr}）。
 \end{itemize}
 
@@ -1173,7 +1173,7 @@ r_{\mathrm A}u_{c,\text{非相干}}\approx1.22.
 \item 同一个镜头，激光照明和普通灯照明，哪个截止频率高？高多少？
 \item NA $=0.5$，$\lambda=0.5\,\mu$m 的非相干显微镜，物面截止频率是多少？
 \end{enumerate}
-\pans{1. 0.3。\enspace 2. 普通灯（非相干）高，是相干的 2 倍。\enspace 3. $\frac{2\mathrm{NA}}{\lambda}=\frac{1}{5\times10^{-4}\text{ mm}}=2000$ mm$^{-1}$。}
+\pans{1. 0.3。\enspace 2. 普通灯（非相干）高，是相干的 2 倍。\enspace 3. $\frac{2\mathrm{NA}}{\lambda_0}=\frac{1}{5\times10^{-4}\text{ mm}}=2000$ mm$^{-1}$。}
 
 % =====================================================================
 \section{像差与 Strehl 比}\label{sec:p-aberr}
@@ -1389,8 +1389,8 @@ FFT $\to$ 乘 $H$ $\to$ FFT & 4f 系统 & 倒像，$M=-f_2/f_1$ & \pageref{sec:p
 滤波器 $H(f)$ & 频谱面挡板、相位板 & 坐标 $u=\xi/(\lambda f_1)$ & \pageref{sec:p-lensft}/\pageref{sec:4fctf}\\
 延时 $\ee^{-i2\pi f\tau}$ & 频谱面线性相位 & 输出平移 & \pageref{sec:p-lensft}/\pageref{sec:linphase}\\
 冲激响应 & 点扩散函数 PSF & 相干 $h\propto\F\{P\}$，非相干 $|h|^2$ & \pageref{sec:p-imaging}/\pageref{sec:typeD}\\
-传递函数（相干系统） & CTF & $H_c=P(-\lambda z_iu)$，截止 $\frac{\mathrm{NA}}{\lambda}$ & \pageref{sec:p-imaging}/\pageref{sec:typeA}\\
-传递函数（非相干系统） & OTF & 光瞳归一化自相关，截止 $\frac{2\mathrm{NA}}{\lambda}$ & \pageref{sec:p-imaging}/\pageref{sec:typeB}\\
+传递函数（相干系统） & CTF & $H_c=P(-\lambda z_iu)$，截止 $\frac{\mathrm{NA}}{\lambda_0}$ & \pageref{sec:p-imaging}/\pageref{sec:typeA}\\
+传递函数（非相干系统） & OTF & 光瞳归一化自相关，截止 $\frac{2\mathrm{NA}}{\lambda_0}$ & \pageref{sec:p-imaging}/\pageref{sec:typeB}\\
 幅频特性 $|H|$ & MTF & $K_{\text{像}}=\mathrm{MTF}\cdot K_{\text{物}}$ & \pageref{sec:p-imaging}/\pageref{sec:typeE}\\
 维纳-辛钦 & OTF = 自相关 & $\F\{|h|^2\}=P\corr P$ & \pageref{sec:p-imaging}/\pageref{sec:mtfproof}\\
 理想系统 $h=\delta$ & 几何光学成像 & $\frac1l+\frac1{l'}=\frac1f$，$\beta=-\frac{l'}{l}$ & \pageref{sec:p-geom}/\pageref{sec:lensimg}\\
@@ -1471,7 +1471,7 @@ iii. 物 $T=1+\cos(2\pi Fx)$，画像面条纹对比度 $K$ 随 $F$ 的变化 & 
 结构光照明显微术是一种针对非相干成像系统突破经典衍射极限的技术 & 显微镜是一个非相干低通系统；想办法让截止频率以外的细节也被“看见”\\
 物体的强度透过率为 $T(x)$ & 物只对强度说话：透过去的强度 = 照明强度 $\times\,T(x)$\\
 两束相干的等振幅等相位平面波照明，波矢关于 $z$ 轴对称，夹角 $\theta$ & 照明是两束光的干涉条纹（§\ref{sec:p-spfreq}），频率 $\frac{2\sin(\theta/2)}{\lambda}$\\
-i. 物面上由衍射决定的非相干成像截止频率 & 交一个数：$\frac{2\mathrm{NA}}{\lambda}$\\
+i. 物面上由衍射决定的非相干成像截止频率 & 交一个数：$\frac{2\mathrm{NA}}{\lambda_0}$\\
 ii. 入射到物体上的照明光的强度分布 & 交：$I(x)\propto1+\cos\big(2\pi\frac{2\sin(\theta/2)}{\lambda}x\big)$\\
 iii. 照明光穿透物体之后的光强度的频谱 & 时域相乘 $\Rightarrow$ 频谱卷积：$\hat T(u)$ 加上平移到 $\pm$ 条纹频率的两份（各乘 $\frac12$）\\
 iv. 选择适当的 $\theta$，可使原截止频率 2 倍的信息被物镜采集到 & 平移量最多取到截止频率本身，于是原本在 $2\times$ 截止处的细节被挪进了通带\\
