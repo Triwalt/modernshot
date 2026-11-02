@@ -603,6 +603,18 @@ t_{\text{透镜}}(x,y)=\exp\!\left(-ik\frac{x^2+y^2}{2f}\right)
 光从一个平面走到另一个平面：每一点都像一个小喇叭向四周发出球面波（惠更斯原理），到了下一个平面全部叠加——这是一次\textbf{卷积}。走得足够远时，结果变成输入的\textbf{傅里叶变换}。
 \end{idea}
 
+\begin{idea}[思路：这一节要解决什么，每一步为什么这样做]
+\textbf{问题}：已知孔后紧贴处的光 $E_{\text{入}}(x_1,y_1)$，求距离 $z$ 的屏上的光 $E_{\text{出}}(x,y)$。
+\begin{enumerate}
+\item \textbf{规律有了，但算不动。}惠更斯原理给出答案：孔上每一点发一个球面波，屏上把它们全加起来，
+$E_{\text{出}}(x,y)\propto\iint E_{\text{入}}(x_1,y_1)\,\dfrac{\ee^{ikr}}{r}\dd x_1\dd y_1$ [F2-p2]，
+$r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}$ 是孔上一点到屏上一点的距离。根号在指数里，这个积分既算不出来，也看不出是什么运算。
+\item \textbf{所以要近似 $r$，目标是认出运算。}近似一次（傍轴），积分变成\textbf{卷积}，这是菲涅耳衍射；再近似一次（远场），变成\textbf{傅里叶变换}，这是夫琅禾费衍射。两个近似的用处是把物理问题翻译成信号与系统里认识的运算。
+\item \textbf{$r$ 出现在两个地方，要分开对待。}分母的 $1/r$ 管振幅，指数的 $kr$ 管相位。同样把 $r$ 弄错一点点，振幅几乎不受影响，相位却可能错掉好几圈。所以要分别问：振幅里的 $r$ 能不能当常数？相位里的 $r$ 能不能当常数？这就是下面的两个近似。
+\end{enumerate}
+\end{idea}
+
+
 \begin{center}
 \begin{tikzpicture}[>=Stealth,font=\footnotesize]
 \draw[line width=2pt] (0,0.9)--(0,1.6); \draw[line width=2pt] (0,-0.9)--(0,-1.6);
@@ -628,7 +640,20 @@ E_{\text{出}}(x,y)=\iint E_{\text{入}}(x_1,y_1)\,h(x-x_1,y-y_1)\dd x_1\dd y_1=
 $h$ 就是“一个点光源走了距离 $z$ 以后的样子”，即自由空间的冲激响应。频域里每个平面波分量只多一个相位，传递函数是一个\textbf{全通}滤波器 $H(u,v)=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]$。
 
 \phead{两个近似：傍轴与远场（2025 随堂第 1 题的情境）}
-点光源发出球面波 $\frac{A}{r}\ee^{ikr}$，照到距离 $z$ 处、半径 $\rho$ 的接收面上。接收面边缘到光源的距离 $r=\sqrt{z^2+\rho^2}$，比中心多走 $\Delta=r-z\approx\frac{\rho^2}{2z}$。
+先用最简单的情形把两个近似看清楚：一个点光源，正前方 $z$ 处立着一块半径 $\rho$ 的接收面。
+
+\phead{球面波公式和“多走的距离”是什么关系}
+球面波 $\dfrac{A}{r}\ee^{ikr}$ 只说了两件事：离光源越远越弱（振幅 $\frac Ar$）；相位等于 $k\times$ 走过的路程（$kr$，§\ref{sec:p-wave}：多走 $\Delta L$，相位多 $k\Delta L$）。所以要知道接收面上各点的光和中心差多少，只需要知道\textbf{各点比中心多走了多少路}：
+\[
+\Delta=r-z=\sqrt{z^2+\rho^2}-z\approx\frac{\rho^2}{2z}\qquad\Big(\sqrt{1+t}\approx1+\frac t2,\ t=\frac{\rho^2}{z^2}\Big)
+\]
+把这一个 $\Delta$ 分别代进振幅和相位，就得到两个近似各自的误差：
+\begin{itemize}
+\item 振幅：$\frac{A}{z}\to\frac{A}{z+\Delta}$，相对变化 $\approx\frac{\Delta}{z}=\frac{\rho^2}{2z^2}$；
+\item 相位：$kz\to k(z+\Delta)$，多出 $k\Delta=\frac{\pi\rho^2}{\lambda z}$。
+\end{itemize}
+算 $\Delta$ 的意图就在这里：球面波公式告诉你“只有路程要紧”，$\Delta$ 量出“路程在接收面上变了多少”，两者合起来就是“光在接收面上变了多少”。
+
 
 \begin{center}
 \begin{tikzpicture}[>=Stealth,font=\footnotesize]
@@ -651,7 +676,55 @@ $h$ 就是“一个点光源走了距离 $z$ 以后的样子”，即自由空�
 \item \textbf{为什么远场更难满足}：同一个 $\Delta$，在振幅里是\textbf{除以} $z$（米量级），在相位里是\textbf{乘以} $k$（每毫米上万弧度）。数例：$\lambda=0.5\,\mu$m，$\rho=1$ mm，$z=1$ m，振幅只差 $5\times10^{-7}$，相位却差 $2\pi$。傍轴早就满足了，远场完全不成立；要远场得 $z\gg2$ m。
 \end{itemize}
 
-\phead{菲涅耳衍射（近场）与夫琅禾费衍射（远场）}
+\phead{两个近似各自换来了什么：从积分里认出运算}
+回到孔和屏。现在 $r$ 里有两组坐标，孔上一点 $(x_1,y_1)$ 和屏上一点 $(x,y)$，多走的距离跟着这两组坐标一起变。两个近似就是对这个 $r$ 一步一步下手。
+\begin{enumerate}
+\item \textbf{傍轴 $\Rightarrow$ 卷积（菲涅耳衍射）。}振幅里取 $\frac1r\approx\frac1z$，倾斜因子取 $K\approx1$，相位里把 $r$ 展开到二次：
+\[
+r\approx z+\frac{(x-x_1)^2+(y-y_1)^2}{2z}.
+\]
+这样一来，被积函数里除了 $E_{\text{入}}$，只剩一个只依赖 $(x-x_1,\,y-y_1)$ 的函数 $h$。孔上的点挪一下，它在屏上留下的图样只跟着平移、形状不变，这就是 LTI 系统，积分就是卷积 $E_{\text{入}}\conv h$，其中 $h=\frac{\ee^{ikz}}{i\lambda z}\exp\!\big(ik\frac{x^2+y^2}{2z}\big)$ [F2-p2]。\\
+\textbf{傍轴近似的用处}：原来每个点的贡献形状各不相同，近似以后形状相同、只是平移，于是能用卷积和传递函数来处理。
+\item \textbf{远场 $\Rightarrow$ 傅里叶变换（夫琅禾费衍射）。}把平方展开，相位里的路程差分成三项，三项的处理各不相同：
+\end{enumerate}
+
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{2.3cm}P{3.3cm}P{5.6cm}P{3.6cm}@{}}
+\toprule
+展开出的项 & 和谁有关 & 物理意思与处理 & 结果\\ \midrule
+$\dfrac{x^2+y^2}{2z}$ & 只和\textbf{屏上}的点有关 & 屏上各点离光源远近不同；对积分是常数，提到积分外面 & 留着，成为观察屏上的二次相位，强度里消失\\
+$-\dfrac{xx_1+yy_1}{z}$ & 两组坐标的\textbf{乘积} & 相位因子 $\exp\!\big[-i2\pi\big(\frac{x}{\lambda z}x_1+\frac{y}{\lambda z}y_1\big)\big]$ 正是傅里叶核，$u=\frac{x}{\lambda z}$ & 留着，它\textbf{就是}傅里叶变换\\
+$\dfrac{x_1^2+y_1^2}{2z}$ & 只和\textbf{孔上}的点有关 & 孔内最大相位 $\frac{ka^2}{2z}=\frac{\pi a^2}{\lambda z}$，要它 $\ll\pi$ 才能扔，即 $z\gg\frac{a^2}{\lambda}$ & 扔掉：这一步就是\textbf{衍射屏的远场近似}\\
+\bottomrule
+\end{tabular}
+\end{center}
+扔掉第三项以后，积分只剩 $\iint E_{\text{入}}\exp[-i2\pi(ux_1+vy_1)]\dd x_1\dd y_1=\F\{E_{\text{入}}\}$ [F1-p36]。所以 2025-1 第 (ii) 问的答案就在这张表里：远场近似只用在\textbf{衍射屏}的坐标上（第三项），观察屏的坐标 $x$ 可以很大，第一项并不小，但它是公共因子，所以观察屏只需傍轴。
+
+{\small 严格地说，相位展开到二次还要求丢掉的四次项 $\frac{k\rho^4}{8z^3}$ 远小于 $\pi$，比振幅条件严。课件把这一步也算在“傍轴”里，答题照课件写即可。}
+
+\begin{idea}[远场的直观：从孔上各点看，屏上那一点在同一个方向]
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[line width=2pt] (0,1.45)--(0,1.9); \draw[line width=2pt] (0,-0.45)--(0,-0.9);
+\fill (0,0) circle (1.4pt) node[left]{$O$};
+\fill (0,1) circle (1.4pt) node[left]{$x_1$};
+\draw[->,thick] (0,0)--++(20:5.4) node[right]{朝方向 $\theta$ 的远处一点};
+\draw[->,thick] (0,1)--++(20:5.4);
+\draw[dashed] (0,1)--(0.321,0.117);
+\draw[line width=2.2pt] (0,0)--(0.321,0.117);
+\draw[->] (1.3,-0.6)--(0.25,0.05);
+\node[anchor=west,align=left] at (1.3,-0.6) {粗线：$O$ 处的光比 $x_1$ 处多走 $x_1\sin\theta\approx x_1\frac{x}{z}$};
+\draw (0.9,0)--(1.2,0); \draw (1.1,0) arc[start angle=0,end angle=20,radius=1.1]; \node at (1.35,0.22){$\theta$};
+\end{tikzpicture}
+\end{center}
+离得足够远时，从孔上各点到屏上同一点的连线几乎平行。孔上 $x_1$ 处的光比 $O$ 处少走 $x_1\sin\theta$，相位少 $k x_1\frac{x}{z}=2\pi\frac{x}{\lambda z}x_1$，随 $x_1$ \textbf{线性}变化。这等于拿一个空间频率 $u=\frac{\sin\theta}{\lambda}=\frac{x}{\lambda z}$ 的平面波去和孔里的光做内积，加起来就是 $\F\{E_{\text{入}}\}$ 在 $u$ 处的值。
+\begin{itemize}
+\item 这就是 §\ref{sec:p-spfreq}“方向 = 空间频率”落到屏上的样子：\textbf{屏上位置 $x$ $\leftrightarrow$ 方向 $\theta$ $\leftrightarrow$ 频率 $u$}。
+\item 表里扔掉的第三项描述“连线并不完全平行”，也就是球面波的弯曲。走得足够远，这点弯曲在整个孔上不到半个波长，就可以不管。
+\end{itemize}
+\end{idea}
+
+\phead{小结：菲涅耳衍射（近场）与夫琅禾费衍射（远场）}
 \begin{itemize}
 \item \textbf{菲涅耳衍射}：只用傍轴近似，相位保留到二次项 $\frac{k\rho^2}{2z}$。图样还像孔的影子，但边缘起皱。
 \item \textbf{夫琅禾费衍射}：再对\textbf{衍射屏}（孔的半宽 $a$）用远场近似，$z\gg a^2/\lambda$。此时输出\textbf{正比于孔的傅里叶变换}：
@@ -695,6 +768,22 @@ E(x,y)\propto\F\{E_{\text{入}}\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lamb
 \item 傍轴 vs 远场 $\leftrightarrow$ 窄带信号的“包络”与“载波”：一个小延迟对包络几乎没影响，对高频载波的相位影响却很大。
 \item 孔越小、斑越大 $\leftrightarrow$ \textbf{时宽带宽积}：脉冲越短，频谱越宽。
 \end{itemize}
+\end{idea}
+
+\begin{idea}[通用读法：相位因子按 $x$ 的幂次分类（0.7--0.9 节都用这张表）]
+光走过的路程差乘以 $k$ 就是相位。把相位按坐标的幂次拆开，每一类的作用是固定的：
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{2.6cm}P{4.2cm}P{7.6cm}@{}}
+\toprule
+相位里的项 & 作用 & 在哪里出现\\ \midrule
+常数 $\varphi_0$ & 整体延迟，强度不变，答题可略 & 菲涅耳核的 $\ee^{ikz}$、活塞像差\\
+一次 $2\pi u_0x$ & 平面波的\textbf{方向}；频谱\textbf{平移}；像\textbf{平移} & 棱镜、斜入射、远场里的交叉项 $-\frac{xx_1}{z}$、倾斜像差\\
+二次 $\pm\frac{kx^2}{2R}$ & 半径 $R$ 的\textbf{球面波}：$+$ 发散，$-$ 会聚 & 点光源、自由传播（菲涅耳核）、透镜 $-\frac{kx^2}{2f}$、离焦像差\\
+三次及以上 & 不能靠平移或换焦面消掉 & 球差、彗差等真正的像差\\
+\bottomrule
+\end{tabular}
+\end{center}
+后面几节都是在给这些项记账：透镜的二次项抵消传播的二次项，得到傅里叶变换（0.7）；成像公式就是二次项系数相加（0.7）；像差按幂次分出好坏（0.9）。
 \end{idea}
 
 \pkao
@@ -786,6 +875,41 @@ x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频
 \end{tabular}
 \end{center}
 
+\phead{为什么透镜能做傅里叶变换：替远场扔掉那一项}
+§\ref{sec:p-diff} 的表里，要得到傅里叶变换，必须扔掉只和孔上坐标有关的二次相位 $\frac{k(x_1^2+y_1^2)}{2z}$，代价是 $z\gg a^2/\lambda$，常常要几米甚至更远。透镜用另一种办法去掉这一项：
+\begin{enumerate}
+\item 紧贴透镜放物，透镜乘上 $\exp\!\big(-ik\frac{x_1^2+y_1^2}{2f}\big)$（§\ref{sec:p-screen}，会聚球面波）。
+\item 从透镜走 $f$ 到后焦面，菲涅耳核展开后正好带出 $\exp\!\big(+ik\frac{x_1^2+y_1^2}{2f}\big)$（就是那张表的第三项，$z=f$）。
+\item 两项\textbf{符号相反、系数相同}，乘起来等于 1 [F2-p9–10]。积分里只剩交叉项，即傅里叶核，$u=\frac{x}{\lambda f}$。
+\end{enumerate}
+所以透镜不是把光“算”成了频谱，而是\textbf{替距离抵消了球面弯曲}：不用走到无穷远，在焦面上就看到了远场。这和上面的几何图是同一件事：同一方向的平行光会聚到焦面同一点，方向对应频率。
+
+\phead{为什么物要放在前焦面：为了相位也对}
+上面那样紧贴透镜放物，焦面上还剩一个只和焦面坐标有关的二次相位 $\exp\!\big(ik\frac{x^2+y^2}{2f}\big)$，强度不受影响，但相位不是严格的 $\F\{E\}$。把物移到透镜前 $d_0$ 处，多出来的这段自由传播在频域乘了 $\exp[-i\pi\lambda d_0(u^2+v^2)]$（§\ref{sec:p-diff}，全通二次相位）。代入 $u=\frac{x}{\lambda f}$，它也是焦面上的二次相位，和剩下那一项合起来是
+\[
+\exp\!\Big[\frac{ik}{2f}\Big(1-\frac{d_0}{f}\Big)(x^2+y^2)\Big]\qquad\text{[F2-p14–15]}
+\]
+$d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。\textbf{只看强度时 $d_0$ 取多少都行}；要把频谱再送进第二个透镜（4f 系统），相位必须对，所以物放在前焦面。
+
+\phead{成像也是记二次项的账}
+同一套记账也能推出成像公式 [F2-p18–20]。点光源在透镜前 $l$ 处，到透镜时是发散球面波 $+\frac{kx_1^2}{2l}$；透镜加 $-\frac{kx_1^2}{2f}$；出来要是会聚到 $l'$ 的球面波 $-\frac{kx_1^2}{2l'}$。二次项系数相加：
+\[
+\frac1l-\frac1f=-\frac1{l'}\quad\Longleftrightarrow\quad\frac1l+\frac1{l'}=\frac1f
+\]
+这就是 §\ref{sec:p-geom} 的高斯公式。点光源离轴 $x_0$ 时还多一个一次项（方向），对一次项得 $\frac{x}{x_0}=-\frac{l'}{l}$，即横向放大率。
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{3.2cm}P{5.2cm}P{6cm}@{}}
+\toprule
+ & 傅里叶变换配置（2f） & 成像配置\\ \midrule
+输入 & 平面波照明的物 & 点光源（或物上一点）\\
+在哪里看 & 后焦面 & 与物共轭的像面（$\frac1l+\frac1{l'}=\frac1f$）\\
+二次相位的账 & 透镜的 $-$ 抵消传播 $f$ 的 $+$ & 发散 $+$ 透镜 $-$ = 会聚到 $l'$\\
+看到什么 & 物的频谱（每个方向一个点） & 物的像（每个物点一个点）\\
+\bottomrule
+\end{tabular}
+\end{center}
+同一块透镜，看哪个面就得到哪种结果 [F2-p22]。4f 系统里两种都有：频谱面是第一片的后焦面，输出面是物的像面。
+
 \begin{idea}[类比]
 \begin{itemize}
 \item 透镜后焦面 $\leftrightarrow$ 频谱分析仪的屏幕，横坐标换算 $x=\lambda fu$。
@@ -825,6 +949,34 @@ x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频
 \item \textbf{PSF 从哪来}：透镜把“远场”搬到了像面上，所以像点的振幅 = 光瞳的夫琅禾费衍射图样：$h(x,y)\propto\F\{P\}\big|_{u=\frac{x}{\lambda z_i},\,v=\frac{y}{\lambda z_i}}$。圆形光瞳的 PSF 是\textbf{艾里斑}（中心亮斑加一圈圈暗环）。光瞳越大，斑越小（时宽带宽积）。
 \item \textbf{相干还是非相干}：先判断，判断错整题全错。
 \end{itemize}
+
+\begin{idea}[思路：为什么相干传递函数就是光瞳]
+把像面上的光按频率拆开（§\ref{sec:p-spfreq}）：频率为 $u$ 的那一份，是以 $\sin\theta'=\lambda u$ 斜射到像面上的一束平面波。再看它从哪里来：
+\begin{enumerate}
+\item 出瞳到像面这一段就是 0.6 节的远场（会聚球面波替距离抵消了二次相位，和 0.7 节的透镜一样）。出瞳上离轴 $\xi$ 的一点射到像点附近的光，在像面上是一个固定方向 $\sin\theta'\approx\xi/z_i$，也就是一个固定频率 $\xi/(\lambda z_i)$。
+\item 所以像面上频率 $u$ 的那份光，只能来自出瞳上离轴 $\lambda z_i u$ 的那一点（方向相反，所以严格写有负号，见下）。那一点透光（$P=1$），这份频率就传得过去；被挡住（$P=0$），这份频率就没了。
+\item 于是“频率 $u$ 能传过去多少”等于“光瞳在 $\lambda z_iu$ 处的透过率”：$H_c(u)=P(-\lambda z_iu)$。截止频率就是光瞳边缘对应的频率：$\lambda z_iu_c=\frac D2$。换到物面，频率再乘横向放大率 $|M|$。
+\end{enumerate}
+光瞳越大，越斜的光（越细的细节）也能到达像面，所以分辨率由 NA 决定。
+\end{idea}
+
+\phead{两次傅里叶变换，意义不同 [F3-p23–25]}
+这一节的公式里有两次傅里叶变换，容易混：
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{2.6cm}P{5.6cm}P{6.6cm}@{}}
+\toprule
+ & ① 光瞳 $\to$ PSF & ② PSF $\to$ CTF\\ \midrule
+公式 & $h(x')\propto\F\{P\}\big|_{x'/(\lambda z_i)}$ & $H_c(u)=\F\{h\}(u)$\\
+物理过程 & 光从出瞳\textbf{传播}到像面（夫琅禾费，0.6 节） & 没有传播，只是把像面上的信号按频率分解（信号与系统）\\
+变换后的“频率” & 是\textbf{方向}，乘 $\lambda z_i$ 换成像面上的位置 $x'$ & 就是像面上的空间频率 $u$，单位 mm$^{-1}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+两次正变换叠起来 $\F\F\{P\}=P(-\cdot)$，所以 $H_c(u)=P(-\lambda z_iu)$。负号来自“两次正变换 = 坐标反演”，和 4f 倒像是同一个原因。光瞳对称时负号不影响结果。
+
+\phead{为什么要分相干和非相干}
+系统对谁线性，就在谁身上做卷积。激光照明时，物上各点的相位关系固定，像面上各点的\textbf{复振幅}相加，所以对复振幅是 LTI，传递函数是 CTF。普通光照明时，各点相位乱跳，干涉项平均为零，只有\textbf{强度}相加，所以对强度是 LTI。强度 PSF 是 $|h|^2$，它的频谱不再是光瞳本身，而是光瞳的自相关（下面一段）。
+
 
 \begin{center}\small\renewcommand{\arraystretch}{1.45}
 \begin{tabular}{@{}P{2.4cm}P{6.3cm}P{6.6cm}@{}}
@@ -949,6 +1101,22 @@ I_{\text{像}}=1+\mathrm{MTF}(F)\cos(2\pi Fx+\text{相移})\quad\Rightarrow\quad
 \item 两个近似：$S\approx1-(k\sigma_W)^2$ 和 $S\approx\ee^{-(k\sigma_W)^2}$。$\sigma_W=\lambda/14$ 时 $k\sigma_W=2\pi/14$，$(k\sigma_W)^2=0.2014$，$S\approx0.8$。
 \item \textbf{倾斜}（$W$ 是 $x,y$ 的一次函数）不算真正的像差：它只让整个像平移，PSF 形状和 MTF 都不变。
 \end{itemize}
+
+\begin{idea}[思路：像差为什么写成 $\ee^{ikW}$，为什么有的“像差”不算数]
+\begin{enumerate}
+\item \textbf{从哪来}：0.8 节的理想系统，出瞳射出的是会聚到像点的球面波。实际波面和理想球面差了一段路程 $W(x,y)$（光程差）。多走路就多相位（§\ref{sec:p-wave}），所以出瞳上多了一个相位因子 $\ee^{ikW}$，相当于在光瞳上贴了一块相位片。
+\item \textbf{怎么用}：前面所有结论照用，只把 $P$ 换成 $\mathcal P=P\ee^{ikW}$（广义光瞳）[F3-p45]。相干时 CTF 的模不变、只多了相位；非相干时 OTF 仍是自相关，只是箭头方向参差，模变小。
+\item \textbf{按幂次分好坏}（0.6 节末的相位分类表）：常数项（活塞）只是整体延迟，什么都不变；一次项（倾斜）只让像平移；二次项是离焦，换一个接收面就能补回来；三次及以上才是改不掉的像差。“倾斜不算像差”就是这个意思。
+\end{enumerate}
+\end{idea}
+
+\phead{Strehl 比的推导在算什么 [F3-p57–58]}
+\begin{enumerate}
+\item \textbf{为什么只看中心}：PSF 中心 $=|\F\{\mathcal P\}(0)|^2=\big|\iint\mathcal P\big|^2$。频率为 0 的傅里叶核是 1，中心的光就是光瞳上所有箭头的直接和（下面的箭头图）。
+\item \textbf{为什么展开到二阶}：$kW$ 很小，$\ee^{ikW}\approx1+ikW-\frac12(kW)^2$。只展开到一阶，模平方里的二阶项不完整；二阶是能看到峰值下降的最低阶。
+\item \textbf{为什么出来的是方差}：平均下来，$|\text{和}|^2\propto1-k^2\big(\E[W^2]-\E^2[W]\big)=1-k^2\sigma_W^2$。$W$ 的平均值是整体的常数延迟（活塞），本来就不影响峰值，所以被减掉；剩下的只有起伏 $\sigma_W$。
+\item \textbf{$\lambda/14$ 从哪来}：要 $S\ge0.8$，需 $(k\sigma_W)^2\le0.2$，$\sigma_W\le\frac{\lambda}{2\pi}\sqrt{0.2}\approx\frac{\lambda}{14}$。
+\end{enumerate}
 
 \phead{单位箭头的直觉：为什么像差让峰值和 MTF 下降}
 像面中心的振幅 $\propto\iint_{\text{光瞳}}\ee^{ikW(x,y)}\dd x\dd y$。光瞳上每一小块贡献一个\textbf{长度相同}的箭头（相量），方向是它的相位 $kW$：
