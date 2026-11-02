@@ -499,17 +499,17 @@ $T(\rho)=\frac{\pi D^2}{4}\cdot\frac{2J_1(\pi D\rho)}{\pi D\rho}$，$\rho=\frac{
 \cOneQtype{题型 6：两个相同的光孔}\ix{双孔衍射}
 
 \begin{exam}{答题模板：两个边长 $a$ 的方孔，中心在 $x=\pm d/2$，平面波正入射}
-\textbf{第 1 步 拆开}：一个方孔再平移到两处，
+\textbf{第 1 步 拆开}：一个方孔再平移到两处（二维里平移点带 $\delta(y)$），
 \[
-t(x,y)=\rect\!\left(\frac xa\right)\rect\!\left(\frac ya\right)\conv\left[\delta\!\left(x-\frac d2\right)+\delta\!\left(x+\frac d2\right)\right].
+t(x,y)=\rect\!\left(\frac xa\right)\rect\!\left(\frac ya\right)\conv\left\{\left[\delta\!\left(x-\frac d2\right)+\delta\!\left(x+\frac d2\right)\right]\delta(y)\right\}.
 \]
 依据：与 $\delta$ 卷积是平移。两个圆孔把方孔换成 $\circf(r_1/(D/2))$，后面的干涉因子不变。
 
-\textbf{第 2 步 查表}：方孔的频谱是 $a^2\sinc(au)\sinc(av)$；两个 $\delta$ 的频谱是 $2\cos(\pi du)$。卷积变乘积：
+\textbf{第 2 步 查表}：方孔的频谱是 $a^2\sinc(au)\sinc(av)$；两个平移点的频谱是实数干涉因子 $2\cos(\pi du)$。卷积变乘积：
 \[
 T(u,v)=a^2\sinc(au)\sinc(av)\cdot 2\cos(\pi du).
 \]
-\textbf{第 3 步 强度}：线性相位在取模时消失，
+\textbf{第 3 步 强度}：干涉因子已经是实数，直接取模平方，
 \[
 I\propto|T|^2=4a^4\sinc^2(au)\sinc^2(av)\cos^2(\pi du),\qquad u=\frac{x}{\lambda f}.
 \]
@@ -587,7 +587,7 @@ r=z\sqrt{1+\frac{x^2+y^2}{z^2}}\approx z+\frac{x^2+y^2}{2z},
 \]
 正号表示发散，好像从后方距离 $z$ 的点发出。会聚到前方 $R$ 则把 $z$ 换成 $R$ 并改成负号。
 
-这块二次相位会进透镜后焦面，而且取决于衍射屏在透镜的哪一侧。屏在透镜前、距离 $d_0$ 时，后焦面多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$，$d_0=f$ 时括号为 0；亮点位置仍是 $x=\lambda fu$，强度与 $d_0$ 无关。屏改到透镜后、距后焦面 $d$ 时，频率坐标改成 $x/(\lambda d)$，同一频率的亮点按 $d/f$ 向光轴靠拢，并多一个振幅因子 $f/d$。两种位置的代入模板在第 \pageref{ex:screenpos} 页。
+上式是\textbf{接收面上}点源场的傍轴二次相位，后面衍射题从它出发。透镜后焦面上残留的二次相位是另一回事：它由衍射屏相对透镜的位置决定，不是把这里的 $x^2/(2z)$ 原样传过去。屏在透镜前、距离 $d_0$ 时，后焦面多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$，$d_0=f$ 时括号为 0；亮点位置仍是 $x=\lambda fu$，强度与 $d_0$ 无关。屏改到透镜后、距后焦面 $d$ 时，频率坐标改成 $x/(\lambda d)$，同一频率的亮点按 $d/f$ 向光轴靠拢，并多一个振幅因子 $f/d$。两种位置的代入模板在第 \pageref{ex:screenpos} 页。
 \end{exam}
 
 \begin{exam}{数值例}

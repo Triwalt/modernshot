@@ -229,12 +229,15 @@ $d_0=f$ 时该点没有额外二次相位。$d_0=0$ 时该点的二次相位路�
 \[
 x=\lambda du_0=5\times10^{-4}\times100\times10=0.5\text{ mm},
 \]
-振幅再乘 $f/d=2$。图样按 $d/f=1/2$ 缩小，形状仍由 $T(u)$ 决定。
+图样按 $d/f=1/2$ 缩小，形状仍由 $T(u)$ 决定。相对正面的前置因子 $1/(i\lambda f)$，反面是 $\dfrac{f}{d}\cdot\dfrac{1}{i\lambda d}=\dfrac{f}{i\lambda d^2}$；本例 $d=f/2$，\textbf{同一 $T$ 值}对应的复振幅是正面的 $(f/d)^2=4$ 倍（强度 16 倍），不要只乘一次 $f/d$。
 \end{exam}
 
 \textbf{【适配/变式】}
 \begin{itemize}
-\item \textbf{斜入射平面波照明} $\ee^{i2\pi u_0x_1}$：$\tilde E_1=t\,\ee^{i2\pi u_0x_1}$，由调制定理频谱变为 $T(u-u_0,v)$，焦面图样\textbf{整体平移} $\lambda fu_0=f\cos\alpha$（$\approx f\sin\theta$）。屏在反面时，平移量用该处的频率坐标，$x=\lambda d u_0$。
+\item \textbf{斜入射平面波照明} $\ee^{i2\pi u_0x_1}$：$\tilde E_1=t\,\ee^{i2\pi u_0x_1}$，由调制定理频谱变为 $T(u-u_0,v)$。平面波先经透镜会聚，\textbf{频谱中心仍在} $x=\lambda fu_0=f\cos\alpha$（$\approx f\sin\theta$）；透明屏不能改变这个焦点。屏在反面时，只有\textbf{频谱尺度}改用 $\lambda d$：
+\[
+I(x)\propto\left|T\!\left(\frac{x-\lambda fu_0}{\lambda d}\right)\right|^2.
+\]
 \item \textbf{屏平移} $t(x_1-a)$：频谱乘 $\ee^{-i2\pi ua}$，只是相位变化，\textbf{焦面强度不动}（夫琅禾费图样平移不变）。
 \item \textbf{点源（球面波）照明}：在点源的像面观察，频率坐标仍是 $x/\lambda f$。
 \item \textbf{有限口径透镜}：只要口径足够大不挡住要用的频谱即可忽略；否则高于 $\frac{D/2}{\lambda f}$ 的频率被截掉（见 §\ref{sec:4fctf} 低通）。
