@@ -5,7 +5,7 @@
 \begin{idea}[怎么用这一章]
 每道往年题按同一个顺序写：\textbf{读题（\icoI\,【直觉】框，大白话翻译题干）$\to$ 原题要点 $\to$ 考点与手册位置 $\to$ 完整答卷（\icoE\,【例】框，可直接照抄）$\to$ 变式（参数、条件变了改哪一步）}。
 \textbf{零基础先看「读题」框（\icoI\,【直觉】框）}：题干逐句翻译、生词一句话解释（附第零章入门页和详解页）、这道题在信号与系统里是什么问题、每一问最后要交什么。题干里的词还不认识，查书末术语表（第 \pageref{tab:glossary} 页）。
-答卷里每一步右边的“依据”就是考场上要写的理由；可以略去的常数都写明了“略去”。
+答卷按「手上有什么、下一步为什么这样做、得到什么」写开。方框里的式子是要交的结论；可以略去的常数都写明了“略去”。
 直觉讲解和更多例子在前面各章，页码已标出。考场遇到新题：先查第 \pageref{tab:typeindex} 页的「题型索引」找最像的一道，套它的步骤。
 \end{idea}
 
@@ -51,38 +51,72 @@ $\left|\iint fg\right|^2\le\iint|f|^2\iint|g|^2$）；(ii) 猜一种出瞳波像
 \textbf{考点}：OTF = 广义光瞳的归一化自相关（§\ref{sec:mtfproof}，第 \pageref{sec:mtfproof} 页）；施瓦茨不等式；线性相位 = 平移。
 
 \begin{exam}{答卷 2024-1}
-\textbf{记号}：出瞳函数 $P(x,y)$（透光处为 1，否则为 0），面积 $S_0=\iint P^2\dd x\dd y$；波像差 $W(x,y)$，$k=2\pi/\lambda$；
-广义光瞳 $\mathcal P=P\,\ee^{ikW}$。记 $\bm r=(x,y)$，$\bm\Delta=(\lambda z_iu,\lambda z_iv)$（$z_i$ 为出瞳到像面距离）。
+三问是一条链：先把 MTF 写成光瞳错开后的重叠，再用施瓦茨不等式比合矢量的长度，最后从等号成立的条件反推波像差只能是倾斜。
 
-\textbf{(i)} 非相干 OTF 是广义光瞳的归一化自相关（依据：OTF $=\F\{|h|^2\}$ 归一化，$h\propto\F\{\mathcal P\}$，再用自相关定理）：
+\textbf{记号}：出瞳 $P(x,y)$ 透光处为 1，否则为 0，面积 $S_0=\iint P^2\dd x\dd y$。波像差 $W(x,y)$，$k=2\pi/\lambda$。广义光瞳 $\mathcal P=P\,\ee^{ikW}$，即孔的形状再乘一张只改相位的薄片。记 $\bm r=(x,y)$。空间频率 $(u,v)$ 对应出瞳上的错开量 $\bm\Delta=(\lambda z_iu,\lambda z_iv)$，$z_i$ 是出瞳到像面的距离。
+
+\textbf{(i) 有像差时，每个频率的对比度都不会更高}
+
+非相干系统对强度线性，一个点物的像是强度 PSF。OTF 是这个强度 PSF 的傅里叶变换；振幅 PSF 又正比于广义光瞳的傅里叶变换。自相关定理把「先取模平方、再做傅里叶变换」写成「函数和自己错开后相乘再积分」，归一化后
 \[
 \mathcal H(u,v)=\frac{1}{S_0}\iint\mathcal P(\bm r)\,\mathcal P^*(\bm r+\bm\Delta)\dd x\dd y .
 \]
-被积函数只在重叠区 $A(\bm\Delta)$（$P(\bm r)=P(\bm r+\bm\Delta)=1$ 的区域，面积 $S(\bm\Delta)$）上不为零，故
+两块光瞳都透光时乘积才不为零。这个区域是重叠区 $A(\bm\Delta)$，面积记为 $S(\bm\Delta)$。在重叠区里相位相减：
 \[
-\mathcal H_{\text{ab}}=\frac1{S_0}\iint_{A}\ee^{ikW(\bm r)}\,\ee^{-ikW(\bm r+\bm\Delta)}\dd x\dd y,\qquad
-\mathcal H_0=\frac1{S_0}\iint_A1\dd x\dd y=\frac{S(\bm\Delta)}{S_0}\ge0 .
+\mathcal P(\bm r)\mathcal P^*(\bm r+\bm\Delta)=\ee^{ik\bigl[W(\bm r)-W(\bm r+\bm\Delta)\bigr]} .
 \]
-在 $A$ 上取 $f=\ee^{ikW(\bm r)}$，$g=\ee^{-ikW(\bm r+\bm\Delta)}$，$|f|=|g|=1$。由施瓦茨不等式
+于是有像差、无像差两种情况分别是
 \[
-|\mathcal H_{\text{ab}}|^2=\frac1{S_0^2}\left|\iint_A fg\right|^2\le\frac1{S_0^2}\iint_A|f|^2\cdot\iint_A|g|^2=\frac{S^2}{S_0^2}=\mathcal H_0^2 .
+\mathcal H_{\text{ab}}=\frac1{S_0}\iint_{A}\ee^{ik\bigl[W(\bm r)-W(\bm r+\bm\Delta)\bigr]}\dd x\dd y,\qquad
+\mathcal H_0=\frac1{S_0}\iint_A 1\dd x\dd y=\frac{S(\bm\Delta)}{S_0}\ge0 .
 \]
-所以 $\mathrm{MTF}_{\text{ab}}=|\mathcal H_{\text{ab}}|\le\mathcal H_0=\mathrm{MTF}_0$，对所有频率成立。证毕。
+无像差时每个贡献都是实数 1，积分就是重叠面积，所以 $\mathrm{MTF}_0=\mathcal H_0$。
 
-\textbf{(ii)} 猜测 $W(x,y)=ax+by+c$（倾斜 + 常数）。此时 $W(\bm r)-W(\bm r+\bm\Delta)=-(a\Delta_x+b\Delta_y)$ 与 $\bm r$ 无关：
+有像差时，被积函数是一堆长度为 1 的箭头，方向随位置 $\bm r$ 改变。在 $A$ 上令
 \[
-\mathcal H_{\text{ab}}=\ee^{-ik(a\Delta_x+b\Delta_y)}\,\frac{S}{S_0}=\ee^{-ik\lambda z_i(au+bv)}\mathcal H_0,\qquad|\mathcal H_{\text{ab}}|=\mathcal H_0 .
+f=\ee^{ikW(\bm r)},\qquad g=\ee^{-ikW(\bm r+\bm\Delta)},
 \]
-MTF 不变，只多一个线性相位（PTF），对应像整体平移 $(az_i,bz_i)$（依据：平移定理）。
+则 $|f|=|g|=1$，而 $\mathcal H_{\text{ab}}=\dfrac1{S_0}\displaystyle\iint_A fg$。施瓦茨不等式 $\bigl|\iint fg\bigr|^2\le\iint|f|^2\iint|g|^2$ 比较的就是合矢量与「全部同向」：
+\[
+|\mathcal H_{\text{ab}}|^2
+=\frac1{S_0^2}\left|\iint_A fg\right|^2
+\le\frac1{S_0^2}\iint_A 1\cdot\iint_A 1
+=\frac{S^2}{S_0^2}
+=\mathcal H_0^2 .
+\]
+开方得 $\mathrm{MTF}_{\text{ab}}=|\mathcal H_{\text{ab}}|\le\mathcal H_0=\mathrm{MTF}_0$，对每一个 $(u,v)$ 都成立。证毕。箭头同向时首尾相接最长；像差只把方向弄乱，合矢量变短，对比度随之下降或保持。
 
-\textbf{(iii)} 取等号 $\iff$ 在 $A$ 上 $f=A_0g^*$，即 $\ee^{ikW(\bm r)}=A_0\,\ee^{ikW(\bm r+\bm\Delta)}$。
-因 $|f|=|g^*|=1$，$A_0=\ee^{i\alpha}$ 是单位模常数，于是
+\textbf{(ii) 倾斜让所有箭头转过同一个角度}
+
+取 $W(x,y)=ax+by+c$。沿任何方向的变化率都是常数，两点之差
 \[
-W(\bm r)-W(\bm r+\bm\Delta)=\frac{\alpha(\bm\Delta)}{k}\quad(\text{模 }\lambda)\ \text{与 }\bm r\text{ 无关}.
+W(\bm r)-W(\bm r+\bm\Delta)=-(a\Delta_x+b\Delta_y)
 \]
-要求所有频率（所有 $\bm\Delta$）MTF 都不降，取 $\bm\Delta$ 很小：$W(\bm r+\bm\Delta)-W(\bm r)\approx\nabla W\cdot\bm\Delta$ 对任意 $\bm r$ 与任意小 $\bm\Delta$ 都与 $\bm r$ 无关
-$\Rightarrow\nabla W=(a,b)$ 为常矢量 $\Rightarrow W=ax+by+c$。
-所以不降 MTF 的波像差必须是\textbf{线性函数（倾斜 + 平移常数）}，(ii) 的猜测是唯一选择（不计相差 $\lambda$ 整数倍的台阶这类在相位上等价的情形）。
+与位置 $\bm r$ 无关。重叠区里的箭头因此转过同一个角度，可以提出公因子：
+\[
+\mathcal H_{\text{ab}}=\ee^{-ik(a\Delta_x+b\Delta_y)}\,\frac{S}{S_0}
+=\ee^{-ik\lambda z_i(au+bv)}\,\mathcal H_0 .
+\]
+模仍等于 $\mathcal H_0$，MTF 不变。多出来的 $\ee^{-i2\pi z_i(au+bv)}$ 是频率的线性相位。平移定理：频域乘线性相位等于空域整体平移，像挪到 $(az_i,bz_i)$，条纹对比度不变。常数 $c$ 在差值里消失，整块波面一起进退也不改图样。
+
+\textbf{(iii) 要每个频率都不降，波像差只能是这种倾斜}
+
+施瓦茨不等式取等号，当且仅当在积分区域上 $f=A_0 g^*$。代入上面的 $f,g$：
+\[
+\ee^{ikW(\bm r)}=A_0\,\ee^{ikW(\bm r+\bm\Delta)} .
+\]
+两边模都是 1，所以 $A_0=\ee^{i\alpha}$。$\alpha$ 可以随错开量 $\bm\Delta$ 变，随位置 $\bm r$ 则是常数：
+\[
+W(\bm r)-W(\bm r+\bm\Delta)=\frac{\alpha(\bm\Delta)}{k}
+\]
+（相差波长的整数倍时相位相同，可以不计）。右边与 $\bm r$ 无关。
+
+题目要求每一个频率的 MTF 都不降，上式对所有很小的 $\bm\Delta$ 都成立。左边按定义展开成梯度，
+\[
+W(\bm r+\bm\Delta)-W(\bm r)\approx\nabla W\cdot\bm\Delta .
+\]
+它对任意位置、任意小位移都与 $\bm r$ 无关，梯度 $\nabla W=(a,b)$ 就是常矢量。积分得 $W=ax+by+c$。
+因此 (ii) 的猜测就是唯一形式：不使 MTF 下降的波像差是倾斜加上一个常数。
 \end{exam}
 
 \begin{warn}[变式与易错]
@@ -127,30 +161,47 @@ $S=\big|\E[\ee^{ikW}]\big|^2\ \to\ S\approx1-k^2\sigma_W^2\ \to\ $ 代入 $\sigm
 \textbf{考点}：PSF 中心值 = 光瞳函数的积分（零频性质）；二阶泰勒展开（§\ref{sec:strehl}，第 \pageref{sec:strehl} 页）。
 
 \begin{exam}{答卷 2024-2}
-\textbf{第 1 步：$S$ 写成光瞳平均。} 像面振幅 $h(x,y)\propto\F\{\mathcal P\}\big|_{u=x/\lambda z_i}$，中心点 $u=v=0$：
-$h(0,0)\propto\iint\mathcal P\dd x\dd y$（依据：$\F\{g\}(0,0)=\iint g$）。于是
-\[
-S=\frac{|h_{\text{ab}}(0,0)|^2}{|h_0(0,0)|^2}=\frac{\left|\iint P\,\ee^{ikW}\dd x\dd y\right|^2}{\left|\iint P\dd x\dd y\right|^2}
-=\left|\E\!\left[\ee^{ikW}\right]\right|^2,
-\]
-其中 $\E[\cdot]=\frac1{S_0}\iint_P(\cdot)\dd x\dd y$ 表示光瞳内平均。
+先把中心亮度写成光瞳上相位箭头的平均，再把箭头展到二阶，取模平方后剩下的就是方差，最后代入 $\lambda/14$。
 
-\textbf{第 2 步：二阶展开。} $\ee^{ikW}\approx1+ikW-\dfrac{k^2W^2}{2}$，取平均：
-$\E[\ee^{ikW}]\approx1-\dfrac{k^2}{2}\E[W^2]+ik\,\E[W]$。
+\textbf{第 1 步：中心亮度等于光瞳的积分。}
+像面振幅是广义光瞳的傅里叶变换，$h(x,y)\propto\F\{\mathcal P\}$ 在频率 $u=x/(\lambda z_i)$、$v=y/(\lambda z_i)$ 处取值。像点正中心对应零频。傅里叶变换在原点的值就是函数本身的积分，
+\[
+h(0,0)\propto\iint\mathcal P\dd x\dd y=\iint P\,\ee^{ikW}\dd x\dd y .
+\]
+无像差时 $\ee^{ikW}=1$，分母是光瞳面积。Strehl 比是两个中心强度之比：
+\[
+S=\frac{|h_{\text{ab}}(0,0)|^2}{|h_0(0,0)|^2}
+=\frac{\left|\iint P\,\ee^{ikW}\dd x\dd y\right|^2}{\left|\iint P\dd x\dd y\right|^2}
+=\left|\E\!\left[\ee^{ikW}\right]\right|^2 .
+\]
+这里 $\E[\cdot]=\dfrac1{S_0}\displaystyle\iint_P(\cdot)\dd x\dd y$，就是在透光面积上取平均。$S$ 因此是「一堆单位箭头的平均」的模平方：箭头越齐，中心越亮。
 
-\textbf{第 3 步：取模平方（实部$^2$ + 虚部$^2$）。}
+\textbf{第 2 步：像差不大，把箭头展到二阶。}
+提示给出 $\ee^{ikW}\approx1+ikW-\dfrac{k^2W^2}{2}$。平均是线性运算，逐项取平均：
 \[
-S\approx\Big(1-\frac{k^2}{2}\E[W^2]\Big)^2+k^2\E^2[W]=1-k^2\E[W^2]+k^2\E^2[W]+\frac{k^4}{4}\E^2[W^2].
+\E[\ee^{ikW}]\approx1-\frac{k^2}{2}\E[W^2]+ik\,\E[W] .
 \]
-最后一项是四阶小量，与展开精度（二阶）不相称，略去：
+实部来自 1 和 $W^2$，虚部来自 $W$ 的平均。整块波面一起进退只改变虚部里的 $\E[W]$，下一步会看到它和 $\E[W^2]$ 配成方差。
+
+\textbf{第 3 步：模平方，只留到 $k^2$。}
+复数的模平方是实部平方加虚部平方：
 \[
-S\approx1-k^2\big(\E[W^2]-\E^2[W]\big)=1-k^2\sigma_W^2=\boxed{1-\Big(\frac{2\pi}{\lambda}\Big)^2\sigma_W^2}
+S\approx\Big(1-\frac{k^2}{2}\E[W^2]\Big)^2+k^2\E^2[W]
+=1-k^2\E[W^2]+k^2\E^2[W]+\frac{k^4}{4}\E^2[W^2] .
 \]
-\textbf{第 4 步：代入。} $\sigma_W<\lambda/14$ 时
+最后一项含 $k^4$，比题目允许的二阶展开更高，略去。括号里正好是提示里的方差：
 \[
-S>1-\Big(\frac{2\pi}{\lambda}\cdot\frac{\lambda}{14}\Big)^2=1-\Big(\frac{\pi}{7}\Big)^2=1-0.2014=0.799\approx0.8 .
+S\approx1-k^2\big(\E[W^2]-\E^2[W]\big)=1-k^2\sigma_W^2
+=\boxed{1-\Big(\frac{2\pi}{\lambda}\Big)^2\sigma_W^2} .
 \]
-即 RMS 波前误差小于 $\lambda/14$ 时 Strehl 比约大于 0.8（Maréchal 判据）。证毕。
+平均相位 $\E[W]$ 已经收进 $\sigma_W$，单独的平移常数不影响 $S$。
+
+\textbf{第 4 步：代入题目的界限。}
+$\sigma_W<\lambda/14$ 时，$k\sigma_W<2\pi/14=\pi/7$，
+\[
+S>1-\Big(\frac{\pi}{7}\Big)^2=1-0.2014=0.799\approx0.8 .
+\]
+所以 RMS 波前误差小于 $\lambda/14$ 时，Strehl 比大于 0.8。证毕。
 \end{exam}
 
 \begin{idea}[更干净的第 2–3 步（可替换上面的写法）]
@@ -210,37 +261,55 @@ iii. 求照明光穿透物体之后的光强度的频谱；iv. 说明选适当�
 \textbf{考点}：截止频率（第 \ref{ch:imaging} 章）；两平面波干涉（第 \ref{ch:wave} 章）；乘积 $\leftrightarrow$ 卷积，$\cos\leftrightarrow$ 两个 $\delta$；§\ref{sec:sim}（第 \pageref{sec:sim} 页）。
 
 \begin{exam}{答卷 2024-3}
-\textbf{i.} 物镜能收集的平面波，与光轴夹角最大为 $\theta_{\max}$，$\mathrm{NA}=n\sin\theta_{\max}$，对应最高空间频率 $\dfrac{n\sin\theta_{\max}}{\lambda}=\dfrac{\mathrm{NA}}{\lambda}$（$\lambda$ 为真空波长），这是相干截止频率。
-非相干 OTF 是光瞳的自相关，宽度加倍，所以物面上的非相干截止频率
+四问连着做：先求物镜自己的通带宽度，再求照明条纹的频率，条纹乘上物体就把物的频谱复制到这条频率的两侧，最后把复制的距离选成正好等于通带宽度。
+
+\textbf{i. 非相干截止是相干截止的两倍。}
+物镜能收进的平面波，与光轴的最大夹角满足 $\mathrm{NA}=n\sin\theta_{\max}$。斜平面波在物面上的空间频率是 $n\sin\theta/\lambda$（$\lambda$ 为真空波长），所以相干照明时最高频率是 $\mathrm{NA}/\lambda$。非相干 OTF 是光瞳和自己错开后的重叠，光瞳半径对应的频率是 $\mathrm{NA}/\lambda$，重叠要到两边都错开这么多才变成零，通带宽度加倍：
 \[
 \boxed{f_c=\frac{2\,\mathrm{NA}}{\lambda}} .
 \]
 
-\textbf{ii.} 两束光在 $xz$ 面内，与 $z$ 轴夹角 $\pm\frac\theta2$：
+\textbf{ii. 两束斜平面波在物面上干涉成余弦条纹。}
+两束等振幅、等相位的光在 $xz$ 面内，与 $z$ 轴夹角 $\pm\theta/2$。物面附近的场是两列波相加：
 \[
-E(x,z)=A\,\ee^{ik(x\sin\frac\theta2+z\cos\frac\theta2)}+A\,\ee^{ik(-x\sin\frac\theta2+z\cos\frac\theta2)}
+E=A\,\ee^{ik\bigl(x\sin\frac\theta2+z\cos\frac\theta2\bigr)}
++A\,\ee^{ik\bigl(-x\sin\frac\theta2+z\cos\frac\theta2\bigr)}
 =2A\,\ee^{ikz\cos\frac\theta2}\cos\!\Big(kx\sin\frac\theta2\Big).
 \]
-强度（共同相位因子 $\ee^{ikz\cos\frac\theta2}$ 模为 1，消掉）：
+共同的 $z$ 向相位模为 1，强度只留下余弦：
 \[
-I_{\text{ill}}(x)=|E|^2=4A^2\cos^2\!\Big(kx\sin\frac\theta2\Big)=2A^2\big[1+\cos(2\pi f_0x)\big],\qquad
-\boxed{f_0=\frac{2\sin(\theta/2)}{\lambda}}
+I_{\text{ill}}=|E|^2=4A^2\cos^2\!\Big(kx\sin\frac\theta2\Big).
 \]
-（依据：$\cos^2a=\frac{1+\cos2a}2$，$2k\sin\frac\theta2=2\pi\cdot\frac{2\sin(\theta/2)}{\lambda}$。）
+用 $\cos^2 a=\dfrac{1+\cos 2a}{2}$，双角把空间频率翻倍。又因 $k=2\pi/\lambda$，
+\[
+2k\sin\frac\theta2=2\pi\cdot\frac{2\sin(\theta/2)}{\lambda},
+\]
+所以
+\[
+I_{\text{ill}}(x)=2A^2\big[1+\cos(2\pi f_0 x)\big],\qquad
+\boxed{f_0=\frac{2\sin(\theta/2)}{\lambda}} .
+\]
+$1$ 是均匀本底，$\cos$ 是明暗条纹，条纹频率由两束光的夹角决定。
 
-\textbf{iii.} 透过物体后 $I(x)=I_{\text{ill}}(x)\,T(x)$。记 $\mathcal T(u)=\F\{T\}$。由 $\F\{\cos2\pi f_0x\}=\frac12[\delta(u-f_0)+\delta(u+f_0)]$、乘积的频谱 = 频谱的卷积、与 $\delta$ 卷积 = 平移：
+\textbf{iii. 条纹乘物体，频谱被复制成三份。}
+物体只改变通过的光强比例，$I(x)=I_{\text{ill}}(x)\,T(x)$。记 $\mathcal T=\F\{T\}$。余弦的频谱是一对 $\delta$：
 \[
-\boxed{\F\{I\}(u)=2A^2\Big[\mathcal T(u)+\tfrac12\mathcal T(u-f_0)+\tfrac12\mathcal T(u+f_0)\Big]}
+\F\{\cos(2\pi f_0 x)\}=\frac12\bigl[\delta(u-f_0)+\delta(u+f_0)\bigr].
 \]
-物的频谱被复制成三份：原位、右移 $f_0$、左移 $f_0$。
+乘积的频谱等于频谱的卷积，与 $\delta(u-f_0)$ 卷积就是把整份频谱平移 $f_0$。三项分别留下原位、右移、左移：
+\[
+\boxed{\F\{I\}(u)=2A^2\Big[\mathcal T(u)+\tfrac12\mathcal T(u-f_0)+\tfrac12\mathcal T(u+f_0)\Big]} .
+\]
+原先落在物镜通带外面的高频，有一份被搬到了 $u\pm f_0$ 附近。
 
-\textbf{iv.} 物镜只让 $|u|\le f_c$ 的分量通过。在通带内，$\mathcal T(u-f_0)$ 这一份携带的是物的频率 $u-f_0\in[-f_c-f_0,\ f_c-f_0]$，
-$\mathcal T(u+f_0)$ 携带 $[-f_c+f_0,\ f_c+f_0]$。所以能采集到的物频率最高为 $f_0+f_c$。
-照明光也要经过物镜（或同样的 NA），$\sin\frac\theta2\le\mathrm{NA}$，即 $f_0\le f_c$。取 $\sin\dfrac\theta2=\mathrm{NA}$：
+\textbf{iv. 把搬移量选成截止频率，可见范围翻倍。}
+物镜只放过 $|u|\le f_c$ 的分量。通带里的 $\mathcal T(u-f_0)$ 携带的是物频率 $u-f_0$，覆盖 $[-f_c-f_0,\ f_c-f_0]$；$\mathcal T(u+f_0)$ 覆盖 $[-f_c+f_0,\ f_c+f_0]$。能拿到的最高物频率因此是 $f_0+f_c$。
+
+照明光本身也要进得了物镜，$\sin(\theta/2)\le\mathrm{NA}$，也就是 $f_0\le f_c$。取等号 $\sin(\theta/2)=\mathrm{NA}$：
 \[
-f_0=\frac{2\,\mathrm{NA}}{\lambda}=f_c\quad\Rightarrow\quad f_{\max}=f_0+f_c=2f_c=\frac{4\,\mathrm{NA}}{\lambda}.
+f_0=\frac{2\,\mathrm{NA}}{\lambda}=f_c,\qquad f_{\max}=f_0+f_c=2f_c=\frac{4\,\mathrm{NA}}{\lambda}.
 \]
-三个频带首尾相接、无空隙，覆盖 $[-2f_c,2f_c]$，即采集到原截止频率 2 倍的信息。实际操作：平移条纹相位（如 $0,\frac{2\pi}3,\frac{4\pi}3$）拍 3 张，解出三份频谱再拼接；旋转条纹方向覆盖二维。
+三份频带首尾相接，覆盖 $[-2f_c,2f_c]$，采集到的最高频率是原来截止频率的 2 倍。拍的时候把条纹相位分别设成 $0$、$2\pi/3$、$4\pi/3$，三张图解出三份频谱再拼回去；条纹转几个方向，就覆盖二维。
 \end{exam}
 
 \begin{warn}[变式]
@@ -291,49 +360,65 @@ i. 计算观察屏上的复振幅，给出总体放大率 $M$；ii. 在频谱面
 \textbf{考点}：透镜前焦面 $\to$ 后焦面 = 傅里叶变换；两次正变换 = 倒像；4f 滤波（第 \ref{ch:lens} 章）。
 
 \begin{exam}{答卷 2024-4}
-\textbf{依据（透镜的傅里叶变换性质）}：物在焦距 $f$ 的透镜前焦面、垂直平面波照明时，后焦面复振幅
+先用一片透镜的后焦面公式走完第一个 4f，第二个 4f 把倒像再倒一次，负号相乘成为正像。滤波器放在第一次变换之后，所以它直接乘在物频谱上。
+
+\textbf{单透镜公式。} 物在焦距 $f$ 的前焦面、垂直平面波照明时，后焦面就是这次傅里叶变换，坐标 $\xi$ 对应频率 $\xi/(\lambda f)$：
 \[
 U_f(\xi,\eta)=\frac{\ee^{i2kf}}{i\lambda f}\,\hat E\Big(\frac{\xi}{\lambda f},\frac{\eta}{\lambda f}\Big),\qquad\hat E=\F\{E\}.
 \]
-\textbf{i. 第 1 步（$L_1$）}：频谱面 1 上 $U_1(\xi,\eta)=\dfrac{\ee^{i2kf_1}}{i\lambda f_1}\hat E\Big(\dfrac{\xi}{\lambda f_1},\dfrac{\eta}{\lambda f_1}\Big)$。
+常数 $\ee^{i2kf}/(i\lambda f)$ 只改整体亮度和一个固定相位，下面每过一片透镜都带一个，最后收成总相位。
 
-\textbf{第 2 步（$L_2$）}：频谱面 1 是 $L_2$ 的前焦面，$L_2$ 后焦面（中间像面）
+\textbf{i. 第一个 4f：一次变换再做一次正变换，得到倒像。}
+$L_1$ 的后焦面（频谱面 1）是
+\[
+U_1(\xi,\eta)=\frac{\ee^{i2kf_1}}{i\lambda f_1}\hat E\Big(\frac{\xi}{\lambda f_1},\frac{\eta}{\lambda f_1}\Big).
+\]
+频谱面 1 同时又是 $L_2$ 的前焦面，所以 $L_2$ 对 $U_1$ 再做一次同样的变换，在中间像面读 $x/(\lambda f_2)$：
 \[
 E_2(x,y)=\frac{\ee^{i2kf_2}}{i\lambda f_2}\F\{U_1\}\Big(\frac{x}{\lambda f_2},\frac{y}{\lambda f_2}\Big).
 \]
-由缩放定理和 $\F\{\hat E\}(\nu)=E(-\nu)$（连续两次正变换 = 翻转）：
-$\F\big\{\hat E(\tfrac{\xi}{\lambda f_1},\tfrac{\eta}{\lambda f_1})\big\}(\nu_x,\nu_y)=(\lambda f_1)^2E(-\lambda f_1\nu_x,-\lambda f_1\nu_y)$。代入 $\nu_x=\frac{x}{\lambda f_2}$：
+连续两次正变换把函数翻转：$\F\{\hat E\}(\nu)=E(-\nu)$。频谱面坐标比物频率放大了 $\lambda f_1$，缩放定理因此多出一个 $(\lambda f_1)^2$，并让空域坐标再乘 $\lambda f_1$。代入 $\nu_x=x/(\lambda f_2)$ 后，坐标缩成 $-(f_1/f_2)x$。前置因子里 $(i\lambda)^2=-\lambda^2$，和 $(\lambda f_1)^2$ 相除得到 $-f_1/f_2$：
 \[
-E_2(x,y)=\frac{\ee^{i2k(f_1+f_2)}}{(i\lambda)^2f_1f_2}(\lambda f_1)^2E\Big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\Big)
-=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}E\Big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\Big).
+E_2(x,y)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}E\Big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\Big).
 \]
-第一个 4f 成倒像，放大率 $M_1=-f_2/f_1$。
+像是倒的，这一级放大率 $M_1=-f_2/f_1$。振幅上的 $f_1/f_2$ 是 $1/|M_1|$：像拉大时单位面积变暗，总能量保持。
 
-\textbf{第 3 步（第二个 4f）}：中间像面是 $L_3$ 的前焦面，同理（把 $E$ 换成 $E_2$，$f_1,f_2$ 换成 $f_3,f_4$）：
+\textbf{第二个 4f 再倒一次。}
+中间像面是 $L_3$ 的前焦面。把上面的结论里 $E\to E_2$、$f_1\to f_3$、$f_2\to f_4$：
 \[
-E_{\text{out}}(x,y)=-\ee^{i2k(f_3+f_4)}\frac{f_3}{f_4}E_2\Big(-\frac{f_3}{f_4}x,-\frac{f_3}{f_4}y\Big)
-=\boxed{\ee^{i2k(f_1+f_2+f_3+f_4)}\,\frac{f_1f_3}{f_2f_4}\,E\Big(\frac{f_1f_3}{f_2f_4}x,\ \frac{f_1f_3}{f_2f_4}y\Big)}
+E_{\text{out}}(x,y)=-\ee^{i2k(f_3+f_4)}\frac{f_3}{f_4}E_2\Big(-\frac{f_3}{f_4}x,-\frac{f_3}{f_4}y\Big).
 \]
-总放大率 $\boxed{M=M_1M_2=\Big(-\frac{f_2}{f_1}\Big)\Big(-\frac{f_4}{f_3}\Big)=\frac{f_2f_4}{f_1f_3}>0}$，正立像。
-振幅因子 $\frac{f_1f_3}{f_2f_4}=\frac1M$ 保证能量守恒（强度 $\times\frac1{M^2}$，面积 $\times M^2$）。
-
-\textbf{ii. 第 1 步}：频谱面 1 处 $U_1'=U_1\cdot T\big(\frac{\xi}{\lambda f_1},\frac{\eta}{\lambda f_1}\big)$。令 $u=\frac{\xi}{\lambda f_1}$，$v=\frac{\eta}{\lambda f_1}$，正是物的空间频率：
-$U_1'\propto\hat E(u,v)\,T(u,v)$——物频谱直接乘 $T$。
-
-\textbf{第 2 步}：$L_2$ 对 $U_1'$ 作正变换并在 $\big(\frac{x}{\lambda f_2},\frac{y}{\lambda f_2}\big)$ 取值。换元 $\xi=\lambda f_1u$：
+$E_2$ 的自变量里已经有一个负号，再乘 $-f_3/f_4$ 之后负号抵消，观察屏上是正立的原图：
 \[
-\iint\hat E(u,v)T(u,v)\,\ee^{-i2\pi\lambda f_1(ux+vy)/(\lambda f_2)}(\lambda f_1)^2\dd u\dd v
-=(\lambda f_1)^2\,\IF\{\hat ET\}\Big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\Big),
+E_{\text{out}}(x,y)
+=\boxed{\ee^{i2k(f_1+f_2+f_3+f_4)}\,\frac{f_1f_3}{f_2f_4}\,E\Big(\frac{f_1f_3}{f_2f_4}x,\ \frac{f_1f_3}{f_2f_4}y\Big)} .
 \]
-而 $\IF\{\hat E\,T\}=E\conv h$，$h=\IF\{T\}$（依据：卷积定理）。所以
-$E_2(x,y)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\,[E\conv h]\big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\big)$。
-
-\textbf{第 3 步}：第二个 4f 无滤波器，只再倒像缩放一次：
+两级放大率相乘，
 \[
-E_{\text{out}}(x,y)=\ee^{i2k(f_1+f_2+f_3+f_4)}\frac1M\,[E\conv h]\Big(\frac xM,\frac yM\Big),\qquad h=\IF\{T\}.
+\boxed{M=M_1M_2=\Big(-\frac{f_2}{f_1}\Big)\Big(-\frac{f_4}{f_3}\Big)=\frac{f_2f_4}{f_1f_3}>0} ,
 \]
-\textbf{相干传递函数}：输出频谱 $\hat E_{\text{out}}(u',v')\propto\hat E(Mu',Mv')\,T(Mu',Mv')$。
-以物面频率计 $\boxed{H(u,v)=T(u,v)}$；以观察屏频率 $(u',v')$ 计 $H'(u',v')=T(Mu',Mv')=T\Big(\frac{f_2f_4}{f_1f_3}u',\frac{f_2f_4}{f_1f_3}v'\Big)$。
+正立。振幅因子 $f_1f_3/(f_2f_4)=1/M$，和面积放大 $M^2$、强度缩小 $1/M^2$ 一致。
+
+\textbf{ii. 滤波器乘在第一次变换的频谱上。}
+频谱面 1 的坐标已经是物频率：$u=\xi/(\lambda f_1)$。滤波片透过率写成 $T(\xi/(\lambda f_1))$，所以它做的就是
+\[
+U_1'=U_1\cdot T(u,v)\propto\hat E(u,v)\,T(u,v).
+\]
+$L_2$ 再做一次正变换。换元 $\xi=\lambda f_1 u$ 后，积分核在中间像面的坐标上取负号，结果是 $\hat E\,T$ 的逆变换，再翻转：
+\[
+E_2(x,y)=-\ee^{i2k(f_1+f_2)}\frac{f_1}{f_2}\,[E\conv h]\Big(-\frac{f_1}{f_2}x,-\frac{f_1}{f_2}y\Big),
+\]
+其中 $h=\IF\{T\}$。卷积定理：频域相乘等于空域卷积，所以物先和 $h$ 卷积，再按第一级 4f 成倒像。
+
+第二个 4f 没有新的滤波器，只把这个卷积像再倒一次、放大 $M_2$ 倍。两次倒像抵消后
+\[
+E_{\text{out}}(x,y)=\ee^{i2k(f_1+f_2+f_3+f_4)}\frac1M\,[E\conv h]\Big(\frac xM,\frac yM\Big).
+\]
+频域里看，输出频谱正比于 $\hat E(Mu',Mv')\,T(Mu',Mv')$。以物面频率计，系统乘的就是滤波片本身，
+\[
+\boxed{H(u,v)=T(u,v)} .
+\]
+若题目用观察屏上的频率 $(u',v')$，物频率是它的 $M$ 倍，$H'(u',v')=T(Mu',Mv')$。
 \end{exam}
 
 \begin{warn}[变式]
@@ -377,28 +462,50 @@ E_{\text{out}}(x,y)=\ee^{i2k(f_1+f_2+f_3+f_4)}\frac1M\,[E\conv h]\Big(\frac xM,\
 \textbf{考点}：角谱传播（自由传播 $z$ = 频谱乘 $\exp[-i\pi\lambda z(u^2+v^2)]$）；4f 的频谱缩放；纵向放大率 $\alpha=M^2$（§\ref{sec:4foffset}）。
 
 \begin{exam}{答卷 2024-5}
-\textbf{依据（菲涅耳近似下的角谱传播）}：自由传播距离 $z$，频谱乘传递函数 $H_z(u,v)=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]$；$z<0$ 表示反向传播。
+物往左挪 $x_1$，频谱先乘上一份二次相位；4f 把频率缩小 $|M|$ 倍，这份相位的系数变成 $M^2x_1$；把接收屏从后焦面往回挪 $x_2$，再乘一份反号的二次相位。令两份系数相等，二次相位消失，输出回到标准 4f。
 
-\textbf{第 1 步：输入面 $\to$ 前焦面。} 记输入 $E(x,y)$，频谱 $\hat E(u,v)$。前焦面在输入面右侧 $x_1$，前焦面场 $g(x,y)$ 的频谱
-\[
-\hat g(u,v)=\hat E(u,v)\exp[-i\pi\lambda x_1(u^2+v^2)]\quad(\text{略去常数 }\ee^{ikx_1}).
-\]
-\textbf{第 2 步：前焦面 $\to$ 后焦面（标准 4f）。} 后焦面场 $E_{\text{b}}(x,y)=C\,\frac{1}{|M|}\,g\big(\frac xM,\frac yM\big)$，$M=-\frac{f_2}{f_1}$，$C=-\ee^{i2k(f_1+f_2)}$ 为常数。
-由缩放定理 $\F\{g(x/M,y/M)\}=M^2\hat g(Mu',Mv')$，后焦面场的频谱（输出面频率 $u',v'$）：
-\[
-\hat E_{\text{b}}(u',v')=C|M|\,\hat g(Mu',Mv')=C|M|\,\hat E(Mu',Mv')\exp[-i\pi\lambda x_1M^2(u'^2+v'^2)].
-\]
-\textbf{第 3 步：后焦面 $\to$ 接收面。} 接收面在后焦面之前 $x_2$，相当于从后焦面反向传播 $x_2$（$z=-x_2$），频谱乘 $\exp[+i\pi\lambda x_2(u'^2+v'^2)]$：
-\[
-\hat E_{\text{rec}}(u',v')=C'\,\hat E(Mu',Mv')\exp\!\big[-i\pi\lambda\,(M^2x_1-x_2)(u'^2+v'^2)\big].
-\]
-\textbf{第 4 步：令二次相位消失。} 取 $\boxed{x_2=M^2x_1}$，指数为 0，$\hat E_{\text{rec}}=C'\hat E(Mu',Mv')$，逆变换（缩放定理）：
-\[
-E_{\text{rec}}(x,y)=\frac{C'}{M^2}\,E\Big(\frac xM,\frac yM\Big),
-\]
-与标准 4f 的输出（放大 $M$ 倍的倒像）只差常数因子，即仍实现原 4f 系统的作用。证毕。
+自由传播距离 $z$ 时，傍轴角谱给频谱乘 $H_z=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]$。$\ee^{ikz}$ 是整体相位，下面略去。$z<0$ 表示逆着光往回看。
 
-\textbf{第 5 步（物理解释，可加分）}：$M^2$ 就是纵向放大率 $\alpha=\beta^2$。物沿轴远离 $L_1$ 移动 $x_1$，像沿同方向移动 $M^2x_1$，即靠近 $L_2$，所以接收面要在后焦面之前。
+\textbf{第 1 步：从物面走到前焦面。}
+物 $E$ 的频谱是 $\hat E$。图上物在前焦面左边 $x_1$，光要再走 $x_1$ 才到前焦面，所以前焦面场 $g$ 的频谱是
+\[
+\hat g(u,v)=\hat E(u,v)\exp[-i\pi\lambda x_1(u^2+v^2)] .
+\]
+这一步只改相位，频谱的模不变。
+
+\textbf{第 2 步：标准 4f 把频率坐标乘上 $M$。}
+前焦面到后焦面就是 2024-4 里的一级 4f。后焦面场是前焦面场的倒像，
+\[
+E_{\text{b}}(x,y)=C\,\frac{1}{|M|}\,g\Big(\frac xM,\frac yM\Big),\qquad M=-\frac{f_2}{f_1},
+\]
+常数 $C=-\ee^{i2k(f_1+f_2)}$。缩放定理说，空域除以 $M$，频域就要乘 $M$，二维雅可比是 $M^2$。后焦面频谱用像面频率 $u'$ 写成
+\[
+\hat E_{\text{b}}(u',v')=C|M|\,\hat g(Mu',Mv').
+\]
+把第 1 步代进来：$\hat g$ 的自变量已经是 $Mu'$，二次相位里的 $(u^2+v^2)$ 变成 $M^2(u'^2+v'^2)$，
+\[
+\hat E_{\text{b}}(u',v')=C|M|\,\hat E(Mu',Mv')\exp[-i\pi\lambda x_1 M^2(u'^2+v'^2)] .
+\]
+物方多走的 $x_1$，到像方变成 $M^2x_1$。这就是纵向放大率 $\alpha=M^2$。
+
+\textbf{第 3 步：接收屏在后焦面之前，等于再反向走 $x_2$。}
+从后焦面到它前面 $x_2$ 处，传播距离是 $-x_2$，频谱再乘 $\exp[+i\pi\lambda x_2(u'^2+v'^2)]$。两份二次相位合在一起：
+\[
+\hat E_{\text{rec}}(u',v')=C'\,\hat E(Mu',Mv')\exp\!\big[-i\pi\lambda(M^2x_1-x_2)(u'^2+v'^2)\big].
+\]
+
+\textbf{第 4 步：让指数里的系数为零。}
+取
+\[
+\boxed{x_2=M^2x_1},
+\]
+指数为 0，$\hat E_{\text{rec}}=C'\hat E(Mu',Mv')$。再做逆变换，缩放定理把 $M$ 送回空域：
+\[
+E_{\text{rec}}(x,y)=\frac{C'}{M^2}\,E\Big(\frac xM,\frac yM\Big).
+\]
+这就是标准 4f 的输出：放大 $M$ 倍的倒像，只差一个常数。证毕。
+
+物沿轴远离 $L_1$ 一段 $x_1$，像沿同一方向移动 $M^2x_1$，也就是靠近 $L_2$，所以接收面落在后焦面之前。
 \end{exam}
 
 \begin{warn}[变式]
@@ -451,36 +558,55 @@ E_{\text{rec}}(x,y)=\frac{C'}{M^2}\,E\Big(\frac xM,\frac yM\Big),
 \textbf{考点}：第 \pageref{box:approx} 页近似条件比较。
 
 \begin{exam}{答卷 2025-1}
-\textbf{(i)} 接收面上半径 $\rho$ 处到波源距离 $r=\sqrt{z^2+\rho^2}$，球面波 $\dfrac{A}{r}\ee^{ikr}$。
+先对同一列球面波分别看振幅和相位：振幅误差只含几何比例 $\rho/z$，相位误差还乘上 $z/\lambda$。比值远大于 1，所以相位近似更苛刻。再用这个标准去看两种衍射公式里留下的项。
 
-\textbf{振幅近似（傍轴）}：$\frac1r\approx\frac1z$，相对误差
+\textbf{(i) 同一个 $\rho$、$z$，相位误差比振幅误差大 $2\pi z/\lambda$ 倍。}
+接收面上离中心 $\rho$ 的点到波源的距离是 $r=\sqrt{z^2+\rho^2}$，球面波写成 $\dfrac{A}{r}\ee^{ikr}$。
+
+振幅近似把 $1/r$ 换成 $1/z$。相对误差是
 \[
-\frac{1/z-1/r}{1/z}=1-\frac{z}{\sqrt{z^2+\rho^2}}\approx\frac{\rho^2}{2z^2}\qquad(\text{依据：}(1+t)^{-1/2}\approx1-\tfrac t2).
+\frac{1/z-1/r}{1/z}=1-\frac{z}{\sqrt{z^2+\rho^2}} .
 \]
-只要 $\rho\ll z$ 即可满足，\textbf{与波长无关}。
+令 $t=\rho^2/z^2$，用 $(1+t)^{-1/2}\approx1-t/2$，得相对误差 $\approx\rho^2/(2z^2)$。它只要求 $\rho\ll z$，式子里没有波长。
 
-\textbf{相位近似（远场）}：$kr\approx kz$，相位误差
+相位近似把 $kr$ 换成 $kz$。多出来的相位是
 \[
-kr-kz=kz\Big(\sqrt{1+\tfrac{\rho^2}{z^2}}-1\Big)\approx\frac{k\rho^2}{2z}=\frac{\pi\rho^2}{\lambda z}.
+kr-kz=kz\Big(\sqrt{1+\frac{\rho^2}{z^2}}-1\Big)\approx\frac{k\rho^2}{2z}=\frac{\pi\rho^2}{\lambda z} .
 \]
-要求它 $\ll\pi$（相位起伏远小于半周），即 $\boxed{z\gg\rho^2/\lambda}$。
-
-\textbf{比较}：相位误差与振幅误差之比
+要把它看成常数，这份起伏应远小于半周，即远小于 $\pi$，于是
 \[
-\frac{\pi\rho^2/(\lambda z)}{\rho^2/(2z^2)}=\frac{2\pi z}{\lambda}\gg1\quad(z\gg\lambda),
+\boxed{z\gg\rho^2/\lambda} .
 \]
-同样的 $\rho,z$ 下相位误差大得多，所以\textbf{远场（相位）近似更难满足}。
-数例：$\lambda=0.5\ \mu$m，$\rho=1$ mm，$z=1$ m：振幅误差 $5\times10^{-7}$，相位误差 $2\pi$ rad——傍轴早已满足，远场根本不成立。
+两个误差相除，$\rho^2$ 约掉：
+\[
+\frac{\pi\rho^2/(\lambda z)}{\rho^2/(2z^2)}=\frac{2\pi z}{\lambda}\gg1
+\]
+（日常的 $z$ 都远大于波长）。同样的几何尺寸下，相位已经转了好多圈，振幅几乎还没变，所以远场近似更难满足。
 
-\textbf{(ii)} 由惠更斯-菲涅耳原理，衍射屏上每点是次波源，观察屏是它们的“接收面”；反过来，从观察屏上一点看，衍射屏（尺寸 $a$）也是“接收面”。
-展开 $r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}\approx z+\frac{(x-x_1)^2+(y-y_1)^2}{2z}$：
-\begin{itemize}
-\item \textbf{菲涅耳衍射}：振幅中 $\frac1r\approx\frac1z$（傍轴），相位保留到二次项。两个屏都\textbf{只满足傍轴（振幅）近似}，衍射屏和观察屏上的二次相位都保留：
-$E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}\F\big\{E_1\ee^{ik\frac{x_1^2+y_1^2}{2z}}\big\}$。
-\item \textbf{夫琅禾费衍射}：在菲涅耳基础上，\textbf{衍射屏}还满足远场（相位）近似：$\frac{k(x_1^2+y_1^2)_{\max}}{2z}\ll\pi$，即 $z\gg\frac{a^2}{\lambda}$，衍射屏上的二次相位 $\approx1$；
-\textbf{观察屏只满足傍轴}，其二次相位 $\ee^{ik\frac{x^2+y^2}{2z}}$ 保留（不影响强度）。于是 $E\propto\F\{E_1\}\big(\frac{x}{\lambda z},\frac{y}{\lambda z}\big)$。
-\end{itemize}
-用菲涅耳数 $N_F=\frac{a^2}{\lambda z}$ 概括：$N_F\gtrsim1$ 为菲涅耳区，$N_F\ll1$ 为夫琅禾费区。
+数例：$\lambda=0.5\,\mu$m，$\rho=1$ mm，$z=1$ m。振幅相对误差 $5\times10^{-7}$；相位误差 $\pi\rho^2/(\lambda z)=2\pi$ rad。傍轴已经很好，远场还不成立。
+
+\textbf{(ii) 菲涅耳留下两处二次相位，夫琅禾费再丢掉衍射屏上的那一处。}
+衍射屏上每一点都是次波源，观察屏是这些次波的接收面；从观察屏上一点回头看，衍射屏（尺寸 $a$）也是一块接收面。距离展开到二次项：
+\[
+r\approx z+\frac{(x-x_1)^2+(y-y_1)^2}{2z}
+=z+\frac{x^2+y^2}{2z}+\frac{x_1^2+y_1^2}{2z}-\frac{xx_1+yy_1}{z} .
+\]
+交叉项给出傅里叶变换。剩下两份二次相位要分别判断。
+
+菲涅耳衍射只用了振幅上的傍轴，$1/r\approx1/z$。两块屏的二次相位都保留，
+\[
+E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}
+\F\Big\{E_1\ee^{ik\frac{x_1^2+y_1^2}{2z}}\Big\} .
+\]
+观察屏上的指数在积分号外面，衍射屏上的指数留在被变换的函数里。
+
+夫琅禾费衍射再要求衍射屏满足远场：屏边缘的二次相位 $ka^2/(2z)$ 远小于 $\pi$，即 $z\gg a^2/\lambda$。这时衍射屏上的指数看成 1，积分变成 $E_1$ 自己的傅里叶变换，
+\[
+E\propto\F\{E_1\}\Big(\frac{x}{\lambda z},\frac{y}{\lambda z}\Big) .
+\]
+观察屏上的二次相位仍然留着；取强度时它的模是 1，图样不受影响。所以观察屏只需要傍轴。
+
+用菲涅耳数 $N_F=a^2/(\lambda z)$ 概括：$N_F\gtrsim1$ 时二次相位还转得动，处在菲涅耳区；$N_F\ll1$ 时衍射屏上的二次相位可以丢掉，进入夫琅禾费区。
 \end{exam}
 
 \begin{warn}[变式]
@@ -530,42 +656,54 @@ i. 求像面点扩散函数（二维）；ii. 画 $x$ 方向 MTF，定量标注�
 \textbf{考点}：光瞳 $\to$ PSF $\to$ OTF（自相关）；完整推导和直觉见第 \pageref{ex:3slit} 页。
 
 \begin{exam}{答卷 2025-2}
-\textbf{准备}：物距 $2f$ $\Rightarrow$ 像距 $z_i=2f$，$M=-1$。记缝宽 $w=D/5$，三缝中心 $x=0,\pm2w$。光瞳
+先把三条缝写成「一条缝卷积三个点」，傅里叶变换得到 PSF；MTF 改数这三条缝错开后还剩几条重叠；余弦物的对比度就等于这个 MTF。
+
+\textbf{准备：像距和光瞳。}
+物距 $2f$，成像公式 $\frac1{2f}+\frac1{z_i}=\frac1f$ 给出像距 $z_i=2f$，放大率 $M=-1$。缝宽 $w=D/5$，缝与缝的空档也是 $w$，所以三条缝的中心在 $x=0,\pm2w$，整组光瞳的总宽是 $5w=D$。
 \[
 P(x,y)=\rect\Big(\frac yD\Big)\Big[\rect\Big(\frac xw\Big)\conv\big(\delta(x)+\delta(x-2w)+\delta(x+2w)\big)\Big].
 \]
-\textbf{i. PSF}：振幅 PSF $h(x',y')\propto\F\{P\}\big(\frac{x'}{\lambda z_i},\frac{y'}{\lambda z_i}\big)$。由可分离、卷积定理、$\F\{\delta(x-a)\}=\ee^{-i2\pi au}$：
-\[
-\F\{P\}(u,v)=D\sinc(Dv)\cdot w\sinc(wu)\cdot\big[1+\ee^{-i4\pi wu}+\ee^{i4\pi wu}\big]=D\sinc(Dv)\,w\sinc(wu)\,[1+2\cos(4\pi wu)].
-\]
-代入 $u=\frac{x'}{2\lambda f}$，$v=\frac{y'}{2\lambda f}$，$w=\frac D5$，非相干 PSF 为其模平方：
-\[
-\boxed{|h(x',y')|^2\propto\sinc^2\Big(\frac{Dy'}{2\lambda f}\Big)\sinc^2\Big(\frac{Dx'}{10\lambda f}\Big)\Big[1+2\cos\Big(\frac{2\pi Dx'}{5\lambda f}\Big)\Big]^2}
-\]
-$x'$ 方向：单缝宽包络（第一零点 $x'=\frac{10\lambda f}{D}$）里有三缝干涉条纹（主极大间距 $\frac{5\lambda f}{D}$）；$y'$ 方向：$\sinc^2$，第一零点 $\frac{2\lambda f}{D}$。
+$y$ 方向是一整条高 $D$ 的矩形，$x$ 方向是窄矩形搬到三个位置。二维里三个点各自还带 $\delta(y)$，和 $y$ 向矩形相乘后它被吸收进 $\rect(y/D)$，写法就收成上面这一行。
 
-\textbf{ii. $x$ 方向 MTF}：OTF = 光瞳自相关归一化。沿 $x$ 位移 $s=\lambda z_iu=2\lambda fu$。
-单缝自相关 $\rect(\frac xw)\star\rect(\frac xw)=w\tri(\frac sw)$；三个 $\delta$ 的自相关 $=3\delta(s)+2\delta(s\mp2w)+\delta(s\mp4w)$（依据：数重叠的对数）。除以 $\mathcal H(0)=3w$：
+\textbf{i. 点的像是光瞳的傅里叶变换再取模平方。}
+衍射受限、非相干时，振幅 PSF 正比于光瞳的傅里叶变换，频率用像面坐标读：$u=x'/(\lambda z_i)=x'/(2\lambda f)$。$P$ 在 $x,y$ 上是乘积，频谱也是乘积。一条宽 $w$ 的缝变成 $w\sinc(wu)$，高 $D$ 的缝变成 $D\sinc(Dv)$。三个 $\delta$ 的变换是三个复指数，配成实数 $1+2\cos(4\pi wu)$：
+\[
+\F\{P\}=D\sinc(Dv)\cdot w\sinc(wu)\cdot[1+2\cos(4\pi wu)] .
+\]
+非相干 PSF 是它的模平方。代入 $w=D/5$ 和 $u=x'/(2\lambda f)$：$wu=Dx'/(10\lambda f)$，$4\pi wu=2\pi Dx'/(5\lambda f)$，
+\[
+\boxed{|h|^2\propto\sinc^2\Big(\frac{Dy'}{2\lambda f}\Big)\sinc^2\Big(\frac{Dx'}{10\lambda f}\Big)\Big[1+2\cos\Big(\frac{2\pi Dx'}{5\lambda f}\Big)\Big]^2} .
+\]
+$y'$ 方向只有单缝的 $\sinc^2$，第一零点在 $2\lambda f/D$。$x'$ 方向是单缝包络套着三缝干涉：包络第一零点 $10\lambda f/D$，干涉主极大间距 $5\lambda f/D$。
+
+\textbf{ii. MTF 等于三条缝的重叠面积，画出来是五个搭接的三角形。}
+OTF 是光瞳的归一化自相关。沿 $x$ 错开 $s$ 时，对应的像方频率是 $u=s/(\lambda z_i)=s/(2\lambda f)$。一条宽 $w$ 的缝和自己重叠，面积是底宽 $2w$、高 $w$ 的三角形 $w\,\tri(s/w)$。三条缝还要数有几对缝同时重叠：
+\begin{itemize}
+\item $s=0$：三条都和自己重叠，权重 3；
+\item $s=\pm2w$：相邻两条重叠，权重 2；
+\item $s=\pm4w$：只有最外侧那一对重叠，权重 1。
+\end{itemize}
+零频重叠面积是 $3w$，用它归一化，每个三角形的高分别变成 $1$、$2/3$、$1/3$：
 \[
 \mathcal H(s)=\tri\Big(\frac sw\Big)+\frac23\Big[\tri\Big(\frac{s-2w}w\Big)+\tri\Big(\frac{s+2w}w\Big)\Big]+\frac13\Big[\tri\Big(\frac{s-4w}w\Big)+\tri\Big(\frac{s+4w}w\Big)\Big].
 \]
-关键点（$u=\frac{s}{2\lambda f}$）：
+三角形在自己的底边两端是 0、顶点取上面的高，中间用直线连接。换成频率 $u=s/(2\lambda f)$：
 
 \begin{center}\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{c|cccccc}
 $s$ & 0 & $w$ & $2w$ & $3w$ & $4w$ & $5w=D$\\ \hline
-$u$ & 0 & $\frac{D}{10\lambda f}$ & $\frac{D}{5\lambda f}$ & $\frac{3D}{10\lambda f}$ & $\frac{2D}{5\lambda f}$ & $\frac{D}{2\lambda f}$\\
-MTF & 1 & 0 & $\frac23$ & 0 & $\frac13$ & 0
+$u$ & 0 & $\dfrac{D}{10\lambda f}$ & $\dfrac{D}{5\lambda f}$ & $\dfrac{3D}{10\lambda f}$ & $\dfrac{2D}{5\lambda f}$ & $\dfrac{D}{2\lambda f}$\\
+MTF & 1 & 0 & $\dfrac23$ & 0 & $\dfrac13$ & 0
 \end{tabular}
 \end{center}
-各段之间线性连接（三角形），\textbf{截止频率} $u_c=\dfrac{D}{2\lambda f}$（光瞳 $x$ 向总宽 $D$ 除以 $\lambda z_i$）。
+$s=5w=D$ 时最外侧的两条也错开了，重叠面积为 0。这个频率就是截止：$u_c=D/(2\lambda f)$，也就是光瞳总宽 $D$ 除以 $\lambda z_i$。
 
-\textbf{iii. 对比度}：物 $T=1+\cos(2\pi Fx)$，对比度 1；$|M|=1$，像面频率仍为 $F$。像强度 $1+|\mathcal H(F)|\cos(2\pi Fx+\arg\mathcal H)$，故
+\textbf{iii. 余弦条纹的对比度就是该频率的 MTF。}
+物 $T=1+\cos(2\pi Fx)$ 的对比度是 1。$|M|=1$，像面上的条纹频率仍是 $F$。非相干成像对这种余弦的响应是把交流项乘上 OTF：像强度变成 $1+|\mathcal H(F)|\cos(2\pi Fx+\arg\mathcal H)$。对比度的定义 $\frac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}$ 正好取出这个系数，
 \[
 K(F)=\mathrm{MTF}(F).
 \]
-$K=0$：$F=\frac{D}{10\lambda f}$，$\frac{3D}{10\lambda f}$，及 $F\ge\frac{D}{2\lambda f}$；
-极大：$F=0$ 时 $K=1$，$F=\frac{D}{5\lambda f}$ 时 $K=\frac23$，$F=\frac{2D}{5\lambda f}$ 时 $K=\frac13$。曲线形状同下图（横轴换成 $F$）。
+所以 $K$ 的曲线就是上一问的 MTF，横轴改成 $F$。$K=0$ 的位置是 $F=\dfrac{D}{10\lambda f}$、$\dfrac{3D}{10\lambda f}$，以及 $F\ge\dfrac{D}{2\lambda f}$。极大在三角形的顶点：$F=0$ 时 $K=1$，$F=\dfrac{D}{5\lambda f}$ 时 $K=\dfrac23$，$F=\dfrac{2D}{5\lambda f}$ 时 $K=\dfrac13$。
 \end{exam}
 
 \begin{center}
@@ -632,58 +770,58 @@ ii. 4f 系统（焦距都为 $f$）：$L_1$ 放输入面，频谱面放 SLM，�
 \textbf{考点}：薄元件相位 $k(n-1)\Delta$；透镜相位 $-\frac{k(x^2+y^2)}{2F}$；4f 平移定理与倒像（§\ref{sec:alvarez}，第 \pageref{sec:alvarez} 页）。
 
 \begin{exam}{答卷 2025-3}
-\textbf{依据}：厚度 $\Delta(x,y)$、折射率 $n$ 的薄元件复透射率 $t=\exp[ik(n-1)\Delta(x,y)]$（相对空气，略常数相位）；焦距 $F$ 的薄透镜 $t_L=\exp\big[-ik\frac{x^2+y^2}{2F}\big]$。
+机械平移让两片互补的三次面型错开，相减后剩下二次厚度，二次相位就是透镜。4f 里的线性相位做的是同一件事：它把 $L_1$ 的像在 $L_2$ 上平移，两片面型再相减。
 
-\textbf{i.} $L_1$ 平移 $-d$ 后面型 $T(x+d,y)$；$L_2$ 平移 $+d$ 后面型 $-T(x-d,y)$。两片紧贴，总厚度
-\[
-\Delta(x,y)=T(x+d,y)-T(x-d,y).
-\]
-直接展开：$(x+d)^3-(x-d)^3=6x^2d+2d^3$，$(x+d)-(x-d)=2d$，
-\[
-\Delta=A\Big[\tfrac13(6x^2d+2d^3)+2dy^2\Big]=2Ad(x^2+y^2)+\tfrac23Ad^3 .
-\]
-（或用导数定义：$\frac{T(x+d)-T(x-d)}{2d}\approx\frac{\partial T}{\partial x}=A(x^2+y^2)$，得 $\Delta\approx2Ad(x^2+y^2)$。）
+薄玻璃厚 $\Delta$、折射率 $n$，相对空气的相位是 $k(n-1)\Delta$（整体常数略去）。焦距 $F$ 的薄透镜是 $\exp\bigl[-ik(x^2+y^2)/(2F)\bigr]$，所以只要把相位凑成 $x^2+y^2$ 的系数，就能读出 $F$。
 
-相位 $\phi=k(n-1)\Delta=2k(n-1)Ad\,(x^2+y^2)+\text{常数}$，是纯二次相位，等效于透镜。对比 $-\frac{k(x^2+y^2)}{2F}$：
+\textbf{i. 错开 $d$ 之后，总厚度变成二次函数。}
+按题图，$L_1$ 向 $-x$ 平移 $d$，面型从 $T(x,y)$ 变成 $T(x+d,y)$；$L_2$ 向 $+x$ 平移 $d$，面型从 $-T$ 变成 $-T(x-d,y)$。两片紧贴，厚度相加：
 \[
--\frac{1}{2F}=2(n-1)Ad\quad\Rightarrow\quad\boxed{F=-\frac{1}{4(n-1)Ad}}
+\Delta=T(x+d,y)-T(x-d,y).
 \]
-$Ad>0$ 时 $F<0$（发散）；平移方向反过来（$d\to-d$）则 $F>0$（会聚），所以 $F$ 的正负号随平移方向变。$|F|\propto1/d$，平移越多焦距越短。
-
-\textbf{ii. 第 1 步}：$L_1$ 在输入面，平面波照明后 $t_1(x,y)=\exp[ik(n-1)T(x,y)]$。频谱面场 $\propto\hat t_1\big(\frac{\xi}{\lambda f},\frac{\eta}{\lambda f}\big)$。
-
-\textbf{第 2 步}：SLM 乘 $\ee^{ikQ\xi}=\ee^{i2\pi(Q/\lambda)\xi}$。第二个透镜作正变换，在 $\big(\frac{x'}{\lambda f},\frac{y'}{\lambda f}\big)$ 取值，换元 $\xi=\lambda fu$：
+$T=A\bigl(\frac13 x^3+xy^2\bigr)+B$。常数 $B$ 相减为零。立方差 $(x+d)^3-(x-d)^3=6x^2d+2d^3$，乘 $A/3$ 得 $A(2x^2d+\frac23 d^3)$；$xy^2$ 一项的差是 $2dy^2$，乘 $A$ 得 $2Ady^2$。合起来
 \[
-\iint\hat t_1(u,v)\,\ee^{i2\pi Qfu}\,\ee^{-i2\pi(ux'+vy')}\,\dd u\dd v\cdot(\lambda f)^2=(\lambda f)^2\,t_1(Qf-x',\,-y').
+\Delta=2Ad(x^2+y^2)+\frac23 Ad^3 .
 \]
-（依据：频谱乘线性相位 $\leftrightarrow$ 平移；两次正变换 $\leftrightarrow$ 倒像。）所以 $L_2$ 左侧场 $\propto t_1(Qf-x',-y')$，再乘 $L_2$ 的透射率 $t_2(x',y')$：
-\[
-\boxed{E_{\text{out}}(x',y')\propto t_1(Qf-x',-y')\,t_2(x',y')}
-\]
-\textbf{第 3 步（关键：倒像改变面型的符号）}：$T-B$ 是奇函数，$T(-x,-y)-B=-[T(x,y)-B]$，且 $y$ 只以 $y^2$ 出现，故
-$T(Qf-x',-y')=-T(x'-Qf,\,y')+2B$。记 $s=Qf$，$L_1$ 的像的相位为 $-k(n-1)T(x'-s,y')+$常数——相当于面型 $-T$ 平移了 $s$。
+$\frac23 Ad^3$ 与 $x,y$ 无关，只是一块均匀玻璃。用题目提示的导数定义可以得到同一项：$\bigl[T(x+d)-T(x-d)\bigr]/(2d)\approx\partial T/\partial x=A(x^2+y^2)$，所以 $\Delta\approx2Ad(x^2+y^2)$。$d$ 不大时，略去的是更高阶的平移修正。
 
-\textbf{第 4 步}：要得到纯二次相位，$L_2$ 应取面型 $+T$（与 $L_1$ 同型）：
+相位 $\phi=k(n-1)\Delta=2k(n-1)Ad\,(x^2+y^2)+$ 常数。和透镜相位 $-\,k(x^2+y^2)/(2F)$ 对比系数：
 \[
-\phi_{\text{out}}=k(n-1)\big[T(x',y')-T(x'-s,y')\big]+\text{常数}.
+-\frac{1}{2F}=2(n-1)Ad,\qquad\boxed{F=-\frac{1}{4(n-1)Ad}} .
+\]
+$Ad>0$ 时 $F<0$，这组平移方向给出发散透镜。平移方向反过来，$d$ 变号，$F$ 变正，成为会聚透镜。$|F|$ 与 $d$ 成反比，错开越多，焦距越短。
+
+\textbf{ii. 线性相位把 $L_1$ 的像平移到 $L_2$ 上。}
+$L_1$ 放在 4f 输入面，平面波经过后场就是 $t_1=\exp[ik(n-1)T]$。第一片透镜把它变成频谱 $\hat t_1(\xi/(\lambda f),\eta/(\lambda f))$。
+
+SLM 再乘 $\ee^{ikQ\xi}=\ee^{i2\pi(Q/\lambda)\xi}$。这是频率坐标上的线性相位，平移定理说它让空域图像移动 $Qf$。第二片透镜再做一次正变换，两次正变换还把图像颠倒，所以到达 $L_2$ 左侧的场是
+\[
+t_1(Qf-x',\,-y') .
+\]
+再乘上 $L_2$ 自己的透过率，输出为
+\[
+\boxed{E_{\text{out}}(x',y')\propto t_1(Qf-x',-y')\,t_2(x',y')} .
+\]
+
+$T-B$ 对 $(x,y)\to(-x,-y)$ 变号，而且 $y$ 只以 $y^2$ 出现，所以
+\[
+T(Qf-x',-y')=-T(x'-Qf,\,y')+2B .
+\]
+记 $s=Qf$。$L_1$ 的像等价于面型 $-T$ 再平移 $s$。要和 (i) 一样得到「一片减另一片」，输出面上的 $L_2$ 应取和 $L_1$ 相同的面型 $+T$，总相位是
+\[
+\phi_{\text{out}}=k(n-1)\bigl[T(x',y')-T(x'-s,y')\bigr]+\text{常数}.
 \]
 展开 $x'^3-(x'-s)^3=3x'^2s-3x's^2+s^3$，
 \[
-T(x')-T(x'-s)=A\big[s(x'^2+y'^2)-s^2x'\big]+\text{常数},
+T(x')-T(x'-s)=A\bigl[s(x'^2+y'^2)-s^2 x'\bigr]+\text{常数}.
 \]
+$s^2 x'$ 是倾斜，写成 $k\theta x'$ 后焦点横移 $F'\theta$，焦距不变。二次项的系数是 $k(n-1)AQf$，对照 $-1/(2F')$：
 \[
-\phi_{\text{out}}=k(n-1)AQf\,(x'^2+y'^2)-k(n-1)AQ^2f^2\,x'+\text{常数}.
+\boxed{F'=-\frac{1}{2(n-1)AQf}} .
 \]
-二次项给出焦距 $-\frac1{2F'}=(n-1)AQf$：
-\[
-\boxed{F'=-\frac{1}{2(n-1)AQf}}
-\]
-一次项是倾斜：写成 $k\theta x'$，$\theta=-(n-1)AQ^2f^2$，焦点横移 $F'\theta=\frac{Qf}{2}$，不影响焦距。$Q$ 由电脑编程改变，即可变焦而无需机械平移。
-与 (i) 对照：相对平移量 $2d\leftrightarrow Qf$，$F=-\frac{1}{2(n-1)A\cdot2d}$，$F'=-\frac{1}{2(n-1)A\cdot Qf}$，形式一致。
+和 (i) 是同一个公式：机械上两片各挪 $d$，相对位移是 $2d$；这里相对位移是 $Qf$，所以分母里 $4Ad$ 换成 $2AQf$。改变程序里的 $Q$ 就改变焦距。
 
-\textbf{第 5 步（按题面取 $L_2=-T$ 的情况，须说明）}：$\phi_{\text{out}}=-k(n-1)\big[T(x'-s,y')+T(x',y')\big]$，
-其中含 $-\frac{2}{3}k(n-1)Ax'^3$ 等三次项不能抵消，不是理想透镜。原因是 4f 成倒像。
-若题目约定输出面坐标已取倒像方向（$x'\to-x'$），则题面的 $-T$ 成立，结果仍为 $|F'|=\frac{1}{2(n-1)A|Q|f}$。
+题面若把 $L_2$ 仍写成 $-T$，4f 的倒像已经把 $L_1$ 翻成了 $-T$，两片变成同号相加，三次项 $\frac23 A x'^3$ 留在总厚度里，合起来的相位含有 $x'^3$，读不出单一焦距。输出坐标若事先按倒像方向取过（$x'\to-x'$），题面的 $-T$ 正好与翻过的 $L_1$ 互补，焦距的绝对值仍是上面的结果。
 \end{exam}
 
 \begin{warn}[变式与易错]
@@ -730,30 +868,43 @@ ii. 证明保留更多阶时 $S\approx\exp\big[-\big(\frac{2\pi}{\lambda}\big)^2
 \textbf{考点}：同 2024-2，外加高阶矩 / 累积量（§\ref{sec:strehl}）。
 
 \begin{exam}{答卷 2025-4}
-\textbf{i.} 与 2024-2 答卷完全相同（第 \pageref{ex:2024-2} 页），照抄第 1–4 步。
+(i) 停在泰勒展开的前两项，得到 $1-k^2\sigma_W^2$。(ii) 把同样的平均相位先减掉，再把剩下的各阶矩按高斯分布加回去，级数收成指数。指数再展开，前两项就是 (i)。
 
-\textbf{ii.} 由 i 的第 1 步，$S=|\E[\ee^{ikW}]|^2=|\E[\ee^{i\varphi}]|^2$，其中 $\varphi=k(W-\E[W])$，$\E[\varphi]=0$，$\E[\varphi^2]=k^2\sigma_W^2\equiv\sigma^2$。
-
-\textbf{方法一（逐项保留高阶矩）}：
+\textbf{i. 二阶展开给出式 (1)，并推出 $\lambda/14$。}
+像面中心是零频，振幅正比于广义光瞳的积分，所以
 \[
-\E[\ee^{i\varphi}]=\sum_{n=0}^{\infty}\frac{i^n\E[\varphi^n]}{n!}=1-\frac{\E[\varphi^2]}{2!}-\frac{i\E[\varphi^3]}{3!}+\frac{\E[\varphi^4]}{4!}-\cdots
+S=\left|\E[\ee^{ikW}]\right|^2,\qquad
+\E[\cdot]=\frac1{S_0}\iint_P(\cdot)\dd x\dd y .
 \]
-像差不太大、分布对称、无振荡时，奇阶矩 $\E[\varphi^{2m+1}]=0$；把 $\varphi$ 的分布近似为高斯型，偶阶矩
-$\E[\varphi^{2m}]=(2m-1)!!\,\sigma^{2m}$（如 $\E[\varphi^4]=3\sigma^4$）。利用 $\frac{(2m-1)!!}{(2m)!}=\frac{1}{2^mm!}$：
+像差不大时 $\ee^{ikW}\approx1+ikW-k^2W^2/2$，取平均后实部是 $1-\frac{k^2}{2}\E[W^2]$，虚部是 $k\E[W]$。模平方展开，含 $k^4$ 的项超出二阶精度，略去，剩下的组合正是方差：
 \[
-\E[\ee^{i\varphi}]=\sum_{m=0}^\infty\frac{(-1)^m(2m-1)!!\,\sigma^{2m}}{(2m)!}=\sum_{m=0}^\infty\frac{1}{m!}\Big(-\frac{\sigma^2}{2}\Big)^m=\ee^{-\sigma^2/2}.
+S\approx1-k^2\big(\E[W^2]-\E^2[W]\big)=1-k^2\sigma_W^2
+=\boxed{1-\Big(\frac{2\pi}{\lambda}\Big)^2\sigma_W^2}\qquad(1).
 \]
-（前三项核对：$1-\frac{\sigma^2}2+\frac{3\sigma^4}{24}=1-\frac{\sigma^2}2+\frac{\sigma^4}{8}$，正是 $\ee^{-\sigma^2/2}$ 的展开。）
+代入 $\sigma_W<\lambda/14$：$k\sigma_W<\pi/7$，$S>1-(\pi/7)^2=0.799\approx0.8$。详细的逐步理由与 2024-2 相同，考场上把上面三行按 2024-2 的四步写全即可。
 
-\textbf{方法二（累积量展开）}：$\ln\E[\ee^{i\varphi}]=\sum_{n\ge1}\frac{i^n\kappa_n}{n!}$，$\kappa_1=\E[\varphi]=0$，$\kappa_2=\sigma^2$；高阶累积量对“不太大、无振荡”的像差很小（高斯分布时严格为 0），保留到二阶：
-$\E[\ee^{i\varphi}]\approx\ee^{-\sigma^2/2}$。
+\textbf{ii. 先去掉平均相位，再把高阶矩收成指数。}
+平均相位 $\ee^{ik\E[W]}$ 的模是 1，提出去不改变 $S$。令 $\varphi=k(W-\E[W])$，则 $\E[\varphi]=0$，$\E[\varphi^2]=\sigma^2$，$k^2\sigma_W^2=\sigma^2$，并且 $S=|\E[\ee^{i\varphi}]|^2$。
 
-两种方法都得
+把指数展成幂级数再取平均：
 \[
-S=\big|\ee^{-\sigma^2/2}\big|^2=\boxed{\exp\Big[-\Big(\frac{2\pi}{\lambda}\Big)^2\sigma_W^2\Big]}
+\E[\ee^{i\varphi}]=\sum_{n=0}^{\infty}\frac{i^n\E[\varphi^n]}{n!}
+=1-\frac{\E[\varphi^2]}{2}-\frac{i\E[\varphi^3]}{6}+\frac{\E[\varphi^4]}{24}-\cdots .
 \]
-\textbf{与 (1) 的关系}：$\ee^{-x}=1-x+\frac{x^2}{2}-\cdots$，前两项就是 (1)，所以 (2) 是 (1) 的推广。
-数值：$\sigma_W=\lambda/14$ 时 (1) 给 0.799，(2) 给 0.817；$\sigma_W=\lambda/8$ 时 (1) 给 0.383，(2) 给 0.540——$S$ 小时两式差别变大。
+像差分布左右对称时，奇次方的平均是 0，虚部各项消失。再把 $\varphi$ 的分布看成高斯：偶次矩是 $\E[\varphi^{2m}]=(2m-1)!!\,\sigma^{2m}$，例如 $\E[\varphi^4]=3\sigma^4$。系数有一个恒等式 $\dfrac{(2m-1)!!}{(2m)!}=\dfrac{1}{2^m m!}$，代回去
+\[
+\E[\ee^{i\varphi}]=\sum_{m=0}^{\infty}\frac{1}{m!}\Big(-\frac{\sigma^2}{2}\Big)^m=\ee^{-\sigma^2/2}.
+\]
+前三项可以手算核对：$1-\sigma^2/2+3\sigma^4/24=1-\sigma^2/2+\sigma^4/8$，正是 $\ee^{-\sigma^2/2}$ 的泰勒展开。
+
+同一结果也可以从累积量看。$\ln\E[\ee^{i\varphi}]$ 的一次项是 $\E[\varphi]=0$，二次项是 $-\sigma^2/2$；高斯分布的更高阶累积量是 0。保留到二阶同样得到 $\E[\ee^{i\varphi}]\approx\ee^{-\sigma^2/2}$。
+
+模平方之后指数翻倍：
+\[
+S=\big|\ee^{-\sigma^2/2}\big|^2
+=\boxed{\exp\Big[-\Big(\frac{2\pi}{\lambda}\Big)^2\sigma_W^2\Big]}\qquad(2).
+\]
+把 $\ee^{-x}$ 展开成 $1-x+x^2/2-\cdots$，$x=k^2\sigma_W^2$ 的前两项就是式 (1)，所以 (2) 是把 (1) 略去的高阶项加回去。$\sigma_W=\lambda/14$ 时 (1) 给出 0.799，(2) 给出 0.817；$\sigma_W=\lambda/8$ 时 (1) 给出 0.383，(2) 给出 0.540。像差越大，被 (1) 丢掉的高阶项越显眼。
 \end{exam}
 
 % =====================================================================
@@ -805,30 +956,53 @@ $C=\frac{128}{255}=0.502>0.04045$，$C_{\text{lin}}=\big(\frac{0.502+0.055}{1.05
 \end{exam}
 
 \begin{exam}{答卷：计算题}
-\textbf{1.} 朗伯体亮度 $L$ 与方向无关，面元 $\dd S$ 在与法线成 $\theta$ 方向的发光强度 $\dd I=L\dd S\cos\theta$。
-取 $\theta\sim\theta+\dd\theta$ 的环带立体角 $\dd\Omega=2\pi\sin\theta\dd\theta$：
-\[
-\Phi=\int_0^U L\dd S\cos\theta\cdot2\pi\sin\theta\dd\theta=2\pi L\dd S\Big[\frac{\sin^2\theta}{2}\Big]_0^U=\pi L\dd S\sin^2U .
-\]
-$U=\frac\pi2$ 时为总量 $\pi L\dd S$，比例 $\sin^2U$，即选择题 2 的结论。同理像方 $\boxed{\Phi'=\pi L'\dd S'\sin^2U'}$。
+三问把亮度守恒拆开：先算进镜头的光通量，再用「孔径角 $=$ 最高空间频率」加上缩放定理得到正弦条件，最后能量守恒把 $M$ 消掉。
 
-\textbf{2.1} 折射率 $n$ 的介质中波长 $\lambda_0/n$；与光轴夹角 $U$ 的平面波在子午面横向的空间频率
-\[
-f_x=\frac{\sin U}{\lambda_0/n}=\frac{n\sin U}{\lambda_0},\qquad f_x'=\frac{n'\sin U'}{\lambda_0}.
-\]
-\textbf{2.2} 物 $g(x)$ 成像为 $g(x/M)$（略常数），由缩放定理 $\F\{g(x/M)\}=|M|G(Mf)$：空域放大 $M$ 倍，频域缩小 $M$ 倍，频率域放大率为 $\dfrac1M$，即 $f'=\dfrac fM$。
+\textbf{1. 朗伯体射进光锥的光通量。}
+亮度 $L$ 不随方向变。面元 $\dd S$ 朝与法线成 $\theta$ 的方向看，投影面积是 $\dd S\cos\theta$，所以这个方向的发光强度 $\dd I=L\dd S\cos\theta$。
 
-\textbf{2.3} 无像差成像要求物方每个空间频率都一一映射到像方（$f'=f/M$），对孔径边缘（能通过的最高频率）也成立。孔径角 $U$ 对应物方最高频率 $f_x$，$U'$ 对应像方最高频率 $f_x'$：
+光锥里再切一圈 $\theta$ 到 $\theta+\dd\theta$ 的环。环的立体角是 $\dd\Omega=2\pi\sin\theta\,\dd\theta$。这一圈贡献的光通量是 $\dd I\,\dd\Omega$，从 $0$ 积到孔径角 $U$：
 \[
-\frac{n'\sin U'}{\lambda_0}=\frac1M\cdot\frac{n\sin U}{\lambda_0}\quad\Rightarrow\quad\boxed{\frac{n\sin U}{n'\sin U'}=M}
+\Phi=\int_0^U L\dd S\cos\theta\cdot 2\pi\sin\theta\,\dd\theta
+=2\pi L\dd S\Big[\frac{\sin^2\theta}{2}\Big]_0^U
+=\pi L\dd S\sin^2 U .
 \]
-这里用的是 $\sin U$ 而非傍轴近似，所以对大孔径成立；用缩放（平移不变）关系，要求小视场。证毕。
+$U=\pi/2$ 时环带盖住整个半空间，总光通量是 $\pi L\dd S$，所以半角 $\theta$ 的光锥占 $\sin^2\theta$，这就是选择题 2。像方同一套几何，把符号加上撇：
+\[
+\boxed{\Phi'=\pi L'\dd S'\sin^2 U'} .
+\]
 
-\textbf{3.} 光能无损 $\Phi=\Phi'$：$\pi L\dd S\sin^2U=\pi L'\dd S'\sin^2U'$。面积比是长度比的平方 $\frac{\dd S'}{\dd S}=M^2$，由 2.3，$\frac{\sin^2U}{\sin^2U'}=\frac{M^2n'^2}{n^2}$：
+\textbf{2.1 孔径边缘的光线就是能通过的最高空间频率。}
+介质折射率 $n$ 里，真空波长 $\lambda_0$ 对应的波长是 $\lambda_0/n$。与光轴夹角 $U$ 的平面波，横向每前进 $\lambda_0/(n\sin U)$ 相位走一圈，所以子午面空间频率是
 \[
-L'=L\cdot\frac{\dd S}{\dd S'}\cdot\frac{\sin^2U}{\sin^2U'}=L\cdot\frac{1}{M^2}\cdot\frac{M^2n'^2}{n^2}=L\,\frac{n'^2}{n^2},\qquad\boxed{\frac{L}{n^2}=\frac{L'}{n'^2}}
+f_x=\frac{n\sin U}{\lambda_0},\qquad f_x'=\frac{n'\sin U'}{\lambda_0}.
 \]
-与横向放大率 $M$ 无关；物像空间折射率相同时 $L'=L$。证毕。
+$U$ 是入瞳边缘的角度，上式就是物镜放得过的最高频率。
+
+\textbf{2.2 像放大 $M$ 倍，条纹频率变成 $1/M$。}
+物 $g(x)$ 成的像是 $g(x/M)$（整体常数略去）。缩放定理 $\F\{g(x/M)\}=|M|G(Mf)$：空域拉长 $M$ 倍，频谱在频率轴上压缩 $M$ 倍。因此像方频率和物方频率的关系是 $f'=f/M$。
+
+\textbf{2.3 最高频率也要满足同一条缩放，得到正弦条件。}
+无像差、小视场时，每个物方频率都按 $f'=f/M$ 映到像方，孔径边缘的那一个频率也不例外。把 2.1 的两个最高频率代进去：
+\[
+\frac{n'\sin U'}{\lambda_0}=\frac1M\cdot\frac{n\sin U}{\lambda_0},
+\qquad\boxed{\frac{n\sin U}{n'\sin U'}=M} .
+\]
+式子里保留的是 $\sin U$，所以孔径很大时仍然成立。缩放定理用的是平移不变，所以视场要小。证毕。
+
+\textbf{3. 能量守恒把放大率消掉。}
+光不损失，$\Phi=\Phi'$：
+\[
+\pi L\dd S\sin^2 U=\pi L'\dd S'\sin^2 U' .
+\]
+横向放大 $M$ 倍，面积比是 $M^2$：$\dd S'/\dd S=M^2$。由 2.3，$\sin^2 U/\sin^2 U'=M^2 n'^2/n^2$。代进去，$M^2$ 上下相消：
+\[
+L'=L\cdot\frac{\dd S}{\dd S'}\cdot\frac{\sin^2 U}{\sin^2 U'}
+=L\cdot\frac{1}{M^2}\cdot\frac{M^2 n'^2}{n^2}
+=L\,\frac{n'^2}{n^2},
+\qquad\boxed{\frac{L}{n^2}=\frac{L'}{n'^2}} .
+\]
+亮度比只剩折射率，与把像放多大无关。物像在同一种介质里时 $n'=n$，$L'=L$。证毕。
 \end{exam}
 
 % =====================================================================

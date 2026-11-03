@@ -10,12 +10,13 @@
 
 \begin{idea}[本章题型一览]
 \begin{tabular}{@{}P{6.6cm}P{8.6cm}@{}}
+看图写成函数，再做傅里叶变换 & 套路「看图写傅里叶变换」、形状表（\pageref{rcp:readfig} 页）\\
 求单缝、矩孔、方孔、圆孔的衍射图样 & 题型 1、5（§\ref{sec:ftexamples}）\\
 多缝、阵列、两个光孔的频谱 & 题型 2、6\\
 余弦光栅、两片光栅叠合、光栅乘物 & 题型 3\\
 黑白光栅、方波、三角波的傅里叶系数 & 题型 4、7\\
 矢量点乘求 OP、写出球面波 & 题型 8、9\\
-卷积 / 相关怎么算、怎么画 & §\ref{sec:convcalc}\\
+卷积 / 相关怎么算、怎么画；几条缝的 MTF 怎么叠成三角形 & §\ref{sec:convcalc}, \pageref{rcp:mtfoverlap}\\
 “证明”某个傅里叶性质 & §\ref{sec:ftproofs}\\
 采样、混叠、像素、DFT 尺度 & §\ref{sec:sampling}
 \end{tabular}
@@ -116,6 +117,21 @@ $\mathrm{sgn}(x)$ & $\dfrac{1}{i\pi u}$ & \\
 注：$\comb(x/d)=d\sum_n\delta(x-nd)$。周期函数 $=$ 单元 $\conv$ 点阵 $\Rightarrow$ 频谱 $=$ 单元频谱 $\times$ 等间隔 $\delta$（只在 $u=m/d$ 处有值，即光栅方程）。
 \end{formula}
 
+\begin{exam}{常规函数：把题目的宽度、频率代进上表}
+题目说「常规函数」时不做积分。先认出是表里的哪一行，再把题目的参数代进 $a$ 或 $u_0$。透镜后焦面（或远场距离 $z$，把下面的 $f$ 换成 $z$）用 $x=\lambda fu$。$\lambda$、$a$、$f$ 先化成同一单位。
+
+\begin{itemize}
+\item $\rect(x/a)$，$a=$ 全宽：频谱 $a\,\sinc(au)$。第一零点 $u=1/a$，焦面上 $x=\lambda f/a=$（$\lambda$）（$f$）/（$a$）。
+\item $\tri(x/a)$：频谱 $a\,\sinc^2(au)$。第一零点仍是 $u=1/a$，焦面同样 $x=\lambda f/a$。
+\item $\cos(2\pi u_0x)$：两点 $u=\pm u_0$，焦面 $x=\pm\lambda fu_0$。$u_0$ 用题目的空间频率；若题目给周期 $d$，则 $u_0=1/d$。
+\item $\ee^{i2\pi u_0x}$：一个点 $u=u_0$，焦面 $x=\lambda fu_0$。$u_0=\sin\theta/\lambda$ 时直接把 $\theta$、$\lambda$ 代进去。
+\item $\ee^{-\pi(x/a)^2}$：频谱 $|a|\,\ee^{-\pi(au)^2}$。表中 $a=1$ 的那一行是它的特例。
+\item $\ee^{i\pi\alpha x^2}$：频谱 $\dfrac{1}{\sqrt{-i\alpha}}\ee^{-i\pi u^2/\alpha}$，$\alpha$ 用题目二次相位的系数。
+\item $\delta(x-x_0)$：频谱 $\ee^{-i2\pi ux_0}$，$x_0$ 用题目的平移量。
+\end{itemize}
+周期函数再往下走一步：上表算出一个周期的形状之后，只在 $u=n/d$ 取值，系数见题型 7。
+\end{exam}
+
 \begin{formula}{二维变换对（可分离 + 圆对称）}\ix{jinc}\ix{艾里斑}
 \par\renewcommand{\arraystretch}{1.6}
 \begin{tabular}{@{}lll@{}}
@@ -192,10 +208,94 @@ $N$ 缝（周期 $d$，对称放置）& $a\sinc(au)\dfrac{\sin(N\pi du)}{\sin(\p
 \item 把图形拆成基本块：rect、circ、$\delta$、cos 的\textbf{和、积、卷积}。例：三条缝 = 一条缝 $\conv$ 三个 $\delta$；有限长光栅 = (无限光栅) $\times$ rect；圆环 = 大圆 $-$ 小圆。
 \item 每块查表 \hyperref[sec:pairs]{§\ref*{sec:pairs}}。
 \item 和 $\to$ 和；积 $\to$ 卷积；卷积 $\to$ 积；平移 $\to$ 乘 $\ee^{-i2\pi ua}$；缩放 $\to$ 倒数缩放并除以 $|a|$。
-\item 若要强度，取 $|F|^2$；线性相位因子此时消失。
+\item 若要强度，取 $|F|^2$；线性相位因子此时模为 1。
 \item 若要屏上的图样，把 $u$ 换成 $x/(\lambda z)$（远场）或 $x/(\lambda f)$（透镜焦面）。
 \end{enumerate}
 \end{recipe}
+
+\begin{idea}[做题前先认是下面哪一件]
+手册里都叫傅里叶变换，考场上其实是四件接续的事。认错了就会翻错代入框。
+\begin{enumerate}
+\item \textbf{先写光，还没有变换。} 题型 8、9 只算光程和球面波，得到复振幅 $\tilde E$。后面的变换从这个 $\tilde E$ 开始。
+\item \textbf{一个有限图形 $\to$ 一条连续的 $F(u)$。} 方孔、单缝、$\cos$、高斯、二次相位：查变换对，把宽度或频率代进去。$\sinc(au)=0$ 当 $au=\pm1,\pm2,\dots$，所以第一暗纹在 $u=1/a$，焦面上 $x=\lambda f/a$。孔越窄，$a$ 越小，斑越宽；式子前面的 $a$（方孔是 $a^2$）是振幅，要留着。
+\item \textbf{无限周期 $\to$ 只有 $u=n/d$ 上的系数 $c_n$。} 方波、三角波、黑白光栅走题型 4、7，把 $w/d$ 代进 $\sinc$。孔径再截成有限长度 $L$ 时，每个 $\delta(u-n/d)$ 变成半宽 $1/L$ 的 $\sinc$。
+\item \textbf{画到屏上。} $u$ 换成 $x/(\lambda f)$（远场把 $f$ 换成 $z$）。问强度就取模平方。平移带来的 $\ee^{-i2\pi ua}$ 模为 1，亮斑位置不变。两个光孔的 $2\cos(\pi du)$ 已经是实数，直接平方，得到条纹。
+\end{enumerate}
+只记一条方向：空域相乘对应频域卷积，空域卷积对应频域相乘。
+孔平移 $=$ 乘相位，亮斑不动。斜入射 $=$ 频谱整体挪到 $u-u_0$。光栅乘物体 $=$ 频谱复制到 $\pm f_0$。一条缝卷积几个 $\delta$ $=$ 单缝包络乘上干涉因子。
+
+$\lambda$ 先化成和长度相同的单位再除：$0.5\,\mu$m $=5\times10^{-4}$ mm。$\ee^{i2\pi u_0x}$ 是一个方向、频谱上一个点，强度均匀；$\cos(2\pi u_0x)$ 是左右两个方向，才有 $\pm1$ 级或干涉条纹。
+\end{idea}
+
+\begin{exam}{从图写成函数，再变换：三条缝}
+下面这张图的读法可以换到任何由重复小孔组成的图。先量尺寸，写成「一块卷积几个 $\delta$」，再查表。傅里叶变换只吃写好的函数。
+
+\textbf{1. 量图。} 阴影是透光，$P=1$；空白是 $P=0$。本题缝宽 $w=D/5$，缝间空白也是 $D/5$，所以相邻两条的中心距是缝宽加空白 $=2D/5=2w$。三条中心在 $x=0,\pm2w$。竖直方向每条缝都是从 $-D/2$ 到 $D/2$，高度是一个 $\rect(y/D)$。总宽 $3w+2\times w=D$。
+
+\textbf{2. 写成函数。} 一条宽 $w$ 的缝放到这三个位置：
+\[
+P(x,y)=\rect\Big(\frac yD\Big)\Big[\rect\Big(\frac xw\Big)\conv\big(\delta(x+2w)+\delta(x)+\delta(x-2w)\big)\Big].
+\]
+卷积 $\delta(x-x_n)$ 就是把整条缝搬到 $x_n$。$y$ 方向大家一样，所以乘在外面。
+
+\textbf{3. 变换。} 乘积的变换是变换的乘积；卷积的变换是变换的乘积。$\rect(x/w)\to w\sinc(wu)$，$\rect(y/D)\to D\sinc(Dv)$，三个 $\delta$ 变成 $1+2\cos(4\pi wu)$。于是
+\[
+\F\{P\}=D\sinc(Dv)\cdot w\sinc(wu)\cdot[1+2\cos(4\pi wu)].
+\]
+包络 $w\sinc(wu)$ 只由一条缝的宽度决定，中括号只由缝的位置决定。这一步就是题型 2。
+
+\textbf{4. 同一张图，后面交什么取决于它放在哪里。}
+\begin{itemize}
+\item 图是衍射屏、问焦面上的图样：把 $u=x/(\lambda f)$ 代进去，强度取模平方。停在本章题型 1、2、6。
+\item 图是出瞳、系统非相干、物距 $2f$（2025-2）：像距 $z_i=2f$，同一个 $\F\{P\}$ 在 $u=x'/(2\lambda f)$ 取值后再取模平方，那是 PSF。MTF 改数缝与缝错开后的重叠面积，用自相关，不再做一次傅里叶变换。对比度 $K(F)$ 就等于这个 MTF。完整代入在第 \pageref{ex:2025-2} 页。
+\end{itemize}
+
+换一张图时，函数和 $\F\{P\}$ 的哪一格要改、三种场景分别交什么，用下面的套路和形状表。
+\end{exam}
+
+\begin{recipe}[label=rcp:readfig]{看图写傅里叶变换}
+任何「图里一块块透光区域」的题都按这五步写。形状对照在第 \pageref{fml:shapes} 页，三条缝的完整示范在上一框。
+\begin{enumerate}
+\item \textbf{认场景。} 三选一，只影响第 5 步：衍射屏（问焦面或远场图样）；出瞳（问 PSF、MTF、条纹对比度）；纯周期函数（问傅里叶系数）。
+\item \textbf{量图。} 阴影 $=1$，空白 $=0$。读出每一块的全宽、高度或直径，以及重复块的中心坐标。相邻中心距 $=$ 块宽 $+$ 中间的空白。
+\item \textbf{写成函数，只用四种运算。} 单块用 $\rect$ 或 $\circf$；$x$ 方向和 $y$ 方向、以及光栅和有限孔径，用乘法；同一块复制到若干位置，用「一块 $\conv$ 若干 $\delta$」；圆环用大圆减小圆。题目直接给 $\rect$、$\tri$、$\cos$、高斯、二次相位的式子时，不画图，走「常规函数」代入框。
+\item \textbf{变换只做三件事。} 乘积的变换仍是乘积；卷积的变换变成乘积；一串 $\delta$ 变成干涉因子（两个点是 $2\cos$，等间距 $N$ 个点是 $\sin(N\pi du)/\sin(\pi du)$）。把量到的宽度、间距代进形状表。
+\item \textbf{按场景交卷。}
+\begin{itemize}
+\item 衍射屏，在前焦面或远场：频率 $u=x/(\lambda f)$，远场把 $f$ 换成距离 $z$。强度 $I=|F|^2$。零点、条纹间距、缺级都在这一步乘上 $\lambda f$。
+\item 出瞳，非相干成像：先由 $\frac1l+\frac1{z_i}=\frac1f$ 求出像距。PSF $\propto\big|F\big(x'/(\lambda z_i)\big)\big|^2$。MTF 改数光瞳错开 $s$ 后的重叠面积，除以 $s=0$ 的面积，频率 $u=s/(\lambda z_i)$；截止频率 $=$ 该方向总宽 $/(\lambda z_i)$。物面频率到像面要乘 $1/|M|$，$|M|=z_i/l$。物距 $2f$ 时 $z_i=2f$、$|M|=1$、$u=x'/(2\lambda f)$。相干照明时传递函数就是光瞳本身，截止是上面的一半。
+\item 只问系数：交 $c_n$，先不要乘 $\lambda f$。这块周期函数同时又被长度 $L$ 的孔径截断时，每一级再乘 $L\sinc[L(u-n/d)]$，亮点在 $x_n=n\lambda f/d$。
+\end{itemize}
+\end{enumerate}
+换图时只改表中对应的一格：条数和间距改 $\delta$，宽度改 $\sinc$，方孔改圆孔换 $\circf$。场景变了，$F$ 不动，只重做第 5 步。$\lambda$ 先化成与长度相同的单位：$0.5\,\mu$m $=5\times10^{-4}$ mm。
+\end{recipe}
+
+\begin{formula}[label=fml:shapes]{常见形状：图怎么写成函数，傅里叶变换是什么}
+\par\small\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}P{3.7cm}P{6.3cm}P{5.6cm}@{}}
+\toprule
+图上是什么 & 写成 & $F$\\ \midrule
+单缝或矩孔，宽 $a$、高 $b$ & $\rect\frac xa\rect\frac yb$ & $ab\,\sinc(au)\sinc(bv)$，零点 $u=\dfrac1a$\\
+方孔，边长 $a$ & 上式 $b=a$ & $a^2\sinc(au)\sinc(av)$。第一零点 $\dfrac{\lambda f}a$，亮斑边长 $\dfrac{2\lambda f}a$\\
+圆孔，直径 $D$ & $\circf\!\left(\dfrac{r}{D/2}\right)$ & $\dfrac{\pi D^2}{4}\dfrac{2J_1(\pi D\rho)}{\pi D\rho}$，$\rho=\sqrt{u^2+v^2}$。艾里斑半径 $1.22\lambda f/D$\\
+圆环，外半径 $a$、内半径 $b$ & $\circf\frac ra-\circf\frac rb$ & 大圆的 $F$ 减小圆的 $F$\\
+两个方孔，边 $a$，中心 $\pm d/2$ & $\rect\frac xa\rect\frac ya\conv\big[\big(\delta(x-\frac d2)+\delta(x+\frac d2)\big)\delta(y)\big]$ & $2a^2\sinc(au)\sinc(av)\cos(\pi du)$。条纹间距 $\lambda f/d$，包络零点 $\lambda f/a$\\
+两个圆孔，直径 $D$，中心距 $d$ & 圆孔 $\conv\big[\big(\delta(x-\frac d2)+\delta(x+\frac d2)\big)\delta(y)\big]$ & （单圆的 $F$）$\times 2\cos(\pi du)$\\
+$N$ 条缝，宽 $a$，相邻中心距 $d$ & $\rect\frac xa\conv\sum_n\delta(x-x_n)$ & $a\sinc(au)\dfrac{\sin(N\pi du)}{\sin(\pi du)}$\\
+三缝，缝宽 $w$，相邻中心距 $d$，高 $H$ & $\rect\frac yH\big[\rect\frac xw\conv\big(\delta(x-d)+\delta(x)+\delta(x+d)\big)\big]$ & $H\sinc(Hv)\,w\sinc(wu)\,[1+2\cos(2\pi du)]$\\
+余弦光栅 $\frac12+\frac m2\cos(2\pi f_0x)$，方孔边 $L$ & 两者相乘 & $\frac12 P(u)+\frac m4 P(u\pm f_0)$，$P=L^2\sinc(Lu)\sinc(Lv)$。亮点 $x=0,\pm\lambda ff_0$\\
+黑白光栅，缝宽 $w$，周期 $d$，孔径 $L$ & $\big[\rect\frac xw\conv\sum\delta(x-nd)\big]\rect\frac xL$ & $c_m L\sinc\!\big[L(u-\frac md)\big]$，$c_m=\frac wd\sinc\frac{mw}d$。亮点 $x_m=\frac{m\lambda f}d$\\
+方波，周期 $d$，高电平宽 $w$ & 一个周期内 $|x|<w/2$ 为 1 & $c_n=\frac wd\sinc\frac{nw}d$。$w=d/2$ 时 $\frac12\sinc\frac n2$\\
+三角波，周期 $d$，底宽 $w$ & 一个周期 $\tri(2x/w)$ & $c_n=\frac{w}{2d}\sinc^2\frac{nw}{2d}$。$w=d$ 时 $\frac12\sinc^2\frac n2$\\
+整块平移 $x_0$ & $f(x-x_0)$ & $F(u)\,\ee^{-i2\pi ux_0}$，强度不变\\
+斜入射 $\ee^{i2\pi u_0x}$，$u_0=\sin\theta/\lambda$ & 乘在透过率上 & $F(u-u_0)$，图样中心在 $x=\lambda fu_0$\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\normalsize
+三缝就是 $N=3$：$d$ 都表示相邻中心距，$1+2\cos(2\pi du)$ 与 $\sin(3\pi du)/\sin(\pi du)$ 是同一个因子。2025-2 的图中缝宽和空白都是 $D/5$，所以 $w=D/5$、$d=2D/5$、$H=D$。$\sinc(au)=0$ 当 $au=\pm1,\pm2,\dots$。
+\end{formula}
 
 \subsection{卷积与相关怎么算、怎么画}\label{sec:convcalc}
 
@@ -258,8 +358,93 @@ $N$ 缝（周期 $d$，对称放置）& $a\sinc(au)\dfrac{\sin(N\pi du)}{\sin(\p
 
 \textbf{三缝}（中心 $0,\pm d$）：点集自相关 $=3\delta(x)+2\delta(x\mp d)+\delta(x\mp2d)$，五个三角形，高度比 $3:2:1$。$N$ 缝：平移 $kd$ 时重合 $N-|k|$ 对。
 
-\textbf{注意}：只有 $d\ge 2w$ 时三角形互不重叠，可以直接画；$w<d<2w$ 时相邻三角形要相加。
+\textbf{注意}：只有 $d\ge 2w$ 时三角形互不重叠，可以直接画；$w<d<2w$ 时相邻三角形要相加。轴上的零点、峰和截止频率怎么标，见下一框。
 \end{exam}
+
+\begin{recipe}[label=rcp:mtfoverlap]{缝的重叠怎么变成 MTF 上的三角形}
+非相干 MTF 在频率 $u$ 处的值，就是把出瞳复印一份、沿 $x$ 错开距离 $s=\lambda z_i u$，看两份阴影还重叠多少，再除以完全对齐时的重叠。错开越远，重叠越少；错开超过整组光瞳的总宽，重叠是 0，这就是截止。
+
+一条缝先练手。缝宽 $w$。两份完全对齐时，重叠长度是 $w$。错开 $s$（$|s|<w$）后，重叠长度变成 $w-|s|$，左右各降一次，画出来是一个三角形：
+\begin{itemize}
+\item 中心在 $s=0$，峰高先按长度记成 $w$（归一化之后改成 1）。
+\item 底宽 $2w$：向右最多错开 $w$，向左也是 $w$。
+\item 两个零点在 $s=\pm w$。从峰到旁边的零点，距离是 $w$，不是 $w/2$。
+\end{itemize}
+缝是左右对称的，对折不改变形状，所以这里的自相关和卷积结果一样。代数上就是 $\rect(x/w)$ 和自己卷积，得到 $w\,\tri(s/w)$。
+
+$N$ 条缝不要把 $N$ 个矩形两两做一遍卷积。每条缝都是同一块矩形，整组光瞳 $=$ 一块矩形 $\conv$ 一组 $\delta$。自相关拆成两步：矩形和自己重叠，得到\textbf{上面那一个}三角形；$\delta$ 和自己重叠，得到一排带权重的 $\delta$。一排 $\delta$ 再去卷积那个三角形，只是把同一个三角形搬到每个 $\delta$ 的位置上。
+
+数 $\delta$ 的位置就是数「哪两条缝对得上」：
+\begin{itemize}
+\item 错开 $0$：每条缝和自己重叠，$N$ 对。
+\item 错开正好一个中心距 $p$：$N-1$ 对。
+\item 错开 $m$ 个中心距：$N-|m|$ 对。
+\item $|m|\ge N$：一对都没有。
+\end{itemize}
+所以三角形中心落在 $s=0,\pm p,\pm 2p,\dots,\pm(N-1)p$，一共 $2N-1$ 个。每个的底仍是 $2w$，峰高按对数取，归一化后是 $(N-|m|)/N$。写成
+\[
+\mathcal H(s)=\sum_{m=-(N-1)}^{N-1}\frac{N-|m|}{N}\,\tri\!\left(\frac{s-mp}{w}\right).
+\]
+
+\textbf{在 $s$ 轴上标刻度，按这个顺序：}
+\begin{enumerate}
+\item 先标三角形的中心：$0,\,p,\,2p,\,\dots$。峰就在这些点上，高度 $1,\dfrac{N-1}{N},\dfrac{N-2}{N},\dots$。
+\item 再标每个三角形自己的两个零点：中心左右各 $w$，也就是 $mp\pm w$。一个三角形内部，零点到零点的宽度是底宽 $2w$。
+\item 看相邻两个三角形是否碰到。$p>2w$：中间空一段，MTF 在空隙里是 0。$p=2w$：前一个的右零点正好是后一个的左零点，两三角形相接，接点值为 0。$p<2w$：两个三角形在轴上有一段公共区间，把高度相加。
+\item 最外侧的零点 $s=(N-1)p+w$ 就是光瞳总宽。再往外 MTF 保持为 0。
+\item 换成频率轴：每个已经标好的 $s$ 除以 $\lambda z_i$。物距 $2f$ 时 $z_i=2f$，所以除以 $2\lambda f$。这个 2 是像距，不是三角形的底宽。
+\end{enumerate}
+$y$ 方向若是一整条高 $H$、中间没有断开，那边只有一个三角形，零点在 $\pm H$，没有旁边的小峰。高度 $H$ 在 $x$ 方向的归一化里上下约掉。
+\end{recipe}
+
+\begin{exam}{三缝刻度：缝宽 $w$，空白也是 $w$，所以中心距 $p=2w$}
+这就是 2025-2 的图。$w=D/5$，空白 $D/5$，中心距 $p=2w=2D/5$，三条中心在 $0,\pm 2w$。$N=3$，三角形有 $2\times3-1=5$ 个，中心在 $0,\pm 2w,\pm 4w$，归一化峰高 $1,\frac23,\frac13$。因为 $p=2w$，相邻三角形正好相接。
+
+只画 $s\ge 0$ 的一半，负半轴是镜像：
+
+\begin{center}
+\begin{tikzpicture}[x=1.15cm,y=2.15cm,font=\small]
+\draw[->] (0,0)--(6.15,0) node[right]{$s$};
+\draw[->] (0,0)--(0,1.35) node[above]{MTF};
+\draw[thick,blue] (0,1)--(1,0)--(2,2/3)--(3,0)--(4,1/3)--(5,0)--(5.7,0);
+\draw[dashed,gray] (0,2/3)--(2,2/3) (0,1/3)--(4,1/3);
+\node[left] at (0,1){$1$};
+\node[left] at (0,2/3){$\frac23$};
+\node[left] at (0,1/3){$\frac13$};
+\foreach \x/\lab in {0/{0},1/{$w$},2/{$2w$},3/{$3w$},4/{$4w$},5/{$5w{=}D$}}{
+  \draw (\x,0.03)--(\x,-0.03);
+  \node[below] at (\x,-0.02){\lab};
+}
+\end{tikzpicture}
+\end{center}
+
+对着这五个刻度核对一遍：
+\begin{itemize}
+\item $s=0$：三对全重叠，峰 $=1$。这个三角形的两个零点在 $\pm w$，所以右零点是第一条刻度 $w$。
+\item $s=2w$：相邻缝重叠，剩 2 对，峰 $=\dfrac23$。它的零点在 $2w\pm w$，就是 $w$ 和 $3w$。$w$ 这一点上，中间三角形和旁边三角形同时降到 0。
+\item $s=4w$：只剩最外侧那一对，峰 $=\dfrac13$。零点在 $4w\pm w$，就是 $3w$ 和 $5w$。
+\item $s=5w=D$：总宽用完，截止。各段之间用直线连接，因为单个三角形的斜边是直线。
+\end{itemize}
+物距 $2f$ 时 $z_i=2f$，频率刻度是把上一行的 $s$ 除以 $2\lambda f$：
+
+\begin{center}\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{c|cccccc}
+$s$ & $0$ & $w=\dfrac D5$ & $2w=\dfrac{2D}5$ & $3w=\dfrac{3D}5$ & $4w=\dfrac{4D}5$ & $5w=D$\\ \hline
+$u=\dfrac{s}{2\lambda f}$ & $0$ & $\dfrac{D}{10\lambda f}$ & $\dfrac{D}{5\lambda f}$ & $\dfrac{3D}{10\lambda f}$ & $\dfrac{2D}{5\lambda f}$ & $\dfrac{D}{2\lambda f}$\\
+MTF & $1$ & $0$ & $\dfrac23$ & $0$ & $\dfrac13$ & $0$
+\end{tabular}
+\end{center}
+零点到相邻零点（$w$ 到 $3w$，再到 $5w$）的间距是 $2w$；峰到相邻峰（$0$ 到 $2w$ 再到 $4w$）的间距也是 $2w$，等于中心距 $p$。对比度曲线和这张图是同一条，横轴改叫 $F$。
+\end{exam}
+
+\begin{idea}[换一道缝的题，只改这三格]
+\begin{itemize}
+\item \textbf{条数 $N$。} 三角形个数改成 $2N-1$。第 $m$ 个峰的高度改成 $(N-|m|)/N$。两条缝就是 3 个三角形，峰 $1$ 和 $\frac12$，中心在 $0,\pm p$。
+\item \textbf{中心距 $p$ 和缝宽 $w$ 的比。} $p=2w$（空白 $=$ 缝宽）时零点相接，像上面这张图。$p>2w$ 时两个三角形之间空出一段 0，空段宽度 $p-2w$。$p<2w$ 时三角形交叠，交叠处的高度相加，轴上可以没有 0。
+\item \textbf{像距 $z_i$。} $s$ 轴上的三角形不动。频率轴每个刻度改除以 $\lambda z_i$。物距不是 $2f$ 时，先用成像公式求出 $z_i$，不要再除 $2\lambda f$。截止始终是总宽 $/(\lambda z_i)$，总宽 $=(N-1)p+w$。
+\end{itemize}
+缝换成圆孔时，峰仍然落在 $0,\pm p,\pm 2p,\dots$，高度比仍然是对数比；每个三角形换成两个圆的重叠面积曲线，底宽改成直径的 2 倍。
+\end{idea}
 
 \subsection{可以直接抄的证明}\label{sec:ftproofs}
 
@@ -341,6 +526,18 @@ $a=0.1$ mm，$b=0.2$ mm，$\lambda=0.5\,\mu$m $=5\times10^{-4}$ mm，$f=500$ mm�
 $x$ 方向第一零点 $\frac{\lambda f}{a}=\frac{5\times10^{-4}\times500}{0.1}=2.5$ mm，$y$ 方向 $1.25$ mm。中央亮斑 $5\text{ mm}\times2.5\text{ mm}$：横宽竖窄，与孔“横窄竖宽”正好相反。
 \end{exam}
 
+\begin{exam}{方孔代入：边长 $a$，波长 $\lambda$，焦距 $f$}
+矩孔模板里令 $a=b$。频谱 $T=a^2\sinc(au)\sinc(av)$，$u=x/(\lambda f)$，$v=y/(\lambda f)$。无透镜、远场距离 $z$ 时，下面的 $f$ 全部换成 $z$。
+
+\textbf{代入}（$\lambda$ 先化成与 $a$、$f$ 相同的单位）：
+\begin{itemize}
+\item 第一零点：$x=y=\dfrac{\lambda f}{a}=$（$\lambda$）（$f$）/（$a$）。
+\item 中央亮斑边长：$\dfrac{2\lambda f}{a}=$ 上式的 2 倍。两个方向相同，亮斑是正方形。
+\item 中心强度因子：$\dfrac{a^4}{\lambda^2 f^2}$。只比较形状时可略去。
+\end{itemize}
+例：$a=0.2$ mm，$\lambda=5\times10^{-4}$ mm，$f=200$ mm。第一零点 $\dfrac{5\times10^{-4}\times200}{0.2}=0.5$ mm，中央亮斑边长 $1$ mm。
+\end{exam}
+
 \cOneQtype{题型 2：双缝、多缝、阵列}\ix{多缝}\ix{阵列衍射}
 
 \begin{exam}{推导：$N$ 条等间距狭缝（宽 $a$、周期 $d$、关于原点对称）}
@@ -419,6 +616,13 @@ T(u,v)=\tfrac12P(u,v)+\tfrac m4P(u-f_0,v)+\tfrac m4P(u+f_0,v).
 
 \textbf{第 5 步 读结果}：三个 sinc 斑，0 级在 $u=0$，$\pm1$ 级在 $u=\pm f_0$，即衍射角 $\sin\theta=\pm\lambda f_0$，焦面位置 $x=\pm\lambda ff_0$。
 只要 $f_0\gg1/L$（孔里有很多个周期），三个斑互不重叠，强度可以分别算：中心强度比 $\frac14:\frac{m^2}{16}:\frac{m^2}{16}$，即 $4:m^2:m^2$。
+
+\textbf{代入}：题目给 $f_0$（或周期 $d$，则 $f_0=1/d$）、调制度 $m$、孔径 $L$、$\lambda$、$f$。
+\begin{itemize}
+\item $\pm1$ 级位置：$x=\pm\lambda f f_0=$（$\lambda$）（$f$）（$f_0$）。0 级在 $x=0$。
+\item 每个斑到第一零点的半宽：$\lambda f/L=$（$\lambda$）（$f$）/（$L$）。它远小于 $\lambda ff_0$ 时，三个斑分开算。
+\item 中心强度比 $4:m^2:m^2$。$m=1$ 时就是 $4:1:1$。振幅比是 $\frac12:\frac m4:\frac m4$。
+\end{itemize}
 \end{exam}
 
 \begin{recipe}{题型 3 的变式}
@@ -452,6 +656,14 @@ $w\sinc(wu)\cdot\frac1d\sum_m\delta\!\left(u-\frac md\right)=\sum_m c_m\,\delta\
 \textbf{第 3 步}：乘 $\rect\frac xL$ $\to$ 卷积 $L\sinc(Lu)$：$T(u)=\sum_mc_m\,L\sinc\!\left[L\left(u-\frac md\right)\right]$。
 
 \textbf{第 4 步 读结果}：第 $m$ 级在 $u=m/d$（光栅方程 $d\sin\theta=m\lambda$），振幅 $\propto c_m$，强度 $\propto c_m^2$。
+
+\textbf{代入}：题目给缝宽 $w$、周期 $d$、孔径 $L$、$\lambda$、$f$。先算比值 $w/d$，再对题目要的每一级 $m$ 算一次。
+\begin{itemize}
+\item 系数：$c_m=\dfrac{w}{d}\sinc\!\left(\dfrac{mw}{d}\right)$。$mw/d$ 为非零整数时这一级是 0（缺级）。
+\item 焦面位置：$x_m=\dfrac{m\lambda f}{d}=$（$m$）（$\lambda$）（$f$）/（$d$）。
+\item 该级斑的半宽：$\lambda f/L$。强度比按 $c_m^2$ 列。能出现的级满足 $|m|<d/\lambda$。
+\end{itemize}
+占空比 $w/d=\frac12$ 时：$c_0=\frac12$，$c_{\pm1}=\frac1\pi$，$c_{\pm2}=0$，$c_{\pm3}=-\frac1{3\pi}$。
 \end{exam}
 
 \begin{formula}[label=fml:dutycycle]{占空比 $w/d=\frac12$ 的光栅（最常考）}
@@ -513,7 +725,15 @@ T(u,v)=a^2\sinc(au)\sinc(av)\cdot 2\cos(\pi du).
 \[
 I\propto|T|^2=4a^4\sinc^2(au)\sinc^2(av)\cos^2(\pi du),\qquad u=\frac{x}{\lambda f}.
 \]
-单孔决定包络，两孔的间距决定包络里的条纹。条纹间距 $\lambda f/d$；包络第一零点 $\lambda f/a$。$d/a$ 为整数时，第 $\pm d/a,\pm 2d/a,\dots$ 级缺级，算法和双缝相同。
+单孔决定包络，两孔的间距决定包络里的条纹。
+
+\textbf{代入}：题目给孔边长 $a$、两孔中心距 $d$、$\lambda$、$f$（远场无透镜则 $f$ 换成距离 $z$）。
+\begin{itemize}
+\item 条纹间距：$\dfrac{\lambda f}{d}=$（$\lambda$）（$f$）/（$d$）。
+\item 包络第一零点：$\dfrac{\lambda f}{a}=$（$\lambda$）（$f$）/（$a$）。中央亮斑边长是它的 2 倍。
+\item 令 $N=d/a$。$N$ 为整数时，缺级 $m=\pm N,\pm 2N,\dots$。中央包络内主极大是 $m=0,\pm1,\dots,\pm(N-1)$，共 $2N-1$ 个。
+\end{itemize}
+两个圆孔：包络改用艾里斑半径 $1.22\lambda f/D$，条纹间距和缺级算法不变，$D$ 是圆孔直径。
 \end{exam}
 
 \begin{exam}{数值例}
@@ -523,24 +743,28 @@ $a=0.1$ mm，$d=0.4$ mm，$\lambda=0.5\,\mu$m，$f=200$ mm。
 
 \cOneQtype{题型 7：方波、三角波这类简单周期函数}\ix{方波}\ix{三角波}
 
-\begin{exam}{答题模板：由定义求一个周期内为 0/1 的方波}
-周期 $d$，一个周期内 $f(x)=1$（$|x|<d/4$），其余为 0。这就是占空比 $1/2$ 的矩形光栅，系数仍是
+\begin{exam}{答题模板：方波，周期 $d$、高电平宽度 $w$}
+一个周期内 $f(x)=1$（$|x|<w/2$），其余为 0。系数按定义算，结果和黑白光栅相同：
 \[
-c_n=\frac1d\int_{-d/4}^{d/4}\ee^{-i2\pi nx/d}\dd x=\frac12\sinc\frac n2.
+c_n=\frac1d\int_{-w/2}^{w/2}\ee^{-i2\pi nx/d}\dd x=\frac wd\sinc\frac{nw}{d}.
 \]
-$c_0=\frac12$，$c_{\pm1}=\frac1\pi$，$c_{\pm2}=0$，$c_{\pm3}=-\frac1{3\pi}$。偶次项除直流外都是 0，因为 $\sinc$（整数）$=0$。
+\textbf{代入}：先算 $w/d$，再把题目要的 $n=0,\pm1,\pm2,\pm3$ 分别代进 $\sinc$。$nw/d$ 为非零整数时该级为 0。
 
-光学题里把它乘上有限孔径 $\rect(x/L)$，各级就从 $\delta$ 变成宽 $1/L$ 的 sinc 斑，位置 $u=n/d$，强度比 $c_n^2$。完整读图用题型 4。
+最常考的方波是 $w=d/2$，上式收成 $c_n=\dfrac12\sinc\dfrac n2$：
+$c_0=\dfrac12$，$c_{\pm1}=\dfrac1\pi$，$c_{\pm2}=0$，$c_{\pm3}=-\dfrac1{3\pi}$。
+
+光学题再乘有限孔径 $\rect(x/L)$ 时，第 $n$ 级从 $\delta$ 变成半宽 $1/L$ 的 sinc 斑，焦面位置 $x_n=n\lambda f/d$，强度比 $c_n^2$。
 \end{exam}
 
-\begin{exam}{三角波：同一个算法，单元换成 $\tri$}
-一个周期内 $f(x)=\tri(2x/d)$（中心为 1，周期两端为 0）。单周期的变换是 $\frac d2\sinc^2(du/2)$，周期采样后
+\begin{exam}{三角波：周期 $d$、底宽 $w$}
+一个周期内 $f(x)=\tri(2x/w)$（中心为 1，底宽 $w$）。单周期的变换是 $\dfrac{w}{2}\sinc^2(wu/2)$，只在 $u=n/d$ 取样：
 \[
-c_n=\frac12\sinc^2\frac n2.
+c_n=\frac{w}{2d}\sinc^2\frac{nw}{2d}.
 \]
-$c_0=\frac12$，$c_{\pm1}=\frac{2}{\pi^2}$，$c_{\pm2}=0$，$c_{\pm3}=\frac{2}{9\pi^2}$。偶次同样缺失，但高级次比方波掉得更快（$\sinc^2$ 而不是 $\sinc$）。
+\textbf{代入}：先算 $w/(2d)$，再对 $n=0,\pm1,\pm2,\pm3$ 各算一次。底宽正好等于周期（$w=d$）时，$c_n=\dfrac12\sinc^2\dfrac n2$：
+$c_0=\dfrac12$，$c_{\pm1}=\dfrac{2}{\pi^2}$，$c_{\pm2}=0$，$c_{\pm3}=\dfrac{2}{9\pi^2}$。偶次同样为 0，高级次按 $\sinc^2$ 下降。
 
-高斯 $\ee^{-\pi x^2}$、线性相位 $\ee^{i2\pi u_0x}$、二次相位 $\ee^{i\pi ax^2}$ 不再做积分，直接查变换对表。题目说“常规函数”时，先认它是 rect、tri、cos、$\delta$ 里的哪一个，再套缩放。
+高斯、线性相位、二次相位不再做积分，用前面「常规函数」那一框：把题目的 $a$、$u_0$ 或 $\alpha$ 代进表。
 \end{exam}
 
 \needspace{8\baselineskip}\section{写光场时先算的两个量}\label{sec:opwave}
@@ -558,15 +782,23 @@ $c_0=\frac12$，$c_{\pm1}=\frac{2}{\pi^2}$，$c_{\pm2}=0$，$c_{\pm3}=\frac{2}{9
 \]
 因此 $E_Q=E_P=A\cos(kz'-\omega t)=A\cos(\bm k\cdot\bm r-\omega t)$，$\bm k=k\bm k_0$。某一时刻各点的 $\ee^{-i\omega t}$ 相同，复振幅只留空间部分 $\tilde E=A\exp(i\bm k\cdot\bm r)$。
 
-在固定平面 $z=z_0$ 上，$z_0\cos\gamma$ 是常数相位。剩下的横向相位决定空间频率：$u=\cos\alpha/\lambda$，$v=\cos\beta/\lambda$。传播方向在 $xz$ 面内、与 $z$ 轴夹角为 $\theta$ 时，$\cos\alpha=\sin\theta$，$u=\sin\theta/\lambda$。
+在固定平面 $z=z_0$ 上，$z_0\cos\gamma$ 是常数相位。剩下的横向相位决定空间频率：$u=\cos\alpha/\lambda$，$v=\cos\beta/\lambda$。
+
+\textbf{代入}：题目给点 $Q=(x,y,z)$ 和方向。三个方向余弦先写下来；若只给 $xz$ 面内与 $z$ 轴的夹角 $\theta$，则 $\cos\alpha=\sin\theta$，$\cos\beta=0$，$\cos\gamma=\cos\theta$。$\lambda$ 与坐标用同一单位。
+\begin{itemize}
+\item $OP=x\cos\alpha+y\cos\beta+z\cos\gamma=$（$x$）（$\cos\alpha$）$+$（$y$）（$\cos\beta$）$+$（$z$）（$\cos\gamma$）。
+\item 只在 $xz$ 面内时收成 $OP=x\sin\theta+z\cos\theta$。
+\item 空间频率：$u=\cos\alpha/\lambda=\sin\theta/\lambda=$（$\sin\theta$）/（$\lambda$），$v=\cos\beta/\lambda$。
+\item 该点相位（弧度）$k\cdot OP=2\pi\,OP/\lambda$。复振幅 $\tilde E=A\exp(i2\pi ux+i2\pi vy)$，沿 $z$ 的那一项 $z\cos\gamma$ 是与 $x,y$ 无关的常数相位。
+\end{itemize}
 \end{exam}
 
 \begin{exam}{数值例}
-$\theta=30^\circ$（$xz$ 面内），$Q=(1,0,2)$ mm，$\lambda=0.5\,\mu$m。
+$\theta=30^\circ$（$xz$ 面内），$Q=(1,0,2)$ mm，$\lambda=0.5\,\mu$m $=5\times10^{-4}$ mm。代入上一框：
 \[
 OP=1\cdot\sin30^\circ+2\cdot\cos30^\circ=0.5+\sqrt3=2.232\text{ mm}.
 \]
-在 $z=2$ mm 的平面上，$u=\sin30^\circ/\lambda=0.5/(5\times10^{-4})=1000$ mm$^{-1}$，
+$u=\sin30^\circ/\lambda=0.5/(5\times10^{-4})=1000$ mm$^{-1}$，
 $\tilde E(x)=A\exp(i2\pi\cdot1000\,x)$（$x$ 用 mm）。沿 $x$ 每移动 $1\,\mu$m，相位走一圈。
 \end{exam}
 
@@ -587,13 +819,22 @@ r=z\sqrt{1+\frac{x^2+y^2}{z^2}}\approx z+\frac{x^2+y^2}{2z},
 \]
 正号表示发散，好像从后方距离 $z$ 的点发出。会聚到前方 $R$ 则把 $z$ 换成 $R$ 并改成负号。
 
-上式是\textbf{接收面上}点源场的傍轴二次相位，后面衍射题从它出发。透镜后焦面上残留的二次相位是另一回事：它由衍射屏相对透镜的位置决定，不是把这里的 $x^2/(2z)$ 原样传过去。屏在透镜前、距离 $d_0$ 时，后焦面多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$，$d_0=f$ 时括号为 0；亮点位置仍是 $x=\lambda fu$，强度与 $d_0$ 无关。屏改到透镜后、距后焦面 $d$ 时，频率坐标改成 $x/(\lambda d)$，同一频率的亮点按 $d/f$ 向光轴靠拢，并多一个振幅因子 $f/d$。两种位置的代入模板在第 \pageref{ex:screenpos} 页。
+上式是接收面上点源场的傍轴二次相位。会聚到前方距离 $R$ 的球面波，把式中的 $z$ 换成 $-R$。
+
+\textbf{代入}：题目给点 $(x,y)$、接收面距离 $z$、波长 $\lambda$、振幅 $A$。长度先化成同一单位。
+\begin{itemize}
+\item 精确距离：$r=\sqrt{x^2+y^2+z^2}$。精确相位 $kr=2\pi r/\lambda$，精确振幅 $A/r$。
+\item 傍轴多走的路程：$\dfrac{x^2+y^2}{2z}=$（$x^2+y^2$）/（$2z$）。换成波长数：该路程 $/\lambda$。相位（弧度）$=2\pi\times$（波长数）。
+\item 傍轴振幅：$A/z$。和精确振幅相比，相对差是 $r/z-1$。这个差远小于 1 时，振幅就用 $A/z$。
+\item 会聚：上两行里的 $z$ 改成题目给的 $R$，二次相位指数改号。
+\end{itemize}
+透镜后焦面上另有一份二次相位，由衍射屏在透镜前还是透镜后决定，代入模板在第 \pageref{ex:screenpos} 页：屏在前方距离 $d_0$ 时多乘 $\exp\!\big[\frac{ik}{2f}(1-\frac{d_0}{f})(x^2+y^2)\big]$；屏在后方、距后焦面 $d$ 时频率改用 $x/(\lambda d)$。
 \end{exam}
 
 \begin{exam}{数值例}
-$z=100$ mm，平面上的点 $(x,y)=(2,0)$ mm，$\lambda=0.5\,\mu$m。
-傍轴多走的路程 $\dfrac{x^2}{2z}=\dfrac{4}{200}=0.02$ mm $=40\lambda$，对应相位 $k\cdot0.02\text{ mm}=80\pi$。
-精确距离 $r=\sqrt{100^2+2^2}=100.019998$ mm，比傍轴的 $100.02$ mm 只少 $0.002\,\mu$m。振幅比中心小 $r/z-1\approx2\times10^{-4}$，傍轴时可以当成不变。
+$z=100$ mm，$(x,y)=(2,0)$ mm，$\lambda=0.5\,\mu$m $=5\times10^{-4}$ mm。代入上一框：
+傍轴多走路程 $\dfrac{x^2}{2z}=\dfrac{4}{200}=0.02$ mm $=0.02/(5\times10^{-4})=40$ 个波长，相位 $2\pi\times40=80\pi$。
+精确距离 $r=\sqrt{100^2+2^2}=100.019998$ mm，比傍轴的 $100.02$ mm 少 $0.002\,\mu$m。振幅相对差 $r/z-1\approx2\times10^{-4}$。
 \end{exam}
 
 \needspace{8\baselineskip}\section{采样与 comb 函数}\label{sec:sampling}

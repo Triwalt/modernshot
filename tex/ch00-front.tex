@@ -25,6 +25,7 @@
 \item \textbf{再看第 9 章每道往年题前的「读题」框}（\icoI\,【直觉】框）（从第 \pageref{rd:2024-1} 页起）：题干逐句翻译成大白话，生词附入门页和详解页，说明这道题是信号与系统里的什么问题、每一问要交什么。
 \item \textbf{然后按下面的「题型索引」查详细推导}：每类题都有公式框、套路和可以照抄的答卷。
 \item \textbf{考场上}：先用第 \pageref{fig:dectree} 页的「解题决策树」或书末「题干信号词表」（第 \pageref{tab:signal} 页）判断题型；遇到不认识的词查术语表（第 \pageref{tab:glossary} 页，按拼音排序，一句话白话 + 信号与系统对应物 + 关键公式 + 页码）。
+\item \textbf{本次划的重点}在第 \pageref{sec:kaodian} 页。平面波怎么写成复振幅、球面波、方波和常规函数、方孔 / 光栅 / 两个光孔，以及衍射屏放在透镜前时哪一个距离才是精确傅里叶变换。
 \end{enumerate}
 \end{idea}
 \begin{itemize}
@@ -153,6 +154,39 @@
 \end{center}
 \clearpage
 
+\section*{标注重点}\label{sec:kaodian}
+\addcontentsline{toc}{section}{标注重点}
+
+\noindent 下面是老师划的范围，加上课件「回顾平面波」和「透镜的傅里叶变换性质」里要能默写的两步。右列是代入模板，考场直接翻。
+
+\begin{tcolorbox}[fmlstyle,title={先看这五条}]
+\begin{enumerate}
+\item \textbf{矢量点乘求 OP，并写成复振幅}（课件：同一波面上 $Q$ 与 $P$ 相位相同）。
+\[
+OP=\bm r\cdot\bm k_0,\qquad
+E=A\cos(\bm k\cdot\bm r-\omega t)
+=A\exp[i(\bm k\cdot\bm r-\omega t)].
+\]
+某一时刻各点的 $\ee^{-i\omega t}$ 相同，复振幅只留 $\tilde E=A\exp(i\bm k\cdot\bm r)$。给夹角 $\theta$ 时 $OP=x\sin\theta+z\cos\theta$，$u=\sin\theta/\lambda$。代入模板：第 \pageref{sec:opwave} 页题型 8。
+
+\item \textbf{球面波表达式。} 精确式 $\dfrac{A}{r}\ee^{ikr}$，$r=\sqrt{x^2+y^2+z^2}$。傍轴后振幅用 $A/z$，相位多留 $\exp\!\big(ik(x^2+y^2)/(2z)\big)$。会聚把 $z$ 换成 $-R$。代入模板：同页题型 9。
+
+\item \textbf{方波、三角波和常规函数的傅里叶变换。} 方波、三角波代周期 $d$ 和高电平宽度（或底宽）$w$，系数 $c_n=\dfrac{w}{d}\sinc\dfrac{nw}{d}$（三角波是 $\sinc^2$）。$\rect$、$\tri$、$\cos$、高斯、二次相位不再积分，把宽度或频率代进变换对表。第 \pageref{sec:pairs} 页的代入框，题型 7。
+
+\item \textbf{方孔、光栅、两个光孔。} 先按第 \pageref{rcp:readfig} 页的五步把图写成函数，再查第 \pageref{fml:shapes} 页的形状表。方孔零点 $\lambda f/a$；余弦光栅亮点在 $\pm\lambda ff_0$；两个光孔的条纹间距 $\lambda f/d$、包络零点 $\lambda f/a$。黑白光栅与方波是同一套 $c_n$。图若是出瞳而不是衍射屏，函数不变，最后一步改交 PSF 和 MTF。
+
+\item \textbf{衍射屏在透镜前距离 $d_0$（课件结论）。} 后焦面上
+\[
+\tilde E(x,y)=\frac{\ee^{ikf}}{i\lambda f}
+\exp\!\left[\frac{ik}{2f}\!\left(1-\frac{d_0}{f}\right)(x^2+y^2)\right]
+\F\{\tilde E_1\}\Big(\frac{x}{\lambda f},\frac{y}{\lambda f}\Big).
+\]
+$d_0=f$ 时括号为 0，二次相位消失，后焦面是屏函数的精确傅里叶变换。$d_0$ 取别的值只多这一份相位，强度分布不变。正面、反面的代入在第 \pageref{ex:screenpos} 页。
+\end{enumerate}
+\end{tcolorbox}
+
+\clearpage
+
 \section*{题型索引}\label{tab:typeindex}
 \par\renewcommand{\arraystretch}{1.35}
 \begin{longtable}{@{}P{6.4cm}P{6.2cm}r@{}}
@@ -162,10 +196,11 @@
 \textbf{看不懂题目里的概念} & 第零章（零基础入门）、术语表 & \pageref{ch:primer}, \pageref{ch:glossary}\\
 \textbf{不知道是哪类题} & 解题决策树、题干信号词表 & \pageref{fig:dectree}, \pageref{tab:signal}\\
 \multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【傅里叶变换与基础】}\\
+看图写成函数再做傅里叶变换 & 固定五步、常见形状对照表 & \pageref{rcp:readfig}, \pageref{fml:shapes}\\
 求某个图形 / 孔的傅里叶变换 & 变换对表、性质表、可抄证明 & \pageref{sec:pairs}, \pageref{sec:ftproofs}\\
 单缝、方孔、多缝、阵列、两个光孔、余弦/黑白光栅、方波的频谱 & 题型例题（缺级、各级强度）& \pageref{sec:ftexamples}\\
 矢量点乘求 OP、球面波的二次相位 & 参数代入模板 & \pageref{sec:opwave}\\
-卷积、相关怎么算怎么画 & 分段推导、多缝自相关 & \pageref{sec:convcalc}\\
+卷积、相关怎么算怎么画；几条缝叠成几个三角形 & 重叠计数、轴上刻度 & \pageref{sec:convcalc}, \pageref{rcp:mtfoverlap}\\
 平面波方向 $\leftrightarrow$ 空间频率 & 空间频率 & \pageref{sec:spfreq}\\
 两束光干涉的条纹频率、对比度 & 两束平面波干涉 & \pageref{sec:twobeam}\\
 写出光屏的复透射系数 & 九种光屏速查 & \pageref{sec:screens}\\
