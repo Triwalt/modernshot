@@ -274,6 +274,19 @@ $T(u,v)=L^2\big[\frac12\sinc(Lu)+\frac14\sinc(L(u-\frac1d))+\frac14\sinc(L(u+\fr
 推导关键：$\displaystyle\int\exp\!\left[-i2\pi\xi\left(\frac{x_1}{\lambda f_1}+\frac{x}{\lambda f_2}\right)\right]\dd\xi=\delta\!\left(\frac{x_1}{\lambda f_1}+\frac{x}{\lambda f_2}\right)=\lambda f_1\,\delta\!\left(x_1+\frac{f_1}{f_2}x\right)$（二维为平方）。
 
 振幅因子 $f_1/f_2=1/|M|$ 保证能量守恒：强度 $\times\frac1{M^2}$，面积 $\times M^2$。
+
+考场把 $f_1,f_2$ 收成 $M$，只记三行（$C=-\ee^{i2k(f_1+f_2)}$）：
+\begin{itemize}
+\item \textbf{像。} $-\dfrac{f_1}{f_2}x=\dfrac{x}{M}$，所以
+\[
+\tilde E_{\text{out}}(x,y)=C\,\frac{1}{|M|}\,\tilde E\Big(\frac xM,\frac yM\Big).
+\]
+\item \textbf{像面频谱。} 空域坐标除以 $M$，频谱乘 $M$。$M<0$ 时二维雅可比用 $|M|^2$，频率自变量保留 $M$ 的负号：
+\[
+\hat E_{\text{out}}(u',v')=C|M|\,\hat E(Mu',Mv').
+\]
+\item \textbf{进 4f 之前多走的距离 $x_1$。} 像方二次相位的系数变成 $M^2x_1$。两级相乘时 $M=M_1M_2$，振幅仍是 $1/|M|$。
+\end{itemize}
 \end{formula}
 
 \subsection*{完整推导：4f 输出（两种方法，任选其一抄写）}\label{sec:4fderiv}

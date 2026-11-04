@@ -17,6 +17,7 @@
 黑白光栅、方波、三角波的傅里叶系数 & 题型 4、7\\
 矢量点乘求 OP、写出球面波 & 题型 8、9\\
 卷积 / 相关怎么算、怎么画；几条缝的 MTF 怎么叠成三角形 & §\ref{sec:convcalc}, \pageref{rcp:mtfoverlap}\\
+性质怎么对上题目：乘、卷积、平移、缩放 & 四条配对（\pageref{rcp:ftuse} 页）\\
 “证明”某个傅里叶性质 & §\ref{sec:ftproofs}\\
 采样、混叠、像素、DFT 尺度 & §\ref{sec:sampling}
 \end{tabular}
@@ -114,11 +115,336 @@ $\mathrm{sgn}(x)$ & $\dfrac{1}{i\pi u}$ & \\
 \end{tabular}
 
 \smallskip
-注：$\comb(x/d)=d\sum_n\delta(x-nd)$。周期函数 $=$ 单元 $\conv$ 点阵 $\Rightarrow$ 频谱 $=$ 单元频谱 $\times$ 等间隔 $\delta$（只在 $u=m/d$ 处有值，即光栅方程）。
+注：$\comb(x/d)=d\sum_n\delta(x-nd)$。周期函数 $=$ 单元 $\conv$ 点阵 $\Rightarrow$ 频谱 $=$ 单元频谱 $\times$ 等间隔 $\delta$（只在 $u=m/d$ 处有值，即光栅方程，\pageref{fml:grating} 页）。
 \end{formula}
 
+\noindent 下面每一对左边是 $f(x)$，右边是 $F(u)$。轴上的刻度就是表里的参数。频谱是复数时，右图只画模，相位写在图下。
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\rect(x/a)\;\longleftrightarrow\;a\,\sinc(au)$}\quad 全宽 $a$，第一零点 $u=\pm1/a$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.95cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.15,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-2,0)--(-1,0)--(-1,1)--(1,1)--(1,0)--(1.9,0);
+\node[below] at (-1,0){$-\frac a2$};
+\node[below] at (1,0){$\frac a2$};
+\node[left] at (0,1){$1$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.72cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.7,0)--(2.85,0) node[right]{$u$};
+\draw[->] (0,-0.45)--(0,1.45);
+\draw[blue,thick] (-2.5,0.10)--(-2.25,0.13)--(-2,0)--(-1.75,-0.13)--(-1.5,-0.21)--(-1.25,-0.18)--(-1,0)--(-0.75,0.30)--(-0.5,0.64)--(-0.25,0.90)--(0,1)--(0.25,0.90)--(0.5,0.64)--(0.75,0.30)--(1,0)--(1.25,-0.18)--(1.5,-0.21)--(1.75,-0.13)--(2,0)--(2.25,0.13)--(2.5,0.10);
+\node[above] at (0,1){$a$};
+\node[below] at (1,0){$\frac1a$};
+\node[above=2pt] at (2,0){$\frac2a$};
+\node[below] at (-1,0){$-\frac1a$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\sinc(x/a)\;\longleftrightarrow\;a\,\rect(au)$}\quad 空域零点 $x=\pm a,\pm2a$；频域矩形全宽 $1/a$，高 $a$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.72cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.7,0)--(2.85,0) node[right]{$x$};
+\draw[->] (0,-0.45)--(0,1.45);
+\draw[blue,thick] (-2.5,0.10)--(-2.25,0.13)--(-2,0)--(-1.75,-0.13)--(-1.5,-0.21)--(-1.25,-0.18)--(-1,0)--(-0.75,0.30)--(-0.5,0.64)--(-0.25,0.90)--(0,1)--(0.25,0.90)--(0.5,0.64)--(0.75,0.30)--(1,0)--(1.25,-0.18)--(1.5,-0.21)--(1.75,-0.13)--(2,0)--(2.25,0.13)--(2.5,0.10);
+\node[above] at (0,1){$1$};
+\node[below] at (1,0){$a$};
+\node[above=2pt] at (2,0){$2a$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.95cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.15,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-2,0)--(-1,0)--(-1,1)--(1,1)--(1,0)--(1.9,0);
+\node[below] at (-1,0){$-\frac1{2a}$};
+\node[below] at (1,0){$\frac1{2a}$};
+\node[left] at (0,1){$a$};
+\node[below=8pt] at (0,0){频域，全宽 $\dfrac1a$};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\tri(x/a)\;\longleftrightarrow\;a\,\sinc^2(au)$}\quad 空域底宽 $2a$（零点 $\pm a$），频域第一零点仍是 $\pm1/a$，峰高 $a$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.95cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.15,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.8,0)--(-1,0)--(0,1)--(1,0)--(1.8,0);
+\node[below] at (-1,0){$-a$};
+\node[below] at (1,0){$a$};
+\node[above] at (0,1){$1$};
+\node[below=8pt] at (0,0){空域，底宽 $2a$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.72cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.7,0)--(2.85,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-2.5,0.01)--(-2,0)--(-1.5,0.04)--(-1,0)--(-0.75,0.09)--(-0.5,0.41)--(-0.25,0.81)--(0,1)--(0.25,0.81)--(0.5,0.41)--(0.75,0.09)--(1,0)--(1.5,0.04)--(2,0)--(2.5,0.01);
+\node[above] at (0,1){$a$};
+\node[below] at (1,0){$\frac1a$};
+\node[above=2pt] at (2,0){$\frac2a$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\sinc^2(x/a)\;\longleftrightarrow\;a\,\tri(au)$}\quad 和上一对对调。频域三角形零点 $\pm1/a$，峰高 $a$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.72cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.7,0)--(2.85,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-2.5,0.01)--(-2,0)--(-1.5,0.04)--(-1,0)--(-0.75,0.09)--(-0.5,0.41)--(-0.25,0.81)--(0,1)--(0.25,0.81)--(0.5,0.41)--(0.75,0.09)--(1,0)--(1.5,0.04)--(2,0)--(2.5,0.01);
+\node[above] at (0,1){$1$};
+\node[below] at (1,0){$a$};
+\node[above=2pt] at (2,0){$2a$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.95cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.15,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.8,0)--(-1,0)--(0,1)--(1,0)--(1.8,0);
+\node[below] at (-1,0){$-\frac1a$};
+\node[below] at (1,0){$\frac1a$};
+\node[above] at (0,1){$a$};
+\node[below=8pt] at (0,0){频域，底宽 $\dfrac2a$};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\delta(x)\;\longleftrightarrow\;1$}\quad 以及 \textbf{$1\;\longleftrightarrow\;\delta(u)$}。一个点铺满所有频率；一条常数只留零频的一个点。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (0,0)--(0,1);
+\node[above] at (0,1){$1$};
+\node[below=8pt] at (0,0){$\delta(x)$，位于 $0$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.9,1)--(1.9,1);
+\node[left] at (0,1){$1$};
+\node[below=8pt] at (0,0){常数 $1$};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\delta(x-x_0)\;\longleftrightarrow\;\ee^{-i2\pi ux_0}$}\quad 点挪到 $x_0$，频谱的模仍是 1，多一段斜率正比于 $x_0$ 的相位。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (1.1,0)--(1.1,1);
+\node[above] at (1.1,1){$1$};
+\node[below] at (1.1,0){$x_0$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.9,1)--(1.9,1);
+\node[left] at (0,1){$|F|{=}1$};
+\node[below=10pt] at (0,0){相位 $-2\pi ux_0$};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\ee^{i2\pi u_0x}\;\longleftrightarrow\;\delta(u-u_0)$}\quad 左图只画实部。一个方向的平面波，频谱只有 $u=u_0$ 处的一个点。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.05cm,y=0.85cm,font=\scriptsize]
+\draw[->] (-1.7,0)--(1.85,0) node[right]{$x$};
+\draw[->] (0,-1.25)--(0,1.45);
+\draw[blue,thick,domain=-1.5:1.5,samples=61] plot (\x,{cos(360*\x)});
+\draw (1,0.05)--(1,-0.05);
+\node[below] at (1,0){$\dfrac1{u_0}$};
+\node[above] at (0,1){$1$};
+\node[below=2pt] at (0,-1.15){实部，周期 $1/u_0$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (1.15,0)--(1.15,1);
+\node[above] at (1.15,1){$1$};
+\node[below] at (1.15,0){$u_0$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\cos(2\pi u_0x)\;\longleftrightarrow\;\tfrac12[\delta(u-u_0)+\delta(u+u_0)]$}\quad 周期仍是 $1/u_0$，频谱是对称的两个点，各高 $\tfrac12$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.05cm,y=0.85cm,font=\scriptsize]
+\draw[->] (-1.7,0)--(1.85,0) node[right]{$x$};
+\draw[->] (0,-1.25)--(0,1.45);
+\draw[blue,thick,domain=-1.5:1.5,samples=61] plot (\x,{cos(360*\x)});
+\draw (1,0.05)--(1,-0.05);
+\node[below] at (1,0){$\dfrac1{u_0}$};
+\node[above] at (0,1){$1$};
+\node[below=2pt] at (0,-1.15){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (-1.15,0)--(-1.15,1) (1.15,0)--(1.15,1);
+\node[above] at (-1.15,1){$\frac12$};
+\node[above] at (1.15,1){$\frac12$};
+\node[below] at (-1.15,0){$-u_0$};
+\node[below] at (1.15,0){$u_0$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\sin(2\pi u_0x)\;\longleftrightarrow\;\tfrac1{2i}[\delta(u-u_0)-\delta(u+u_0)]$}\quad 两个点的系数差一个负号，而且是虚数。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.05cm,y=0.85cm,font=\scriptsize]
+\draw[->] (-1.7,0)--(1.85,0) node[right]{$x$};
+\draw[->] (0,-1.25)--(0,1.45);
+\draw[blue,thick,domain=-1.5:1.5,samples=61] plot (\x,{sin(360*\x)});
+\node[below] at (1,0){$\dfrac1{u_0}$};
+\node[below=2pt] at (0,-1.15){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (-1.15,0)--(-1.15,1) (1.15,0)--(1.15,1);
+\node[above] at (-1.15,1){$-\frac1{2i}$};
+\node[above] at (1.15,1){$\frac1{2i}$};
+\node[below] at (-1.15,0){$-u_0$};
+\node[below] at (1.15,0){$u_0$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\sum_n\delta(x-nd)\;\longleftrightarrow\;\dfrac1d\sum_m\delta(u-m/d)$}\quad 空域每隔 $d$ 一个点，频域每隔 $1/d$ 一个点，每个点的权重是 $1/d$。\(\F\{\delta(x-nd)\}=\ee^{-i2\pi ndu}\)：相邻两条缝在频率 \(u\) 上相差相位 \(2\pi du\)，只在 \(du=m\)（整数）时同相，针落在 \(u=m/d\)。\(n\) 数第几条缝，\(m\) 数第几次谐波。展开在题型 4（\pageref{ex:gratingcomb} 页）。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.7cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.6,0)--(2.7,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (-2,0)--(-2,1) (-1,0)--(-1,1) (0,0)--(0,1) (1,0)--(1,1) (2,0)--(2,1);
+\node[above] at (0,1){$1$};
+\node[below] at (-1,0){$-d$};
+\node[below] at (1,0){$d$};
+\node[below] at (2,0){$2d$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.7cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.6,0)--(2.7,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,very thick,-{Stealth}] (-2,0)--(-2,1) (-1,0)--(-1,1) (0,0)--(0,1) (1,0)--(1,1) (2,0)--(2,1);
+\node[above] at (0,1){$\frac1d$};
+\node[below] at (-1,0){$-\frac1d$};
+\node[below] at (1,0){$\frac1d$};
+\node[above=2pt] at (2,1){$\frac2d$};
+\node[below=8pt] at (0,0){频域};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\ee^{-\pi x^2}\;\longleftrightarrow\;\ee^{-\pi u^2}$}\quad 两边是同一条曲线。$|x|=1$ 时降到 $\ee^{-\pi}$。宽度若是 $\ee^{-\pi(x/a)^2}$，空域乘 $a$、频域乘 $1/a$，峰高变成 $|a|$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.15cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-1.7,0)--(1.85,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.4,0.02)--(-1,0.04)--(-0.75,0.17)--(-0.5,0.46)--(-0.25,0.82)--(0,1)--(0.25,0.82)--(0.5,0.46)--(0.75,0.17)--(1,0.04)--(1.4,0.02);
+\node[above] at (0,1){$1$};
+\node[below] at (1,0){$1$};
+\node[below=8pt] at (0,0){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.15cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-1.7,0)--(1.85,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.4,0.02)--(-1,0.04)--(-0.75,0.17)--(-0.5,0.46)--(-0.25,0.82)--(0,1)--(0.25,0.82)--(0.5,0.46)--(0.75,0.17)--(1,0.04)--(1.4,0.02);
+\node[above] at (0,1){$1$};
+\node[below] at (1,0){$1$};
+\node[below=8pt] at (0,0){频域，同一条};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\ee^{i\pi a x^2}\;\longleftrightarrow\;\dfrac1{\sqrt{-ia}}\ee^{-i\pi u^2/a}$}\quad 模是常数，相位是二次的，离原点越远振荡越密。频域的二次系数是 $1/a$，模是 $1/\sqrt{|a|}$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$x$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.9,1)--(1.9,1);
+\node[left] at (0,1){$|f|{=}1$};
+\node[below=8pt] at (0,0){相位 $\pi a x^2$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=1.15cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,0)--(0,1.45);
+\draw[blue,thick] (-1.9,1)--(1.9,1);
+\node[left] at (0,1){$\dfrac1{\sqrt{|a|}}$};
+\node[below=8pt] at (0,0){相位 $-\pi u^2/a$};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\mathrm{sgn}(x)\;\longleftrightarrow\;1/(i\pi u)$}\quad 空域在原点从 $-1$ 跳到 $1$。频谱是奇的虚函数，原点处发散，远处于 $1/|u|$ 衰减。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=0.7cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$x$};
+\draw[->] (0,-1.55)--(0,1.7);
+\draw[blue,thick] (-1.9,-1)--(0,-1) (0,1)--(1.9,1);
+\node[left] at (0,1){$1$};
+\node[left] at (0,-1){$-1$};
+\node[below=2pt] at (0,-1.45){空域};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.85cm,y=0.7cm,font=\scriptsize]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$u$};
+\draw[->] (0,-1.55)--(0,1.7);
+\draw[blue,thick] (-1.8,-0.18)--(-1,-0.32)--(-0.55,-0.58)--(-0.35,-0.91) (0.35,0.91)--(0.55,0.58)--(1,0.32)--(1.8,0.18);
+\node[below=2pt] at (0,-1.45){虚部，奇函数};
+\end{tikzpicture}
+\end{minipage}
+
 \begin{exam}{常规函数：把题目的宽度、频率代进上表}
-题目说「常规函数」时不做积分。先认出是表里的哪一行，再把题目的参数代进 $a$ 或 $u_0$。透镜后焦面（或远场距离 $z$，把下面的 $f$ 换成 $z$）用 $x=\lambda fu$。$\lambda$、$a$、$f$ 先化成同一单位。
+题目说「常规函数」时不做积分。先认出是表里的哪一行，对照上面那一对坐标图上的零点和峰高，再把题目的参数代进 $a$ 或 $u_0$。透镜后焦面（或远场距离 $z$，把下面的 $f$ 换成 $z$）用 $x=\lambda fu$。$\lambda$、$a$、$f$ 先化成同一单位。
 
 \begin{itemize}
 \item $\rect(x/a)$，$a=$ 全宽：频谱 $a\,\sinc(au)$。第一零点 $u=1/a$，焦面上 $x=\lambda f/a=$（$\lambda$）（$f$）/（$a$）。
@@ -151,6 +477,56 @@ $\exp[-\pi(x^2+y^2)]$ & $\exp[-\pi(u^2+v^2)]$ & \\
 换成角度/位置：$\sin\theta_1=1.22\lambda/D$；透镜焦面上半径 $r_1=1.22\lambda f/D$（艾里斑半径）。\ix{艾里斑!半径 1.22}
 圆孔在直角坐标里不能分离变量，只能用傅里叶–贝塞尔变换，课件\textbf{不定量要求推导}，直接引用结果。[F1-p38, p51]
 \end{formula}
+
+\noindent 其余几行（$\delta$、斜平面波、高斯）就是上面一维图在 $x$ 和 $y$ 上各用一次。矩形孔和圆孔的刻度如下。
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\rect(x/a)\rect(y/b)\;\longleftrightarrow\;ab\,\sinc(au)\sinc(bv)$}\quad 两个方向分开。沿 $u$（$v=0$）的切面峰高 $ab$，零点 $\pm1/a$；$v$ 方向把 $a$ 换成 $b$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.9cm,y=0.9cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.2,0) node[right]{$x$};
+\draw[->] (0,-1.3)--(0,1.5) node[above]{$y$};
+\draw[blue,thick,fill=blue!12] (-1,-0.7) rectangle (1,0.7);
+\node[below] at (1,-0.7){$\frac a2$};
+\node[above right] at (0,0.7){$\frac b2$};
+\node[below=6pt] at (0,-1.15){孔内为 $1$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.72cm,y=1.05cm,font=\scriptsize]
+\draw[->] (-2.7,0)--(2.85,0) node[right]{$u$};
+\draw[->] (0,-0.4)--(0,1.45);
+\draw[blue,thick] (-2.5,0.10)--(-2,0)--(-1.5,-0.21)--(-1,0)--(-0.5,0.64)--(0,1)--(0.5,0.64)--(1,0)--(1.5,-0.21)--(2,0)--(2.5,0.10);
+\node[above] at (0,1){$ab$};
+\node[below] at (1,0){$\frac1a$};
+\node[below] at (-1,0){$-\frac1a$};
+\node[below=8pt] at (0,0){$v=0$ 的切面};
+\end{tikzpicture}
+\end{minipage}
+
+\needspace{8\baselineskip}
+\noindent\textbf{$\circf(r/a)\;\longleftrightarrow\;\pi a^2\cdot\dfrac{2J_1(2\pi a\rho)}{2\pi a\rho}$}\quad 半径 $a$，直径 $D=2a$。中心高度是圆面积 $\pi a^2$，第一零点 $\rho=0.61/a=1.22/D$。
+
+\noindent\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=0.9cm,y=0.9cm,font=\scriptsize]
+\draw[->] (-2.1,0)--(2.2,0) node[right]{$x$};
+\draw[->] (0,-1.5)--(0,1.7) node[above]{$y$};
+\draw[blue,thick,fill=blue!12] (0,0) circle (1);
+\node[below right] at (1,0){$a$};
+\node[below=4pt] at (0,-1.35){孔内为 $1$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\begin{tikzpicture}[x=1.15cm,y=1.05cm,font=\scriptsize]
+\draw[->] (0,0)--(2.7,0) node[right]{$\rho$};
+\draw[->] (0,-0.45)--(0,1.45);
+\draw[blue,thick] (0,1)--(0.35,0.72)--(0.7,0.22)--(1,0)--(1.35,-0.12)--(1.7,-0.06)--(1.83,0)--(2.3,0.04)--(2.5,0);
+\node[above] at (0,1){$\pi a^2$};
+\node[below] at (1,0){$\dfrac{0.61}{a}$};
+\node[above] at (2.15,0.15){径向切面};
+\end{tikzpicture}
+\end{minipage}
 
 \begin{formula}{常用组合图形的频谱（直接抄）}\ix{双缝}\ix{多缝}\ix{矩形光栅}\ix{环形孔}
 \par\renewcommand{\arraystretch}{1.7}
@@ -193,6 +569,40 @@ $N$ 缝（周期 $d$，对称放置）& $a\sinc(au)\dfrac{\sin(N\pi du)}{\sin(\p
 \bottomrule
 \end{tabular}
 \end{formula}
+
+\begin{recipe}[label=rcp:ftuse]{性质怎么用：先看题目在哪个域里动了函数}\ix{傅里叶变换!性质!考场}
+总表的每一行都是同一句话：这一边做一件事，另一边做配对的那件事。考题换的是函数和坐标，配对关系不变。做题时先圈出它在\textbf{空域还是频域}、在做\textbf{乘、卷积、平移还是变宽}，再写另一边。信号课里的时域，这里就是空域。
+
+\begin{enumerate}
+\item \textbf{乘和卷积成对，方向相反。}\ix{卷积定理!考场}
+两个函数用同一个变量写在一起相乘，换到另一边就是卷积。一个图形由同一块平移几次叠出来（卷积若干个 $\delta$），换到另一边就是相乘。
+\begin{itemize}
+\item 空域相乘 $\to$ 频域卷积。物体乘照明条纹：频谱被复制到条纹频率的两侧（SIM，2024-3，第 \pageref{ex:2024-3} 页）。无限光栅再乘有限孔径：每一级 $\delta$ 展成一个 $\sinc$。
+\item 频域相乘 $\to$ 空域卷积。频谱面乘滤波器 $T$：像是物与 $h=\IF\{T\}$ 的卷积（2024-4(ii)）。自由传播一段距离也是频域相乘，乘的是 $\exp[-i\pi\lambda z(u^2+v^2)]$，模为 1，只改相位。
+\item 空域卷积 $\to$ 频域相乘。一条缝卷积几个 $\delta$：频谱是单缝包络乘上干涉因子。
+\item 空域先取模平方再变换 $\to$ 频域自相关。非相干的 MTF 就是光瞳错开后的重叠，数面积即可（第 \pageref{rcp:mtfoverlap} 页）。
+\end{itemize}
+
+\item \textbf{平移和乘线性相位成对，方向也相反。}
+形状不变、只是挪了一个位置：另一边乘 $\ee^{-i2\pi ua}$，这个因子模为 1，强度分布不动。函数乘上随位置线性增加的相位：另一边整体平移。
+\begin{itemize}
+\item 孔在空域平移：频谱多一个线性相位，亮斑留在原地。
+\item 空域乘 $\ee^{i2\pi u_0 x}$（斜入射）：频谱中心挪到 $u_0$。屏上的位置再用下一条的尺子去读。
+\item 频谱面乘 $\ee^{ikQ\xi}$：像在空域平移。平移量 $=$ 相位斜率换成频率后、再乘这一级的焦距（Alvarez 的 4f 实现）。
+\end{itemize}
+
+\item \textbf{缩放成对：一边变宽，另一边变窄。}\ix{缩放定理!考场}
+题目在改宽度、放大率，或问某个频率落在屏的哪一格，用的都是这一条。二维时面积因子用绝对值。
+\begin{itemize}
+\item \textbf{给频率轴贴尺子。} 变换已经做完，只是把频率 $u$ 写成屏上的长度。分母一律是 $\lambda\times$ 这段传播距离：后焦面用 $f$，远场或屏到观察面的距离用 $z$、$d$，出瞳到像面用 $z_i$。物距 $2f$ 时成像公式给出 $z_i=2f$，所以写成 $2\lambda f$。频率 $u_0$ 的亮点在 $\lambda\times$ 距离 $\times u_0$。
+\item \textbf{函数本身被缩小。} 4f 输出 $E_{\mathrm{out}}(x)=C\,|M|^{-1}E(x/M)$，像面频谱是 $C|M|\,\hat E(Mu')$。空域除以 $M$，频谱乘 $M$。$M=-f_2/f_1$ 时 $x/M=-(f_1/f_2)x$，负号是倒像。进 4f 之前多传播的距离 $x_1$，二次相位系数变成 $M^2x_1$（2024-5，第 \pageref{ex:2024-5} 页）。
+\end{itemize}
+
+\item \textbf{再做一次正变换，坐标反号。}
+$\F\{\F\{f\}\}(x)=f(-x)$。一级 4f 是倒像；再接一级，两个负号相乘，正立，放大率连乘（2024-4，第 \pageref{ex:2024-4} 页）。两端都落在焦面上、间距正好一个焦距时，这一段直接用透镜的傅里叶变换。离开焦面的那一段空气，回到第 1 条的自由传播。
+\end{enumerate}
+新题先圈「乘 / 卷积 / 平移 / 变宽」中的一个，并记下它发生在空域还是频域。另一边的形状就由上面的配对决定，具体的 $f$、$z_i$、$M$ 只负责把坐标填进已经定好的式子。
+\end{recipe}
 
 \begin{formula}{卷积、相关的定义（课件写法）}\ix{卷积}\ix{互相关}\ix{自相关}
 \begin{align*}
@@ -646,12 +1056,35 @@ $\pm1$ 级：$\sin\theta=\lambda f_0=5\times10^{-4}\times100=0.05$，$\theta\app
 
 \cOneQtype{题型 4：黑白（矩形）光栅的各级强度与缺级}\ix{矩形光栅}\ix{缺级}
 
-\begin{exam}{推导：缝宽 $w$、周期 $d$ 的光栅，孔径 $L$ [F1-p63]}
+\begin{formula}[label=fml:grating]{光栅方程}\ix{光栅方程}
+相邻两条缝同相。缝距 \(d\)，入射角 \(\theta_0\)，第 \(m\) 级出射角 \(\theta_m\)（都从法线量起）：
+\[
+d(\sin\theta_m-\sin\theta_0)=m\lambda,\qquad
+\sin\theta_m=\sin\theta_0+\frac{m\lambda}{d},\qquad m=0,\pm1,\pm2,\dots
+\]
+正入射 \(\theta_0=0\)：\(d\sin\theta_m=m\lambda\)。多走的光程是 \(d(\sin\theta_m-\sin\theta_0)\)，它等于 \(m\) 个波长时各级缝的光在这个方向上加强。
+
+和频谱是同一句话。角 \(\theta\) 的平面波在光栅面上的空间频率是 \(u=\sin\theta/\lambda\)。点阵频谱只在 \(u=m/d\) 有针；斜入射再叠上 \(\sin\theta_0/\lambda\)。代进去就是上面两式。介质里把 \(\sin\theta\) 换成 \(n\sin\theta\)，\(\lambda\) 仍用真空波长。
+
+透镜后焦面（正入射）：\(x_m=\lambda fu_m=m\lambda f/d\)。能传播的级满足 \(|\sin\theta_m|<1\)，正入射时 \(|m|<d/\lambda\)。
+\end{formula}
+
+\begin{exam}{推导：缝宽 $w$、周期 $d$ 的光栅，孔径 $L$ [F1-p63]}\label{ex:gratingcomb}
 \textbf{第 1 步 拆开}：$t(x)=\left[\rect\frac xw\conv\sum_n\delta(x-nd)\right]\cdot\rect\frac xL$。
 
-\textbf{第 2 步}：方括号内（卷积 $\to$ 乘积，点阵查表）：
-$w\sinc(wu)\cdot\frac1d\sum_m\delta\!\left(u-\frac md\right)=\sum_m c_m\,\delta\!\left(u-\frac md\right)$，$\boxed{c_m=\dfrac wd\sinc\!\left(\dfrac{mw}{d}\right)}$。
-（$\sinc(wu)\delta(u-\frac md)=\sinc(\frac{mw}d)\delta(u-\frac md)$：$\delta$ 只在 $u=m/d$ 取值。）
+\textbf{第 2 步}：方括号内，卷积 $\to$ 乘积。先算点阵自己的频谱。
+\(\F\{\delta(x-nd)\}=\ee^{-i2\pi n d u}\)：第 \(n\) 条缝在频率 \(u\) 上带相位 \(2\pi n\,du\)，相邻两条缝相差 \(2\pi\,du\)。
+\(\sum_n\ee^{-i2\pi n d u}\) 只在 \(du=m\)（\(m\) 为整数）时各项同相，立起一根针，位置 \(u=m/d\)，权重 \(1/d\)。\(n\) 数的是第几条缝，\(m\) 数的是第几次谐波。
+\[
+\sum_n\delta(x-nd)\;\longleftrightarrow\;\frac1d\sum_m\delta\!\left(u-\frac md\right).
+\]
+同一条件写成角度就是上面的光栅方程：\(u=\sin\theta/\lambda\)，\(du=m\) 即 \(d\sin\theta=m\lambda\)（正入射）。
+
+再乘缝的频谱 \(w\sinc(wu)\)。\(\delta(u-m/d)\) 只在 \(u=m/d\) 取值，\(\sinc(wu)\) 收成 \(\sinc(mw/d)\)：
+\[
+w\sinc(wu)\cdot\frac1d\sum_m\delta\!\left(u-\frac md\right)=\sum_m c_m\,\delta\!\left(u-\frac md\right),\quad
+\boxed{c_m=\dfrac wd\sinc\!\left(\dfrac{mw}{d}\right)}.
+\]
 
 \textbf{第 3 步}：乘 $\rect\frac xL$ $\to$ 卷积 $L\sinc(Lu)$：$T(u)=\sum_mc_m\,L\sinc\!\left[L\left(u-\frac md\right)\right]$。
 
