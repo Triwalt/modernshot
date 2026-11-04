@@ -1,0 +1,784 @@
+\chapter{成像系统：PSF、CTF、OTF、MTF 与截止频率}\label{ch:imaging}
+
+\begin{idea}[本章在全景图上的位置（总图\pageref{sec:p-whole}）]
+\whereami{3,4,5,6}
+本章把物和像之间的 ③④⑤ 合成\textbf{一个 LTI 系统}，不再逐段传播。这个系统完全由光瞳 $P$ 决定：对一个物点走一遍链路得到 $h=\F\{P\}$（场景 ⑨，\pageref{sec:p-scenes}）。$P$ 同时给出 PSF、CTF、OTF，再按相干或非相干决定怎么叠加。
+\end{idea}
+
+\begin{idea}[整章只有一张图]
+\begin{center}
+\begin{tikzpicture}[node distance=0.6cm and 1.1cm,>=Stealth,
+  box/.style={draw,rounded corners=2pt,align=center,font=\small,minimum height=0.9cm,inner sep=3pt}]
+\node[box,fill=blue!6] (P) {光瞳 $P(x,y)$\\（含像差 $P\ee^{ikW}$）};
+\node[box,right=of P,fill=green!6] (h) {振幅 PSF $h$\\$=\F\{P\}$ 缩放};
+\node[box,right=of h,fill=orange!8] (I) {强度 PSF $|h|^2$};
+\node[box,below=1.2cm of P,fill=green!6] (Hc) {相干 CTF\\$H_c=P(-\lambda z_iu)$};
+\node[box,below=1.2cm of I,fill=orange!8] (O) {OTF $=\F\{|h|^2\}$ 归一化\\$=P$ 的自相关};
+\draw[->] (P)--node[above,font=\scriptsize]{FT} (h);
+\draw[->] (h)--node[above,font=\scriptsize]{$|\cdot|^2$} (I);
+\draw[->] (P)--node[left,font=\scriptsize]{直接缩放} (Hc);
+\draw[->] (I)--node[right,font=\scriptsize]{FT} (O);
+\draw[->] (Hc)--node[below,font=\scriptsize]{自相关} (O);
+\end{tikzpicture}
+\end{center}
+\textbf{相干照明}（激光）：复振幅是线性的，像 $=$ 物复振幅 $\conv h$，频域乘 $H_c$（光瞳本身）。\\
+\textbf{非相干照明}（自然光、荧光、显示屏）：强度是线性的，像强度 $=$ 物强度 $\conv|h|^2$，频域乘 OTF（光瞳的自相关），截止频率是相干的 2 倍。
+\end{idea}
+
+\begin{exam}{本章题型速查（先找到自己的题，再翻到对应单元照抄）}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}P{6.6cm}P{5.6cm}r@{}}
+题目问法 & 单元 & 页\\ \hline
+“相干照明……求截止频率（物方/像方）” & 题型 A：相干截止 & \pageref{sec:typeA}\\
+“非相干……求 OTF / 画 MTF”（方瞳、圆瞳） & 题型 B：规则光瞳 OTF & \pageref{sec:typeB}\\
+“出瞳如图（几条缝、几个孔）……画 MTF” & 题型 C：分块光瞳 MTF & \pageref{sec:typeC}\\
+“求像面点扩展函数（二维形式）” & 题型 D：由光瞳求 PSF & \pageref{sec:typeD}\\
+“物为 $a+b\cos$……求像的对比度 / 画 $K$–$F$” & 题型 E：对比度传递 & \pageref{sec:typeE}\\
+三缝光瞳：PSF、MTF、对比度 & 完整例题 & \pageref{ex:3slit}\\
+像元间距、混叠、双折射低通滤波器 & 题型 F & \pageref{sec:typeF}\\
+离焦：$W_{\max}$、对比度反转、弥散圆 & 题型 G & \pageref{sec:typeG}\\
+证明有像差 MTF 不升高 & §\ref{sec:mtfproof} & \pageref{sec:mtfproof}\\
+SIM 超分辨 & §\ref{sec:sim} & \pageref{sec:sim}\\
+显微镜分辨率、倾斜照明 & §\ref{sec:abbe} & \pageref{sec:abbe}
+\end{tabular}
+\end{exam}
+
+\needspace{8\baselineskip}\section{成像的波动光学描述}\label{sec:waveimg}
+\begin{formula}{有限孔径透镜成像（课件结论）}\ix{成像!有限孔径}\ix{点扩散函数}\ix{PSF}
+点物经透镜（光瞳 $P$）成像，像面复振幅：
+\[
+\tilde E(x,y)=\exp\!\left(ik\frac{x^2+y^2}{2l'}\right)\F\{P(x_1,y_1)\}\Big|_{u=\frac{x}{\lambda l'},\,v=\frac{y}{\lambda l'}}
+\]
+物在无穷远时 $l'=f$。\textbf{像面复振幅由光瞳的频谱给出} [F2-p23,24]。一般写作（$z_i$：出瞳到像面距离）：
+\[
+h(x,y)=\frac{1}{\lambda z_i}\dint P(x_1,y_1)\exp\!\left[-i\frac{2\pi}{\lambda z_i}(xx_1+yy_1)\right]\dd x_1\dd y_1
+\]
+物像关系：$\frac1l+\frac1{l'}=\frac1f$，横向放大率 $M=-l'/l$（倒像）[F2-p20]。
+\end{formula}
+
+\begin{idea}[为什么 PSF 就是光瞳的傅里叶变换（推导思路，证明题可抄）]
+\begin{enumerate}
+\item 点物发出的发散球面波经过理想透镜，在出瞳处变成会聚球面波 $\exp\!\left(-ik\frac{\xi^2+\eta^2}{2l'}\right)$，会聚到像面上的理想像点 [F3-p21]。
+\item 出瞳有限大，只有光瞳内的部分通过：出瞳后的场 $=P(\xi,\eta)\exp\!\left(-ik\frac{\xi^2+\eta^2}{2l'}\right)$。
+\item 从出瞳传到像面（距离 $l'$）用菲涅耳衍射：积分核里有 $\exp\!\left(+ik\frac{\xi^2+\eta^2}{2l'}\right)$，\textbf{正好和会聚波的二次相位抵消}。
+\item 剩下的就是夫琅禾费形式：$h(x',y')\propto\F\{P\}\big|_{u=x'/\lambda l',\,v=y'/\lambda l'}$，像面前的二次相位因子 $\exp(ik\frac{x'^2+y'^2}{2l'})$ 范围很小可略 [F3-p22]。
+\end{enumerate}
+\textbf{一句话}：出瞳射出的会聚球面波抵消了传播的二次相位，所以像面是出瞳的傅里叶面，像点的形状 = 光瞳形状的夫琅禾费衍射图样。
+\end{idea}
+
+\begin{formula}{线性空不变成像：卷积关系}\ix{线性空不变系统}\ix{理想像}
+定义\textbf{理想像}（几何像）$\tilde E_g(x,y)=\frac1{|M|}\tilde E_o\!\left(\frac xM,\frac yM\right)$，则
+\begin{align*}
+\text{相干：}\quad & \tilde E_i(x,y)=\tilde E_g\conv h, && \hat E_i(u,v)=\hat E_g(u,v)\cdot H_c(u,v)\\
+\text{非相干：}\quad & I_i(x,y)=I_g\conv|h|^2, && \hat I_i(u,v)=\hat I_g(u,v)\cdot\mathcal H(u,v)
+\end{align*}
+所有频率都在\textbf{像面}上计。换回物面频率：$u_{\text{物}}=|M|\,u_{\text{像}}$。
+\end{formula}
+
+\begin{warn}[相干 / 非相干：先判断，判断错整题全错]
+\begin{itemize}
+\item 题目说“激光”“单色相干光照明”“相干成像”$\Rightarrow$ 相干：一切对\textbf{复振幅}算，传递函数是 CTF。
+\item 题目说“非相干”“自然光”“荧光”“物面强度分布”“调制传递函数 MTF”$\Rightarrow$ 非相干：一切对\textbf{强度}算，传递函数是 OTF。
+\item 相干系统不能叠加强度（有干涉项 $2\,\mathrm{Re}(g_1g_2^*)$）；非相干系统不能叠加复振幅（时间平均后交叉项为 0）[F3-p18]。
+\item 课件的两次傅里叶变换意义不同：$\F\{P\}$ 涉及衍射传播，频率要代 $x'/\lambda l'$；$\F\{h\}$、$\F\{|h|^2\}$ 只是像面信号的变化频率，\textbf{不涉及传播} [F3-p23]。
+\end{itemize}
+\end{warn}
+
+\needspace{8\baselineskip}\section{相干传递函数 CTF}
+\begin{formula}{CTF 与相干截止频率}\ix{相干传递函数}\ix{截止频率!相干}
+\[
+\boxed{H_c(u,v)=P(-\lambda z_iu,\ -\lambda z_iv)}
+\]
+这里略去共同常数因子；复光瞳为偶函数时可去掉负号。光瞳内的点 $(x_1,y_1)$ 对应像面频率 $(u,v)=(-x_1,-y_1)/(\lambda z_i)$ [F3-p24,25]。
+\begin{itemize}
+\item 圆形光瞳直径 $D$：$H_c=\circf\!\left(\dfrac{\rho}{D/2\lambda z_i}\right)$，截止 $\boxed{\rho_c=\dfrac{D}{2\lambda z_i}=\dfrac{\mathrm{NA}'}{\lambda}}$（$\mathrm{NA}'\approx\frac{D}{2z_i}$ 为像方数值孔径）。
+\item 方形光瞳边长 $L$：$u_c=\dfrac{L}{2\lambda z_i}$。
+\item 物面截止：$\dfrac{\mathrm{NA}}{\lambda}$（物方 NA）。
+\item CTF 只取 0 或 1（无像差时）：在截止内无失真，外面全丢。
+\end{itemize}
+\end{formula}
+
+\begin{formula}{CTF $=P(-\lambda l'u,-\lambda l'v)$ 的推导（两种写法，证明题照抄）}\ix{相干传递函数!推导}
+\textbf{写法一：积分法} [F3-p24]。依据：CTF 是像面振幅 PSF 的傅里叶变换，$h=\F\{P\}|_{x'/\lambda l'}$。
+\begin{align*}
+H_c(u,v)&=\iint h(x',y')\,\ee^{-i2\pi(ux'+vy')}\dd x'\dd y' &&\text{(CTF 定义)}\\
+&=\iint\!\!\iint P(\xi,\eta)\,\ee^{-i\frac{2\pi}{\lambda l'}(\xi x'+\eta y')}\dd\xi\dd\eta\;\ee^{-i2\pi(ux'+vy')}\dd x'\dd y' &&\text{(代入 $h$)}\\
+&=\iint P(\xi,\eta)\left[\iint\ee^{-i2\pi\left[(u+\frac{\xi}{\lambda l'})x'+(v+\frac{\eta}{\lambda l'})y'\right]}\dd x'\dd y'\right]\dd\xi\dd\eta &&\text{(交换积分次序)}\\
+&=\iint P(\xi,\eta)\,\delta\!\left(u+\tfrac{\xi}{\lambda l'},\,v+\tfrac{\eta}{\lambda l'}\right)\dd\xi\dd\eta &&\text{($\int\ee^{-i2\pi ax}\dd x=\delta(a)$)}\\
+&=(\lambda l')^2\,P(-\lambda l'u,\,-\lambda l'v) &&\text{($\delta$ 筛选，$\delta(\xi/c)=c\,\delta(\xi)$)}
+\end{align*}
+常数 $(\lambda l')^2$ 归一化时去掉；光瞳对称时负号可去：$\mathrm{CTF}=P(\lambda l'u,\lambda l'v)$。
+
+\textbf{写法二：缩放法} [F3-p25]。$P\xrightarrow{\F}\mathscr P(\frac{x'}{\lambda l'},\frac{y'}{\lambda l'})$（第一次变换，涉及传播）$\xrightarrow{\F}P(-\lambda l'u,-\lambda l'v)$（第二次变换，用 $\F\F\{f\}(x)=f(-x)$ 与缩放定理，常数略）。
+\end{formula}
+
+\subsection*{题型 A：求相干截止频率（像方、物方）}\label{sec:typeA}
+\textbf{【题型】}“用口径 $D$、焦距 $f$ 的理想透镜对 $l$ 远处的物成像，单色相干光照明，求物和像的截止频率，说明 CTF 的含义。”[F3-p27] 变化：矩形光瞳 $a\times b$、给 NA、给 F 数。
+
+\textbf{【用到的公式】}上面的 CTF 公式框：$\mathrm{CTF}=P(\lambda l'u,\lambda l'v)$；高斯公式 $\frac1l+\frac1{l'}=\frac1f$；$|M|=l'/l$。
+
+\begin{recipe}{求相干截止频率}
+\begin{enumerate}
+\item 由高斯公式求像距 $l'=\dfrac{lf}{l-f}$（物在无穷远：$l'=f$；物在 $2f$：$l'=2f$）。
+\item 写 $\mathrm{CTF}=P(\lambda l'u,\lambda l'v)$：把光瞳函数的自变量 $\xi$ 换成 $\lambda l'u$。
+\item CTF 不为零的条件 = 光瞳内：圆瞳 $\lambda l'\rho\le D/2$，矩形 $|\lambda l'u|\le a/2$。
+\item 像方截止：$u_{\max}=\dfrac{D}{2\lambda l'}$（矩形：$u_{\max}=\frac{a}{2\lambda l'},\ v_{\max}=\frac{b}{2\lambda l'}$）。
+\item 物方截止：物面上的图案经放大 $|M|$ 倍到像面，频率缩小 $|M|$ 倍，故 $u_{\text{物}}=|M|u_{\max}=\dfrac{l'}{l}\cdot\dfrac{D}{2\lambda l'}=\dfrac{D}{2\lambda l}=\dfrac{\mathrm{NA}}{\lambda}$。
+\item 说明含义：CTF 是理想低通滤波器，截止内的复振幅频率分量幅度、相位都不变地通过，截止外全部丢失。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{答题模板（相干截止频率）}
+解：由 $\frac1l+\frac1{l'}=\frac1f$ 得像距 $l'=\frac{lf}{l-f}$。衍射受限相干系统的相干传递函数为光瞳函数本身：
+\[
+\mathrm{CTF}=H_c(u,v)=P(\lambda l'u,\lambda l'v)=\circf\!\left(\frac{\lambda l'\sqrt{u^2+v^2}}{D/2}\right).
+\]
+CTF 在 $\lambda l'\rho\le D/2$ 内为 1，外为 0，故像面截止频率 $\rho_{\max}=\dfrac{D}{2\lambda l'}$。物像共轭、只差横向放大率 $|M|=l'/l$，物面截止频率 $\rho_{\text{物}}=|M|\rho_{\max}=\dfrac{D}{2\lambda l}$。CTF 为理想低通：截止频率以内的复振幅分量无失真通过，以外被光瞳挡掉。
+\end{exam}
+
+\begin{exam}{【适配/变式】}
+\begin{itemize}
+\item \textbf{矩形光瞳 $a\times b$}：$u_{\max}=\frac{a}{2\lambda l'}$，$v_{\max}=\frac{b}{2\lambda l'}$，两个方向不同。
+\item \textbf{给物方 NA}：物方截止直接 $\frac{\mathrm{NA}}{\lambda}$；像方再除以 $|M|$。
+\item \textbf{给 F 数}（物在远处，$l'\approx f$）：$\rho_{\max}=\frac{D}{2\lambda f}=\frac{1}{2\lambda F/\#}$。
+\item \textbf{问非相干}：截止乘 2（像方 $\frac{D}{\lambda l'}$，物方 $\frac{D}{\lambda l}$），见题型 B。
+\item \textbf{环形光瞳}（内径 $D_1$、外径 $D_2$）：CTF 只让 $\frac{D_1}{2\lambda l'}\le\rho\le\frac{D_2}{2\lambda l'}$ 通过——是带通，低频（除直流外）被挡。
+\item \textbf{有像差}：令 $\mathcal P=P\ee^{ikW}$，$\mathrm{CTF}=\mathcal P(-\lambda l'u,-\lambda l'v)$；模不变、截止不变，只有相位扭曲 [F3-p24,46]。
+\end{itemize}
+\end{exam}
+
+\begin{exam}{【数值例】$D=20$ mm，$f=100$ mm，$l=300$ mm，$\lambda=0.5\,\mu$m，相干}
+$l'=\frac{300\times100}{300-100}=150$ mm，$|M|=0.5$。像方 $\rho_{\max}=\frac{20}{2\times0.5\times10^{-3}\times150}=133$ lp/mm；物方 $\rho_{\text{物}}=\frac{20}{2\times0.5\times10^{-3}\times300}=66.7$ lp/mm（$=133\times0.5$，验算一致）。物上周期小于 $1/66.7=15\,\mu$m 的细节在相干照明下完全成不了像。
+\end{exam}
+
+\needspace{8\baselineskip}\section{光学传递函数 OTF 与 MTF}
+\begin{formula}{OTF 的定义与计算}\ix{光学传递函数}\ix{OTF}\ix{MTF}\ix{PTF}
+\[
+\mathcal H(u,v)=\frac{\F\{|h|^2\}}{\F\{|h|^2\}\big|_{0,0}}
+=\frac{\displaystyle\dint P(x_1,y_1)\,P^*(x_1+\lambda z_iu,\ y_1+\lambda z_iv)\dd x_1\dd y_1}{\displaystyle\dint|P(x_1,y_1)|^2\dd x_1\dd y_1}
+\]
+\begin{itemize}
+\item MTF $=|\mathcal H|$（对比度传递），PTF $=\arg\mathcal H$（条纹平移；$\mathcal H<0$ 时条纹黑白反转）。
+\item 无像差（$P$ 只有 0/1）：\textbf{OTF = 光瞳与平移 $\lambda z_i(u,v)$ 后的自己的重叠面积 / 光瞳总面积}。
+\item 性质：$\mathcal H(0,0)=1$；$|\mathcal H(u,v)|\le1$；$\mathcal H(-u,-v)=\mathcal H^*(u,v)$。
+\item 截止：光瞳在该方向上的\textbf{总宽度} $W_x$，$u_c=\dfrac{W_x}{\lambda z_i}$（平移超过总宽就不重叠）= \textbf{相干的 2 倍}。
+\end{itemize}
+\end{formula}
+
+\begin{formula}{OTF = 光瞳自相关 的推导（证明题照抄）}\ix{OTF!推导}\ix{自相关}
+[F3-p24,31,34] 记 $h_I=|h|^2$ 为强度 PSF，$H_I=\F\{h_I\}$；$H_c$ 的共同常数在归一化中约去。令 $q=\lambda l'$，保留 $H_c(u,v)=P(-qu,-qv)$ 的坐标反演：
+\begin{align*}
+\mathcal H(u,v)&=\frac{H_I(u,v)}{H_I(0,0)} &&\text{(以直流归一化，使 $\mathcal H(0,0)=1$)}\\
+&=\frac{(H_c\corr H_c)(u,v)}{(H_c\corr H_c)(0,0)} &&\text{(自相关定理)}\\
+(H_c\corr H_c)(u,v)&=\iint H_c^*(s,t)\,H_c(s+u,t+v)\dd s\dd t &&\text{(相关的定义)}\\
+&=\iint P^*(-qs,-qt)\,P\big(-q(s+u),-q(t+v)\big)\dd s\dd t\\
+&=\frac{1}{q^2}\iint P(\xi,\eta)\,P^*(\xi+qu,\eta+qv)\dd\xi\dd\eta &&\text{($\xi=-q(s+u),\ \eta=-q(t+v)$)}
+\end{align*}
+分母是同一式子在 $u=v=0$ 处的值 $q^{-2}\iint|P|^2$，常数 $q^{-2}$ 约掉，得上框公式。偶对称光瞳可省坐标反演；一般复光瞳按 [F3-p24] 保留。
+\textbf{物理图像}：$P$ 只有 0/1 时被积函数在两个光瞳的重叠区为 1，积分 = 重叠面积，所以 $\mathcal H(u,v)=\dfrac{\text{重叠面积}(\lambda l'u,\lambda l'v)}{\text{光瞳面积}}$。
+\end{formula}
+
+\begin{exam}{符号自检：倾斜光瞳 [F3-p24,31,34]}
+取 $\mathcal P(\xi,\eta)=P_0(\xi,\eta)\ee^{ika\xi}$。由负号傅里叶核，$h(x,y)=h_0(x-az_i,y)$，PSF 沿 $+x$ 移动 $az_i$。
+因此 $\mathcal H(u,v)=\mathcal H_0(u,v)\ee^{-i2\pi az_i u}$。上框的 $\mathcal P(\xi,\eta)\mathcal P^*(\xi+\lambda z_i u,\eta+\lambda z_i v)$ 正好给出这个负号；MTF 不变，PTF 改变。
+\end{exam}
+
+\begin{formula}{常见光瞳的 OTF}\ix{OTF!圆形光瞳}\ix{OTF!方形光瞳}
+\textbf{方形光瞳}（边长 $L$）：$\mathcal H(u,v)=\tri\!\left(\dfrac{u}{2u_0}\right)\tri\!\left(\dfrac{v}{2u_0}\right)$，$2u_0=\dfrac{L}{\lambda z_i}$。沿 $u$ 轴是一个三角形，线性下降到截止。
+
+\textbf{圆形光瞳}（直径 $D$，$\rho_0=\frac{D}{\lambda z_i}$ 为非相干截止）：
+\[
+\mathcal H(\rho)=\frac2\pi\left[\arccos\frac{\rho}{\rho_0}-\frac{\rho}{\rho_0}\sqrt{1-\left(\frac{\rho}{\rho_0}\right)^2}\right],\quad\rho\le\rho_0
+\]
+（两个圆的重叠面积除以圆面积；比三角形略低，中段下凹。）
+
+\textbf{多缝/分块光瞳}：自相关 $=$（单块自相关）$\conv$（块位置的 $\delta$ 自相关）。重叠的块越多，那个频率的 MTF 越高。见题型 C。
+\end{formula}
+
+\subsection*{题型 B：规则光瞳（方瞳、圆瞳、矩形）的 OTF 与画图}\label{sec:typeB}
+\textbf{【题型】}“衍射受限非相干系统，出瞳为边长 $L$ 的正方形（或直径 $D$ 的圆），求 OTF，画出 CTF 与 OTF（MTF）沿 $u$ 轴的曲线并标出截止频率。”[F3-p35, 36]
+
+\textbf{【完整推导：方瞳】}光瞳 $P=\rect\frac{\xi}{L}\rect\frac{\eta}{L}$，可分离，只看 $x$ 方向。光瞳平移 $s=\lambda z_iu$：
+\begin{itemize}
+\item 两个宽 $L$ 的线段错开 $s$，重叠长度 $L-|s|$（$|s|\le L$），否则 0。依据：重叠面积法。
+\item 归一化：$\mathcal H_x=\dfrac{L-|s|}{L}=1-\dfrac{|s|}{L}=\tri\!\left(\dfrac{s}{L}\right)=\tri\!\left(\dfrac{\lambda z_iu}{L}\right)$。
+\item 截止：$\lambda z_iu=L\Rightarrow u_c=\dfrac{L}{\lambda z_i}$，相干截止 $\dfrac{L}{2\lambda z_i}$ 的 2 倍。二维：$\mathcal H=\tri\big(\frac{\lambda z_iu}{L}\big)\tri\big(\frac{\lambda z_iv}{L}\big)$。
+\end{itemize}
+
+\textbf{【完整推导：圆瞳】}半径 $R=D/2$ 的两个圆，圆心距 $s=\lambda z_i\rho$。重叠区是两个相同的弓形，每个弓形 = 扇形 $-$ 三角形：
+\[
+\text{扇形半角 }\alpha=\arccos\frac{s}{2R},\quad
+\text{重叠面积}=2\left[R^2\alpha-\frac s2\sqrt{R^2-\frac{s^2}{4}}\right]
+\]
+除以 $\pi R^2$，记 $\nu=\dfrac{s}{2R}=\dfrac{\lambda z_i\rho}{D}=\dfrac{\rho}{\rho_0}$：$\mathcal H=\dfrac2\pi\left[\arccos\nu-\nu\sqrt{1-\nu^2}\right]$，截止 $\nu=1$ 即 $\rho_0=\dfrac{D}{\lambda z_i}$。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{c|ccccc}
+$\nu=\rho/\rho_0$ & 0 & 0.25 & 0.5 & 0.75 & 1\\ \hline
+方瞳 $1-\nu$ & 1 & 0.75 & 0.5 & 0.25 & 0\\
+圆瞳 & 1 & 0.685 & 0.391 & 0.144 & 0
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[x=5.2cm,y=2.6cm,>=Stealth]
+\draw[->] (0,0)--(1.15,0) node[right,font=\scriptsize]{$u$};
+\draw[->] (0,0)--(0,1.2) node[above,font=\scriptsize]{传递函数};
+\draw[thick,green!50!black] (0,1)--(0.5,1)--(0.5,0);
+\draw[thick,blue,dashed] (0,1)--(1,0);
+\draw[very thick,black,densely dotted,smooth] plot coordinates {(0,1)(0.125,0.841)(0.25,0.685)(0.375,0.534)(0.5,0.391)(0.625,0.258)(0.75,0.144)(0.875,0.052)(1,0)};
+\draw[dashed,gray] (0.5,0)--(0.5,1);
+\node[below,font=\scriptsize] at (0.5,0){$u_c=\frac{L}{2\lambda z_i}$};
+\node[below,font=\scriptsize] at (1,0){$2u_c=\frac{L}{\lambda z_i}$};
+\node[left,font=\scriptsize] at (0,1){1};
+\node[font=\scriptsize,green!50!black] at (0.36,1.08){CTF（矩形，实线）};
+\node[font=\scriptsize,blue,right] at (0.66,0.42){方瞳 OTF（三角形，虚线）};
+\node[font=\scriptsize,black,left] at (0.4,0.3){圆瞳 OTF（下凹，点线）};
+\end{tikzpicture}
+\end{center}
+
+\begin{recipe}{画 CTF / OTF 图的步骤}
+\begin{enumerate}
+\item 横轴写 $u$（单位 lp/mm 或 mm$^{-1}$），纵轴写 CTF 或 MTF，标 0 和 1。
+\item CTF：从 $(0,1)$ 画水平线到相干截止 $\frac{L}{2\lambda z_i}$（圆瞳 $\frac{D}{2\lambda z_i}$），竖直落到 0（矩形）。
+\item OTF：从 $(0,1)$ 出发，方瞳画直线到 $\frac{L}{\lambda z_i}$；圆瞳画略向下凹的曲线，中点约 0.39，到 $\frac{D}{\lambda z_i}$ 处相切地落到 0。
+\item 标注“OTF 截止 = 2 × CTF 截止”，并写明二者传递的是不同的量（复振幅 vs 强度），不能直接比优劣 [F3-p37]。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{【适配/变式】}
+\begin{itemize}
+\item \textbf{矩形 $a\times b$}：$\mathcal H=\tri\big(\frac{\lambda z_iu}{a}\big)\tri\big(\frac{\lambda z_iv}{b}\big)$，$x$、$y$ 截止分别 $\frac{a}{\lambda z_i}$、$\frac{b}{\lambda z_i}$。
+\item \textbf{物在无穷远 / 给 F 数}：$z_i=f$，圆瞳截止 $\frac{D}{\lambda f}=\frac{1}{\lambda\,F/\#}$ [F3-p36]。
+\item \textbf{问物方}：所有像方频率乘 $|M|$。
+\item \textbf{斜方向（方瞳沿 45°）}：$u=v=\rho/\sqrt2$，$\mathcal H=\big(1-\frac{\lambda z_i\rho}{\sqrt2L}\big)^2$，截止 $\frac{\sqrt2L}{\lambda z_i}$（对角线更长）。
+\item \textbf{中心遮挡、环形}：用重叠面积法逐段算，截止仍由外径决定。
+\end{itemize}
+\end{exam}
+
+\begin{exam}{【数值例】相机 F/2，$\lambda=0.55\,\mu$m，物在远处 [F3-p36]}
+非相干截止 $\frac{1}{\lambda F/\#}=\frac{1}{0.55\times10^{-3}\,\text{mm}\times2}=909$ lp/mm；F/8 时 227 lp/mm。在一半截止（455 lp/mm，F/2）处圆瞳 MTF $=0.391$。若是方瞳边长 $L=10$ mm、$z_i=50$ mm：$u_c=\frac{10}{0.55\times10^{-3}\times50}=364$ lp/mm，100 lp/mm 处 MTF $=1-100/364=0.725$。
+\end{exam}
+
+\subsection*{题型 C：分块光瞳（几条缝、几个孔）的 MTF}\label{sec:typeC}
+\textbf{【题型】}“出射光瞳如图（阴影为透光区），画出 $x$ 方向 MTF，定量标注截止频率。”（三缝光瞳例题就是这一类）
+
+\textbf{【通用结论】}$N$ 条等宽 $w$、中心间距 $p$ 的缝（高 $H$），沿 $x$ 方向平移 $s=\lambda z_iu$：
+\[
+\boxed{\mathcal H(s)=\sum_{m=-(N-1)}^{N-1}\frac{N-|m|}{N}\,\tri\!\left(\frac{s-mp}{w}\right)}
+\]
+\textbf{依据}：错开 $mp$ 附近时，第 $j$ 条缝与第 $j+m$ 条缝重叠，共有 $N-|m|$ 对；每对的重叠长度是单缝自相关 $w\,\tri\big(\frac{s-mp}{w}\big)$；乘高度 $H$，除以总面积 $NwH$。
+\begin{itemize}
+\item 三角形中心在 $s=0,\pm p,\pm2p,\dots$，峰高依次 $1,\frac{N-1}{N},\frac{N-2}{N},\dots,\frac1N$，底宽 $2w$。
+\item $p\ge2w$（缝间空隙 $\ge$ 缝宽）时各三角形互不重叠，中间有 MTF $=0$ 的点；$p<2w$ 时相邻三角形重叠，重叠处相加。
+\item 截止：$s=(N-1)p+w=$ 光瞳总宽度 $\Rightarrow u_c=\dfrac{(N-1)p+w}{\lambda z_i}$。
+\end{itemize}
+
+一条缝为什么是底宽 $2w$ 的三角形、$N$ 条缝为什么是 $2N-1$ 个三角形、刻度标在 $mp\pm w$，图解在\pageref{rcp:mtfoverlap}。
+
+\begin{recipe}{画分块光瞳 MTF 的步骤（重叠计数法）}
+\begin{enumerate}
+\item 画出光瞳和它向右平移 $s$ 的副本（脑中或草稿），找出“哪几对块会重叠”。
+\item 平移量 $s=mp$（块间距的整数倍）时第 $m$ 组对齐：重叠对数 $N-|m|$，MTF 峰值 $\frac{N-|m|}{N}$。
+\item 每组在 $s=mp\pm w$ 之间是三角形（单缝自相关），在 $mp\pm w$ 处降为 0（若不与邻组重叠）。
+\item 把横轴 $s$ 换成频率：$u=\dfrac{s}{\lambda z_i}$，逐点标在横轴上；纵轴标峰值 $1,\frac{N-1}N,\dots$。
+\item 截止 $u_c=\dfrac{\text{总宽}}{\lambda z_i}$，在图上框出来。$y$ 方向若是一整条高 $H$：$\tri\big(\frac{\lambda z_iv}{H}\big)$，截止 $\frac{H}{\lambda z_i}$。
+\end{enumerate}
+\end{recipe}
+
+\begin{center}
+\begin{tikzpicture}[x=0.55cm,y=0.55cm]
+% 原光瞳三条缝（w=1，中心 0,±2）
+\foreach \c in {-2,0,2} \draw[blue,thick] (\c-0.5,0) rectangle (\c+0.5,3);
+% 平移 s=2 的副本
+\foreach \c in {0,2,4} \draw[red,thick,dashed] (\c-0.5,0.15) rectangle (\c+0.5,2.85);
+\foreach \c in {0,2} \fill[pattern=north east lines] (\c-0.5,0.15) rectangle (\c+0.5,2.85);
+\draw[<->] (-2.5,-0.4)--(-1.5,-0.4) node[midway,below,font=\scriptsize]{$w$};
+\draw[<->] (-1.5,-0.4)--(-0.5,-0.4) node[midway,below,font=\scriptsize]{$w$};
+\node[font=\scriptsize,align=left,right] at (5,1.5){实线框：原光瞳；虚线框：平移 $s=2w$\\斜线阴影：重叠区 2 对 $\Rightarrow$ MTF $=\frac23$};
+\end{tikzpicture}
+\end{center}
+
+\begin{exam}{【适配/变式】}
+\begin{itemize}
+\item \textbf{两条缝}（宽 $w$、中心距 $p\ge2w$）：$\mathcal H=\tri\big(\frac sw\big)+\frac12\tri\big(\frac{s\mp p}{w}\big)$，峰值 $1,\frac12$，截止 $\frac{p+w}{\lambda z_i}$。注意 $0$ 附近与 $p$ 附近之间 MTF $=0$：这段频率\textbf{完全传不过去}（对比度为 0）。
+\item \textbf{缝宽 = 间隙}（如三缝 $p=2w$）：相邻三角形刚好相接，零点在 $s=w,3w,\dots$。
+\item \textbf{缝很密（$p<2w$）}：三角形重叠相加，MTF 没有零点，只有起伏。
+\item \textbf{二维分块}（如 $2\times2$ 的四个方孔）：可分离时 $\mathcal H(u,v)=\mathcal H_x(u)\mathcal H_y(v)$，各方向用上式。
+\item \textbf{各块透过率不同} $t_j$：峰值 $=\dfrac{\sum_j t_jt_{j+m}}{\sum_j t_j^2}$（振幅透过率的离散自相关），三角形形状不变。
+\item \textbf{问相干}：CTF $=P(\lambda z_iu)$ 直接就是光瞳形状（几个矩形通带），见三缝光瞳例题后的变式。
+\end{itemize}
+\end{exam}
+
+\subsection*{题型 D：由光瞳求像面点扩展函数（二维形式）}\label{sec:typeD}
+\begin{recipe}{求 PSF 的步骤}
+\begin{enumerate}
+\item 确定出瞳到像面距离 $z_i$（$l'$）：物在 $2f$ 则 $z_i=2f$；物在无穷远则 $z_i=f$。
+\item 用 rect、circ、$\delta$ 的乘积/卷积写出 $P(\xi,\eta)$；能分离就分成 $P_x(\xi)P_y(\eta)$。
+\item 查表求纯数学频谱 $\mathscr P(u,v)$：$\rect\frac\xi a\to a\sinc(au)$；$f\conv\delta(\xi-c)\to\ee^{-i2\pi cu}F$；对称的 $\delta(\xi-c)+\delta(\xi+c)\to2\cos(2\pi cu)$；圆 $\to$ jinc。
+\item 代入 $u=\dfrac{x'}{\lambda z_i}$，$v=\dfrac{y'}{\lambda z_i}$ 得振幅 PSF $h(x',y')$（常数和二次相位因子可略）。
+\item 强度 PSF $=|h|^2$。写出特征尺寸：零点、主极大间距、包络宽度。
+\end{enumerate}
+\end{recipe}
+
+\subsection*{题型 E：条纹对比度（调制度）的传递}\label{sec:typeE}
+\begin{formula}{对比度（调制度）的传递}\ix{对比度}\ix{调制度}\ix{条纹对比度}
+物强度 $I_o=a+b\cos(2\pi Fx)$，对比度 $K_o=\dfrac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}=\dfrac ba$。经非相干系统：
+\[
+I_i=a+b\,|\mathcal H(F)|\cos(2\pi Fx+\arg\mathcal H),\qquad \boxed{K_i=K_o\cdot\mathrm{MTF}(F)}
+\]
+（$F$ 用像面频率；$|M|=1$ 时物像频率相同。）
+相干系统中同一物（若是振幅 $1+\cos$）：$F<\rho_c$ 时完全传过，$F>\rho_c$ 时 cos 项全丢，没有“逐渐下降”。
+\end{formula}
+
+\textbf{【完整推导】}（为什么 $K_i=K_o\,\mathrm{MTF}$，答题时写这几行）
+\begin{align*}
+I_o(x)&=a+\tfrac b2\ee^{i2\pi Fx}+\tfrac b2\ee^{-i2\pi Fx} &&\text{(欧拉公式)}\\
+\hat I_o(u)&=a\,\delta(u)+\tfrac b2\delta(u-F)+\tfrac b2\delta(u+F) &&\text{(查表)}\\
+\hat I_i(u)&=\hat I_o(u)\,H_I(u)\propto a\,\delta(u)+\tfrac b2\mathcal H(F)\delta(u-F)+\tfrac b2\mathcal H(-F)\delta(u+F) &&\text{(频域相乘，归一化)}\\
+I_i(x)&\propto a+b\,|\mathcal H(F)|\cos\!\big(2\pi Fx+\varphi(F)\big) &&\text{($\mathcal H(-F)=\mathcal H^*(F)$)}
+\end{align*}
+所以 $K_i=\dfrac{b|\mathcal H(F)|}{a}=K_o\,\mathrm{MTF}(F)$；PTF $\varphi$ 只让条纹平移，$\varphi=\pi$ 时黑白反转。
+
+\begin{exam}{【适配/变式】}
+\begin{itemize}
+\item \textbf{物频率给在物面}：先换到像面 $F_{\text{像}}=F_{\text{物}}/|M|$，再查 MTF。
+\item \textbf{给 $I_{\max},I_{\min}$}：$K=\frac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}$，如 $3+\cos$：$K=\frac{4-2}{4+2}=\frac13$ [F3-p29]。
+\item \textbf{方波光栅（矩形条纹）}：拆成基频 $F$、$3F$、$5F$… 余弦，各自乘 $\mathcal H(nF)$；只剩基频通过时像变成正弦条纹。
+\item \textbf{二维条纹 $\cos(2\pi(Fx+Gy))$}：用 $\mathcal H(F,G)$。
+\item \textbf{相干照明下的振幅物 $1+\cos(2\pi Fx)$}：CTF 只取 0/1：$F$ 在通带内时像强度 $|1+\cos|^2$，对比度 1；不在通带内时像为均匀亮度，对比度 0。
+\end{itemize}
+\end{exam}
+
+\begin{exam}{【数值例】}
+方瞳 $L=10$ mm，$z_i=100$ mm，$\lambda=0.5\,\mu$m，$|M|=1$，物 $I_o=2+\cos(2\pi Fx)$，$F=100$ lp/mm。截止 $u_c=\frac{10}{0.5\times10^{-3}\times100}=200$ lp/mm，$\mathrm{MTF}(100)=1-\frac{100}{200}=0.5$；$K_o=\frac12$，$K_i=0.25$。像强度 $2+0.5\cos(2\pi\cdot100x)$。
+\end{exam}
+
+\needspace{12\baselineskip}
+\begin{exam}{例：三条缝的光瞳，宽 $D/5$，间隔 $D/5$，高 $D$，$z_i=2f$}\ix{三缝光瞳}\label{ex:3slit}
+\textbf{题设}：一个焦距为 $f$、只受衍射限制的非相干成像系统，出瞳是三条竖直透光缝（缝宽 $D/5$，缝与缝之间空 $D/5$，缝高 $D$），物放在 $2f$ 处。要做三件事：写出二维 PSF；画 $x$ 方向的 MTF 并标截止频率；物为 $1+\cos(2\pi Fx)$ 时，画像的条纹对比度 $K$ 随 $F$ 的变化，标出 $K=0$ 和 $K$ 取极大的 $F$。
+
+\textbf{第 0 步：几何}。物距 $2f$ $\Rightarrow$ 像距 $2f$（$\frac1{2f}+\frac1{l'}=\frac1f$），$|M|=1$，出瞳（在透镜处）到像面 $z_i=2f$，$\lambda z_i=2\lambda f$。
+
+\textbf{第 1 步：写光瞳}。记 $w=D/5$。缝中心在 $\xi=0,\pm2w$（缝宽 $w$ + 空隙 $w$ = 中心距 $2w$），总宽 $5w=D$。
+\[
+P(\xi,\eta)=\rect\!\left(\frac{\eta}{D}\right)\left[\rect\!\left(\frac{\xi}{w}\right)\conv\big(\delta(\xi)+\delta(\xi-2w)+\delta(\xi+2w)\big)\right]
+\]
+\textbf{(i) PSF}。依据：PSF $=|\F\{P\}|^2$ 在 $u=\frac{x'}{\lambda z_i}$ 处取值；可分离；卷积定理。
+\begin{align*}
+\F\Big\{\rect\big(\tfrac\eta D\big)\Big\}&=D\sinc(Dv)\\
+\F\Big\{\rect\big(\tfrac\xi w\big)\Big\}&=w\sinc(wu)\\
+\F\{\delta(\xi)+\delta(\xi-2w)+\delta(\xi+2w)\}&=1+\ee^{-i4\pi wu}+\ee^{i4\pi wu}=1+2\cos(4\pi wu)\\
+\Rightarrow\ \F\{P\}&=D\sinc(Dv)\cdot w\sinc(wu)\,[1+2\cos(4\pi wu)]
+\end{align*}
+代入 $u=\frac{x'}{2\lambda f}$，$v=\frac{y'}{2\lambda f}$，$w=\frac D5$：
+\[
+\boxed{|h(x',y')|^2\propto\sinc^2\!\left(\frac{Dy'}{2\lambda f}\right)\sinc^2\!\left(\frac{Dx'}{10\lambda f}\right)\left[1+2\cos\!\left(\frac{2\pi Dx'}{5\lambda f}\right)\right]^2}
+\]
+读图：$y'$ 方向单缝 $\sinc^2$，第一零点 $y'=\pm\frac{2\lambda f}{D}$；$x'$ 方向宽包络 $\sinc^2$（第一零点 $\pm\frac{10\lambda f}{D}$）里套三缝干涉条纹：主极大（$\cos=1$，峰值 $9$）间距 $\frac{5\lambda f}{D}$，两主极大之间有 2 个零点（$\cos=-\frac12$）、1 个次极大（$\cos=-1$，峰值 1）。
+
+\textbf{(ii) $x$ 方向 MTF}。依据：OTF = 光瞳自相关 / 面积；用题型 C 的公式（$N=3$，$p=2w$）。
+\begin{itemize}
+\item $\delta$ 的自相关 $=3\delta(s)+2\delta(s\mp2w)+\delta(s\mp4w)$（错开 0：3 对；错开 $2w$：2 对；错开 $4w$：1 对）。
+\item 单缝自相关 $=wD\,\tri(s/w)$；总面积 $3wD$。
+\end{itemize}
+\[
+\mathcal H(s)=\tri\!\left(\frac sw\right)+\frac23\tri\!\left(\frac{s\mp2w}{w}\right)+\frac13\tri\!\left(\frac{s\mp4w}{w}\right),\qquad s=\lambda z_iu=2\lambda fu
+\]
+关键点（$u\ge0$；$s$ 换成 $u$ 就是除以 $2\lambda f$）：
+\begin{center}
+\par\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c|ccccccc}
+$s$ & 0 & $w$ & $2w$ & $3w$ & $4w$ & $5w=D$ & $>D$\\ \hline
+$u$ & 0 & $\frac{D}{10\lambda f}$ & $\frac{D}{5\lambda f}$ & $\frac{3D}{10\lambda f}$ & $\frac{2D}{5\lambda f}$ & $\boxed{\frac{D}{2\lambda f}}$ & \\
+MTF & 1 & 0 & $\frac23$ & 0 & $\frac13$ & 0 & 0
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[x=1.15cm,y=2.4cm,>=Stealth]
+\draw[->] (-0.2,0)--(6.0,0) node[right]{$u$};
+\draw[->] (0,-0.05)--(0,1.2) node[above]{MTF};
+\draw[thick,blue] (0,1)--(1,0)--(2,0.6667)--(3,0)--(4,0.3333)--(5,0)--(5.7,0);
+\foreach \x/\l in {1/{\frac{D}{10\lambda f}},2/{\frac{D}{5\lambda f}},3/{\frac{3D}{10\lambda f}},4/{\frac{2D}{5\lambda f}},5/{\frac{D}{2\lambda f}}} \draw (\x,0.02)--(\x,-0.02) node[below,font=\scriptsize]{$\l$};
+\draw[dashed,gray] (0,0.6667)--(2,0.6667); \node[left,font=\scriptsize] at (0,0.6667){$2/3$};
+\draw[dashed,gray] (0,0.3333)--(4,0.3333); \node[left,font=\scriptsize] at (0,0.3333){$1/3$};
+\node[left,font=\scriptsize] at (0,1){1};
+\node[font=\scriptsize,red] at (5.3,0.22){截止 $\frac{D}{2\lambda f}$};
+\end{tikzpicture}
+\end{center}
+截止频率 $u_c=\dfrac{\text{总宽 }D}{\lambda z_i}=\dfrac{D}{2\lambda f}$。（$y$ 方向 MTF：$\tri\!\left(\frac{u}{D/2\lambda f}\right)$，截止也是 $\frac{D}{2\lambda f}$；二维 OTF $=\mathcal H_x(u)\,\tri\big(\frac{2\lambda fv}{D}\big)$。）
+
+\textbf{(iii) 对比度}。物 $T=1+\cos(2\pi Fx)$：$a=b=1$，物对比度 $K_o=1$。$|M|=1$，物像频率相同，由题型 E：$K(F)=K_o\,\mathrm{MTF}(F)=\mathcal H(F)$，$K$–$F$ 曲线就是上图。
+\begin{itemize}
+\item $K=0$：$F=\dfrac{D}{10\lambda f}$，$\dfrac{3D}{10\lambda f}$，以及 $F\ge\dfrac{D}{2\lambda f}$。
+\item $K$ 极大：$F=0$ 时 $K=1$；$F=\dfrac{D}{5\lambda f}$ 时 $K=\dfrac23$；$F=\dfrac{2D}{5\lambda f}$ 时 $K=\dfrac13$。
+\item 物理解释：$F=\frac{D}{5\lambda f}$ 的条纹在出瞳上对应“相邻两缝”的干涉，有 2 对缝贡献；中间 $\frac{D}{10\lambda f}$ 处没有任何一对光瞳点能产生这个频率，所以对比度为零。
+\end{itemize}
+\end{exam}
+
+\begin{exam}{三缝光瞳的【适配/变式】与【数值例】}
+\begin{itemize}
+\item \textbf{物在无穷远（或题说“像面在焦面”）}：$z_i=f$，所有 $2\lambda f$ 换成 $\lambda f$：截止 $\frac{D}{\lambda f}$，零点 $\frac{D}{5\lambda f},\frac{3D}{5\lambda f}$。
+\item \textbf{缝宽 $w$、中心距 $p$ 任意}：峰在 $u=\frac{mp}{\lambda z_i}$，高 $\frac{3-|m|}3$，半底宽 $\frac{w}{\lambda z_i}$，截止 $\frac{2p+w}{\lambda z_i}$；PSF 中 $\cos(4\pi wu)$ 换成 $\cos(2\pi pu)$。
+\item \textbf{两缝 / 四缝}：用题型 C 通用公式，峰高 $1,\frac12$ 或 $1,\frac34,\frac12,\frac14$。
+\item \textbf{物放大 $|M|\ne1$}：先在像面算，再用 $F_{\text{物}}=|M|F_{\text{像}}$ 换算。
+\item \textbf{相干照明版本}：CTF $=P(2\lambda fu)$ 沿 $u$ 是三个矩形通带：$|u|\le\frac{D}{20\lambda f}$ 和 $\big|u\mp\frac{D}{5\lambda f}\big|\le\frac{D}{20\lambda f}$。振幅物 $1+\cos(2\pi Fx)$ 的 $\pm F$ 分量落在通带内则条纹对比度 1，否则 0（中间有“传不过去”的频段）。
+\end{itemize}
+\textbf{数值}：$D=10$ mm，$f=50$ mm，$\lambda=0.5\,\mu$m：$\lambda f=0.025$ mm$^2$。截止 $\frac{10}{2\times0.025}=200$ lp/mm；$K=0$ 于 40、120 lp/mm 及 $\ge200$；$K=\frac23$ 于 80 lp/mm，$\frac13$ 于 160 lp/mm。PSF：$y'$ 第一零点 $\frac{2\lambda f}{D}=5\,\mu$m；$x'$ 主极大间距 $\frac{5\lambda f}{D}=12.5\,\mu$m，包络零点 $25\,\mu$m。
+\end{exam}
+
+\begin{warn}[三缝题易错]
+\begin{enumerate}
+\item 图上的 “$D/5$” 标在两缝\textbf{之间}是空隙，中心距是 $2D/5$，不是 $D/5$。
+\item 截止用\textbf{总宽} $D$，不是缝宽；分母是 $\lambda z_i=2\lambda f$，不是 $\lambda f$。
+\item 归一化分母是 3 条缝的总面积 $3wD$，所以峰值是 $1,\frac23,\frac13$（不是 $1,2,1$）。
+\item MTF 图横轴是频率 $u$，不要只标 $s$；三角形是直线段，不是曲线。
+\end{enumerate}
+\end{warn}
+
+\subsection*{同一个物、同一个光瞳：相干和非相干的结果对比}\phantomsection\label{sec:cohcompare}\ix{相干与非相干!同物对比}
+\begin{exam}{余弦振幅光栅经方瞳成像}
+物的复透射系数 $t=\frac12+\frac12\cos(2\pi f_0x)$，方瞳，相干截止 $f_c$，非相干截止 $2f_c$。频率都在像面上量，$|M|=1$。非相干的 OTF 沿 $x$ 方向为 $1-\dfrac{u}{2f_c}$。
+
+\textbf{相干}：对 $t$ 算。$t$ 有 $0,\pm f_0$ 三个频率，低于 $f_c$ 的通过，权重不变，最后取模方。
+
+\textbf{非相干}：对强度算。物强度含 $f_0$ 和 $2f_0$ 两个频率：
+\[
+I_o=|t|^2=\frac14\Big[\frac32+2\cos(2\pi f_0x)+\frac12\cos(2\pi\cdot2f_0x)\Big]
+\]
+所以 $I_i=\frac14\big[\frac32+2\,\mathrm{OTF}(f_0)\,c_1+\frac12\,\mathrm{OTF}(2f_0)\,c_2\big]$，其中 $c_1=\cos(2\pi f_0x)$，$c_2=\cos(2\pi\cdot2f_0x)$。
+
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{2.0cm}P{6.8cm}P{7.2cm}@{}}
+\toprule
+条纹频率 & 相干的像 & 非相干的像\\ \midrule
+$f_0=0.5f_c$ & 三个频率都通过，$I_i=|t|^2$，对比度 $K=1$ & $\mathrm{OTF}(f_0)=0.75$，$\mathrm{OTF}(2f_0)=0.5$；$I_i\propto\frac32+1.5c_1+0.25c_2$，$K=\frac{3.25-0.25}{3.25+0.25}=0.857$\\
+$f_0=1.5f_c$ & $\pm f_0$ 被挡，只剩直流，$I_i=\frac14$，$K=0$ & $\mathrm{OTF}(f_0)=0.25$，$2f_0$ 超过截止；$I_i\propto\frac32+0.5c_1$，$K=\frac13$\\
+$f_0=2.5f_c$ & 均匀，$K=0$ & 均匀，$K=0$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{读法}：非相干的截止更高，所以 $f_c$ 与 $2f_c$ 之间的条纹还看得见；但截止以内相干的对比度不打折，非相干会下降。两者不能简单说谁更好。
+\end{exam}
+
+\needspace{8\baselineskip}\section{课件 III 的写法与补充题材}\label{sec:f3extra}
+\begin{formula}{老师的记号（答题照这个写）}\ix{CTF!课件记号}\ix{截止频率!F 数}
+物面 $(x,y)$，入瞳 / 出瞳 $(\xi,\eta)$，像面 $(x',y')$；物距 $l$，像距（出瞳到像面）$l'$。
+\begin{itemize}
+\item 相干：$g=f\conv h$，$G_c=F_c\cdot H_c$；$h(x',y')=\F\{P(\xi,\eta)\}\big|_{\frac{x'}{\lambda l'},\frac{y'}{\lambda l'}}$（二次相位因子忽略）。
+\item $\mathrm{CTF}=H_c(u,v)=P(-\lambda l'u,-\lambda l'v)=P(\lambda l'u,\lambda l'v)$（光瞳对称）。截止 $u_{\max}\lambda l'=\frac a2$。[F3-p24–26]
+\item 非相干：$I=I_o\conv h_I$，$\mathrm{OTF}=H(u,v)=\dfrac{H_I(u,v)}{H_I(0,0)}=\dfrac{H_c\corr H_c}{H_I(0,0)}$，$H=|H|\ee^{i\varphi}$：MTF 与 PTF。[F3-p31,34]
+\item 圆瞳 OTF 截止 $\dfrac{D}{\lambda l'}\approx\dfrac{D}{\lambda f}=\boxed{\dfrac{1}{\lambda\cdot F/\#}}$。例：$\lambda=0.55\,\mu$m，F/2 $\to$ 909 lp/mm，F/8 $\to$ 227 lp/mm。[F3-p36]
+\item \textbf{两次傅里叶变换的频率含义不同}：$\F\{P\}$ 的频率是传播方向，要代 $x'/\lambda l'$；$\F\{h\}$ 的频率是像面信号本身的变化频率，不涉及传播。[F3-p23]
+\item CTF 是复振幅的截止，OTF 是强度的截止，“OTF 截止是 CTF 两倍”不代表非相干一定更好。[F3-p37]
+\end{itemize}
+\end{formula}
+
+\begin{exam}{课件例题 [F3-p27]：口径 $D$、焦距 $f$ 的理想透镜拍 $l$ 远的物，相干照明，求物、像截止频率}
+$\frac1l+\frac1{l'}=\frac1f$。CTF $=P(\lambda ul',\lambda vl')$ $\Rightarrow$ 像方 $u_{\max}=\dfrac{D}{2\lambda l'}$；物方 $u_{\text{obj}}=u_{\max}\dfrac{l'}{l}=\dfrac{D}{2\lambda l}=\dfrac{\mathrm{NA}}{\lambda}$。
+物像空间共轭，只差横向放大率；CTF 是理想低通。非相干时两个都乘 2。（完整模板见题型 A，\pageref{sec:typeA}。）
+\end{exam}
+
+\subsection*{题型 F：像元采样与双折射光学低通滤波器（OLPF）}\label{sec:typeF}
+\begin{formula}{传感器采样与双折射光学低通滤波器（OLPF）}\ix{采样定理!传感器}\ix{光学低通滤波器}\ix{双折射}
+像元间距 $p$：不混叠要求 $\dfrac1p>2u_{\max}=\dfrac{2D}{\lambda f}$（采样频率大于 OTF 截止的两倍）。[F3-p40]
+
+双折射晶体把一个点分成 o、e 两个点，横向间距 $h\theta$（$h$ 晶体厚，$\theta$ 分离角）：
+\[
+\mathrm{PSF}'(x)=\mathrm{PSF}(x)+\mathrm{PSF}(x-h\theta)\ \Rightarrow\
+\mathrm{OTF}'(u)=\mathrm{OTF}(u)\cos(\pi h\theta u)
+\]
+（严格：$\F\{\mathrm{PSF}'\}=\F\{\mathrm{PSF}\}(1+\ee^{-i2\pi uh\theta})=2\ee^{-i\pi uh\theta}\cos(\pi h\theta u)\F\{\mathrm{PSF}\}$，归一化去 2，线性相位只是平移 $h\theta/2$。）
+设计：余弦第一零点 $\dfrac{1}{2h\theta}<\dfrac1{2p}$，即 $\boxed{h\theta>p}$。四点式（水平 + 竖直两片）OTF 是两个余弦相乘；余弦周期性，高频会“复活”。[F3-p41,43]
+\end{formula}
+
+\textbf{【完整推导】}（OLPF 的 OTF，答题时逐行写）
+\begin{align*}
+\F\{\mathrm{PSF}(x-h\theta)\}&=\ee^{-i2\pi uh\theta}\F\{\mathrm{PSF}\} &&\text{(平移定理)}\\
+\F\{\mathrm{PSF}'\}&=\F\{\mathrm{PSF}\}\,(1+\ee^{-i2\pi uh\theta}) &&\text{(线性)}\\
+1+\ee^{-i2\pi uh\theta}&=\ee^{-i\pi uh\theta}(\ee^{i\pi uh\theta}+\ee^{-i\pi uh\theta})=2\ee^{-i\pi uh\theta}\cos(\pi uh\theta) &&\text{(提出半角相位)}\\
+\mathrm{OTF}'(u)&=\frac{\F\{\mathrm{PSF}'\}(u)}{\F\{\mathrm{PSF}'\}(0)}=\mathrm{OTF}(u)\,\cos(\pi h\theta u)\,\ee^{-i\pi uh\theta} &&\text{(以零频归一，2 约掉)}
+\end{align*}
+$\ee^{-i\pi uh\theta}$ 是线性相位 = 像整体平移 $h\theta/2$，MTF 不受影响：$\mathrm{MTF}'=\mathrm{MTF}\cdot|\cos(\pi h\theta u)|$。
+
+\begin{recipe}{采样 / OLPF 计算步骤}
+\begin{enumerate}
+\item 求镜头 OTF 截止 $u_{\max}=\frac{D}{\lambda l'}\approx\frac{1}{\lambda F/\#}$。
+\item 采样频率 $1/p$；奈奎斯特频率 $\frac1{2p}$。若 $u_{\max}>\frac1{2p}$ 就会混叠（摩尔纹、伪色）。
+\item 不加 OLPF 时需要 $p<\frac{1}{2u_{\max}}=\frac{\lambda F/\#}{2}$。
+\item 加 OLPF：让 $\cos(\pi h\theta u)$ 的第一零点 $u=\frac{1}{2h\theta}$ 落在奈奎斯特频率以内：$\frac1{2h\theta}\le\frac1{2p}\Rightarrow h\theta\ge p$，晶体厚度 $h\ge p/\theta$。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{【数值例与变式】}
+F/2.8，$\lambda=0.55\,\mu$m：$u_{\max}=\frac{1}{0.55\times10^{-3}\times2.8}=649$ lp/mm。像元 $p=4\,\mu$m：奈奎斯特 $\frac{1}{2\times0.004}=125$ lp/mm $<649$，会混叠。不靠 OLPF 需 $p<0.77\,\mu$m。加石英 OLPF（分离角 $\theta\approx5.8\times10^{-3}$ rad）：$h\ge\frac{4\times10^{-3}}{5.8\times10^{-3}}\approx0.69$ mm。
+\begin{itemize}
+\item \textbf{四点式}（水平一片、竖直一片）：$\mathrm{OTF}'=\mathrm{OTF}\cos(\pi h\theta u)\cos(\pi h\theta v)$。
+\item \textbf{余弦的周期性}：$u=\frac{1}{h\theta}$ 处 $|\cos|=1$，高频“复活”，所以两点/四点式不是理想低通 [F3-p43]。
+\item \textbf{三点等间距}：$1+\ee^{-i2\pi ud}+\ee^{-i4\pi ud}\to\ee^{-i2\pi ud}[1+2\cos(2\pi ud)]$，第一零点 $u=\frac{1}{3d}$。
+\end{itemize}
+\end{exam}
+
+\subsection*{题型 G：离焦的 OTF（画图题重点）}\label{sec:typeG}
+\begin{formula}{离焦的 OTF（画图题重点）}\ix{离焦!OTF}\ix{对比度反转}\ix{弥散圆}
+传感器在 $l'$，实际会聚点在 $l'+\Delta$：
+\[
+W(\xi,\eta)=\left(\frac1{l'}-\frac1{l'+\Delta}\right)\frac{\xi^2+\eta^2}{2}\approx b\,\frac{\xi^2+\eta^2}{2},\quad b=\frac{\Delta}{l'^2}
+\]
+出瞳直径 $a$，边缘最大波像差 $W_{\max}=\dfrac{ba^2}{8}$，$\Delta=\dfrac{8W_{\max}l'^2}{a^2}$。（与第 \ref{ch:aberr} 章 $W_{020}$ 对应：$W_{020}=W_{\max}$。）[F3-p51,52]
+
+\textbf{OTF 实部随 $W_{\max}$ 的变化}（截止都是 $a/\lambda l'$，与离焦无关）[F3-p55]：
+\begin{center}
+\begin{tikzpicture}[x=1.6cm,y=3cm,>=Stealth]
+\draw[->] (0,0)--(5.4,0) node[right,font=\scriptsize]{$u$};
+\draw[->] (0,-0.12)--(0,1.15) node[above,font=\scriptsize]{Re OTF};
+\draw[black,very thick] plot[smooth] coordinates {(0,1)(1,0.75)(2,0.5)(3,0.27)(4,0.09)(5,0)};
+\draw[black,thick,dashed] plot[smooth] coordinates {(0,1)(1,0.62)(2,0.38)(3,0.2)(4,0.07)(5,0)};
+\draw[black,very thick,densely dotted] plot[smooth] coordinates {(0,1)(1,0.4)(2,0.1)(2.6,0.08)(3.5,0.06)(4.3,0.03)(5,0)};
+\draw[black,thick,dash dot] plot[smooth] coordinates {(0,1)(0.8,0.32)(1.5,0)(2.4,-0.05)(3.4,0)(4.2,0.03)(5,0)};
+\draw[black!55,thick] plot[smooth] coordinates {(0,1)(0.6,0.3)(1.05,0)(2,-0.07)(3.8,-0.02)(4.4,0.02)(5,0)};
+\draw[dashed] (0,0)--(5,0);
+\node[below,font=\scriptsize] at (5,0){$\frac{a}{\lambda l'}$};
+% 图内线型说明（右上角空白处）
+\begin{scope}[font=\scriptsize]
+\draw[black,very thick] (3.0,1.10)--(3.5,1.10) node[right]{$W_{\max}=0$};
+\draw[black,thick,dashed] (3.0,0.97)--(3.5,0.97) node[right]{$W_{\max}=0.25\lambda$};
+\draw[black,very thick,densely dotted] (3.0,0.84)--(3.5,0.84) node[right]{$W_{\max}=0.5\lambda$（临界，不变负）};
+\draw[black,thick,dash dot] (3.0,0.71)--(3.5,0.71) node[right]{$W_{\max}=0.75\lambda$（有负值）};
+\draw[black!55,thick] (3.0,0.58)--(3.5,0.58) node[right,black]{$W_{\max}=1\lambda$（有负值）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+\item 出瞳内相位越不均匀，OTF 越差；$W_{\max}$ 超过约 $\lambda/2$ 时 OTF 出现负值，PTF $=\pi$，条纹黑白反转（离焦西门子星“两次对比度消失、黑白反转”）。[F3-p49,55]
+\item 严重离焦：PSF 趋近几何弥散圆，直径 $d\approx a\Delta/l'$，均匀圆盘的 OTF $=\dfrac{2J_1(\pi d\rho)}{\pi d\rho}$，第一零点 $\rho=\dfrac{1.22}{d}$。[F3-p56]
+\item 广义光瞳为偶函数时 OTF 是实数，相位只有 0 或 $\pi$，所以可以画“实部”代替 MTF 来显示反转。
+\end{itemize}
+\end{formula}
+
+\textbf{【完整推导】}离焦波像差 [F3-p51]：
+\begin{align*}
+\text{理想出瞳场}&=\exp\!\left(-ik\frac{\xi^2+\eta^2}{2l'}\right),\qquad\text{实际出瞳场}=\exp\!\left(-ik\frac{\xi^2+\eta^2}{2(l'+\Delta)}\right) &&\text{(会聚球面波)}\\
+\frac{\text{实际}}{\text{理想}}&=\exp\!\left[ik\left(\frac1{l'}-\frac{1}{l'+\Delta}\right)\frac{\xi^2+\eta^2}{2}\right]\equiv\ee^{ikW} &&\text{(广义光瞳的定义)}\\
+\frac1{l'}-\frac1{l'+\Delta}&=\frac{\Delta}{l'(l'+\Delta)}\approx\frac{\Delta}{l'^2}=b &&\text{($\Delta\ll l'$)}\\
+W_{\max}&=b\cdot\frac{(a/2)^2}{2}=\frac{ba^2}{8}=\frac{\Delta a^2}{8l'^2} &&\text{(取光瞳边缘)}
+\end{align*}
+边缘相位 $kW_{\max}=\frac{2\pi}{\lambda}W_{\max}$：$W_{\max}=\frac\lambda2\Leftrightarrow kW_{\max}=\pi$ [F3-p52]。
+
+\begin{recipe}{离焦题步骤}
+\begin{enumerate}
+\item 由 $\Delta$、$l'$、$a$ 算 $W_{\max}=\frac{\Delta a^2}{8l'^2}$，再写成“几分之几波长”。
+\item 判断：$W_{\max}\lesssim\lambda/4$ 轻微；$\approx\lambda/2$ 临界（OTF 刚好不变负）；$>\lambda/2$ 出现负值，某些频率对比度反转、并有“两次对比度消失”。
+\item 反求允许离焦：$W_{\max}\le\frac\lambda2\Rightarrow|\Delta|\le\frac{4\lambda l'^2}{a^2}=4\lambda(F/\#)^2$（$l'/a=F/\#$）；用 $\lambda/4$ 判据则 $2\lambda(F/\#)^2$（第 6 章焦深）。
+\item 画图：五条曲线都从 $(0,1)$ 出发、终于同一截止 $\frac{a}{\lambda l'}$；$W_{\max}$ 越大下降越快；0.75$\lambda$、1$\lambda$ 两条先过零变负、再回正。
+\item 严重离焦（$W_{\max}\gg\lambda$）可用几何近似：弥散圆直径 $d=\frac{a\Delta}{l'}$，第一零点 $\frac{1.22}{d}$。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{【数值例】课件参数 $a=2$ mm，$l'=10$ mm，$\lambda=0.55\,\mu$m [F3-p54]}
+截止 $\frac{a}{\lambda l'}=\frac{2}{0.55\times10^{-3}\times10}=364$ lp/mm（CTF 截止 182）。$W_{\max}=\frac\lambda2$ 对应 $\Delta=\frac{4\lambda l'^2}{a^2}=\frac{4\times0.55\times10^{-3}\times100}{4}=0.055$ mm $=55\,\mu$m；$W_{\max}=\lambda$ 对应 $110\,\mu$m。$\Delta=110\,\mu$m 时几何弥散圆 $d=\frac{2\times0.11}{10}=22\,\mu$m，第一零点 $\frac{1.22}{0.022}=55$ lp/mm（波动结果约 75，几何近似只在严重离焦时准）。
+\end{exam}
+
+\needspace{8\baselineskip}\section{有像差时 MTF 不会提高}\label{sec:mtfproof}
+\textbf{【题型】}这类证明题通常分三步：(i) 非相干系统里，证明加了像差以后每个频率的 MTF 都不会超过无像差的值，工具是施瓦茨不等式 $\left|\iint fg\right|^2\le\iint|f|^2\iint|g|^2$；(ii) 举一个不让 MTF 下降的波像差；(iii) 由施瓦茨不等式取等号的条件 $f=Ag^*$，求出所有这样的波像差，看 (ii) 的例子是不是唯一的。[F3-p59]
+
+\begin{formula}{证明：$|\mathcal H_{\text{ab}}|\le\mathcal H_0$}\ix{MTF!像差使下降}\ix{施瓦茨不等式}\ix{广义光瞳}
+广义光瞳 $\mathcal P(x,y)=P(x,y)\exp[ikW(x,y)]$，$P$ 取 0/1。记重叠区 $A(u,v)$（$P(x,y)$ 与 $P(x+\lambda z_iu,\cdot)$ 都为 1 的区域），面积 $S(u,v)$，光瞳面积 $S_0$。
+\[
+\mathcal H_{\text{ab}}(u,v)=\frac1{S_0}\iint_{A}\exp\{ik[W(x,y)-W(x+\lambda z_iu,y+\lambda z_iv)]\}\dd x\dd y
+\]
+取 $f=\ee^{ikW(x,y)}$，$g=\ee^{-ikW(x+\lambda z_iu,\,y+\lambda z_iv)}$，在 $A$ 上用施瓦茨不等式：
+\[
+|\mathcal H_{\text{ab}}|^2\le\frac1{S_0^2}\iint_A|f|^2\cdot\iint_A|g|^2=\frac{S(u,v)^2}{S_0^2}=\mathcal H_0(u,v)^2
+\]
+无像差 OTF $\mathcal H_0=S/S_0\ge0$，所以 $\mathrm{MTF}_{\text{ab}}\le\mathrm{MTF}_0$。
+\end{formula}
+
+\begin{exam}{(i) 完整答题模板（照抄）}
+\textbf{证}：设出瞳函数 $P(x,y)$ 在光瞳内为 1、外为 0，面积 $S_0=\iint P^2\dd x\dd y$；有像差时广义光瞳为 $\tilde P=P\ee^{ikW}$。记 $\bm\Delta=(\Delta_x,\Delta_y)=\lambda l'(u,v)$ 为频率 $(u,v)$ 对应的光瞳平移量。
+
+非相干系统的 OTF 是广义光瞳的归一化自相关：
+\[
+\mathcal H_{\text{ab}}(u,v)=\frac{\iint\tilde P(x,y)\tilde P^*(x+\Delta_x,y+\Delta_y)\dd x\dd y}{\iint|\tilde P|^2\dd x\dd y}.
+\]
+因 $|\ee^{ikW}|=1$，分母 $=S_0$。被积函数仅在 $P(x,y)$ 与 $P(x+\Delta_x,y+\Delta_y)$ 同时为 1 的重叠区 $A(\bm\Delta)$ 内非零，故
+\[
+\mathcal H_{\text{ab}}=\frac{1}{S_0}\iint_{A}\ee^{ikW(x,y)}\cdot\ee^{-ikW(x+\Delta_x,y+\Delta_y)}\dd x\dd y.
+\]
+令 $f=\ee^{ikW(x,y)}$，$g=\ee^{-ikW(x+\Delta_x,y+\Delta_y)}$，由施瓦茨不等式：
+\[
+|\mathcal H_{\text{ab}}|^2\le\frac{1}{S_0^2}\iint_A|f|^2\dd x\dd y\iint_A|g|^2\dd x\dd y=\frac{1}{S_0^2}\Big(\iint_A\dd x\dd y\Big)^2=\left(\frac{S_A}{S_0}\right)^2,
+\]
+其中用了 $|f|=|g|=1$，$S_A$ 为重叠面积。而无像差（$W=0$）时 $\mathcal H_0=\frac{S_A}{S_0}\ge0$，即 $\mathrm{MTF}_0=\frac{S_A}{S_0}$。所以
+\[
+\mathrm{MTF}_{\text{ab}}(u,v)=|\mathcal H_{\text{ab}}(u,v)|\le\mathrm{MTF}_0(u,v),\quad\text{对所有 }(u,v)\text{ 成立。}\qquad\blacksquare
+\]
+\end{exam}
+
+\begin{formula}{什么像差不降低 MTF（等号条件）}\ix{MTF!等号条件}\ix{倾斜像差}
+等号当且仅当 $f=c\,g^*$：在重叠区内 $\exp\{ik[W(x,y)-W(x+\Delta_x,y+\Delta_y)]\}=$ 与 $(x,y)$ 无关的常数，$\Delta=\lambda z_i(u,v)$。
+\begin{itemize}
+\item \textbf{(ii) 猜测}：$W=ax+by+c$（平移 piston + 倾斜 tilt）。差值 $=-(a\Delta_x+b\Delta_y)$ 与位置无关，$|\mathcal H|$ 不变，只多一个相位 $\ee^{-ik(a\Delta_x+b\Delta_y)}$，即像整体平移 $(az_i,bz_i)$。
+\item \textbf{(iii) 唯一性}：要对\textbf{所有}频率成立，$W(\bm r)-W(\bm r+\bm\Delta)$ 对任意小 $\bm\Delta$ 与 $\bm r$ 无关 $\Rightarrow\nabla W$ 为常矢量 $\Rightarrow W$ 是线性函数。所以线性 $W$ 基本是唯一选择。
+\item 补充说明（拿满分用）：(a) 条件约束的是 $\ee^{ikW}$，所以 $W$ 可以再加 $\lambda$ 的整数倍的台阶（相位折叠，如菲涅耳化表面），MTF 也不变。(b) 若只要求\textbf{某一个}频率不降，$W$ 只需沿 $\bm\Delta$ 方向以 $|\bm\Delta|$ 为周期（再加线性项），选择不唯一。(c) 光瞳由几块不相连的区域组成时，每块可以有不同的常数相位，只要重叠的块对之间满足条件。
+\end{itemize}
+\end{formula}
+
+\begin{exam}{(ii)(iii) 完整答题模板（照抄）}
+\textbf{(ii)} 取 $W(x,y)=ax+by+c$（常数项 + 倾斜）。则
+\[
+W(x,y)-W(x+\Delta_x,y+\Delta_y)=-(a\Delta_x+b\Delta_y)
+\]
+与 $(x,y)$ 无关，$\mathcal H_{\text{ab}}=\frac{1}{S_0}\ee^{-ik(a\Delta_x+b\Delta_y)}\iint_A\dd x\dd y=\mathcal H_0\,\ee^{-ik(a\Delta_x+b\Delta_y)}$，故 $\mathrm{MTF}_{\text{ab}}=\mathrm{MTF}_0$，只多一个线性相位（PTF），对应像整体平移，形状不变。
+
+\textbf{(iii)} 施瓦茨不等式取等号当且仅当在 $A$ 上 $f=C\,g^*$，即
+\[
+\ee^{ikW(x,y)}=C\,\ee^{ikW(x+\Delta_x,y+\Delta_y)}\iff W(x+\Delta_x,y+\Delta_y)-W(x,y)=\text{常数}(\bm\Delta)\pmod\lambda .
+\]
+要求对截止以内\textbf{所有}频率（所有平移 $\bm\Delta$）成立。取 $\bm\Delta$ 为小量并展开：$\nabla W(x,y)\cdot\bm\Delta=$ 与 $(x,y)$ 无关，对任意方向的 $\bm\Delta$ 成立 $\Rightarrow\nabla W=(a,b)$ 为常矢量 $\Rightarrow W=ax+by+c$。所以不降低 MTF 的波像差只能是平移 + 倾斜，(ii) 的猜测在连续光瞳、要求所有频率都不降的意义下是唯一的。
+（补充：若允许 $W$ 有 $\lambda$ 整数倍的台阶，或只要求个别频率不降，或光瞳分成不相连的几块，则还有其他形式。）
+\end{exam}
+
+\begin{exam}{【适配/变式】同一套方法还能证的结论}
+\begin{itemize}
+\item \textbf{$|\mathcal H(u,v)|\le1$}：令 $W=0$ 时 $\frac{S_A}{S_0}\le1$；一般光瞳 $P$ 复值时，对 $\iint P(\bm r)P^*(\bm r+\bm\Delta)$ 用施瓦茨不等式得 $\le\iint|P|^2$。
+\item \textbf{$\mathcal H(0,0)=1$}：平移为 0 时分子 = 分母。
+\item \textbf{有像差时 CTF 的模不变}：$|\mathrm{CTF}|=|P\ee^{ikW}|=P$，只有相位变，截止不变 [F3-p46]。
+\item \textbf{Strehl 比 $\le1$}：$|\iint P\ee^{ikW}|\le\iint P$（三角不等式），见第 \ref{ch:aberr} 章。
+\end{itemize}
+\end{exam}
+
+\needspace{8\baselineskip}\section{结构光照明显微 SIM}\label{sec:sim}
+\textbf{【题型】}按一维分析：物的强度透过率为 $T(x)$，用两束相干、等幅、同相的平面波照明，两束光关于光轴对称、夹角 $\theta$。通常依次问：(i) 波长 $\lambda$、物镜数值孔径 NA 时，物面上的非相干截止频率；(ii) 照明条纹的强度分布；(iii) 透过物体后的强度频谱；(iv) 说明 $\theta$ 选得合适时，物镜能收集到频率高达原截止频率 2 倍的信息。
+
+\begin{formula}{SIM 计算全流程}\ix{结构光照明}\ix{SIM}\ix{超分辨}
+\textbf{(i) 截止频率}：物镜数值孔径 NA，非相干成像，物面截止频率 $\boxed{f_c=\dfrac{2\,\mathrm{NA}}{\lambda}}$（相干时为 $\frac{\mathrm{NA}}\lambda$）。
+
+\textbf{(ii) 照明强度}：两束等幅相干平面波，与 $z$ 轴夹角 $\pm\frac\theta2$：
+\[
+\tilde E_{\text{ill}}=A\ee^{ikx\sin\frac\theta2}+A\ee^{-ikx\sin\frac\theta2}\ \Rightarrow\
+I_{\text{ill}}(x)=2A^2\left[1+\cos(2\pi f_0x)\right],\quad f_0=\frac{2\sin(\theta/2)}{\lambda}
+\]
+\textbf{(iii) 透过物体后的强度及其频谱}：$I(x)=I_{\text{ill}}(x)\,T(x)$，记 $\mathcal T(u)=\F\{T\}$：
+\[
+\F\{I\}=2A^2\left[\mathcal T(u)+\tfrac12\mathcal T(u-f_0)+\tfrac12\mathcal T(u+f_0)\right]
+\]
+物频谱被复制成三份：原位、右移 $f_0$、左移 $f_0$。
+
+\textbf{(iv) 分辨率翻倍}：物镜只让 $|u|\le f_c$ 通过。$\mathcal T(u-f_0)$ 这一份在通带内携带的是物的 $[f_0-f_c,\ f_0+f_c]$ 频段。取 $f_0=f_c$：
+\[
+\frac{2\sin(\theta/2)}{\lambda}=\frac{2\,\mathrm{NA}}{\lambda}\ \Rightarrow\ \boxed{\sin\frac\theta2=\mathrm{NA}}
+\]
+此时可采集物频率最高到 $f_0+f_c=2f_c$，即原截止频率的 2 倍。实际操作中，平移条纹相位（如 $0,\frac{2\pi}3,\frac{4\pi}3$）拍 3 张，解出三份频谱再拼接；再转动条纹方向，覆盖二维频域。
+（若照明本身也经过这个物镜，条纹频率最高就是 $2\mathrm{NA}/\lambda$，所以线性 SIM 最多提高 2 倍。）
+\end{formula}
+
+\begin{exam}{SIM 完整答题模板（逐问照抄）}
+\textbf{(i)} 物镜物方数值孔径 NA，相干截止 $\frac{\mathrm{NA}}{\lambda}$（CTF = 光瞳，边缘对应 $\sin\theta_{\max}/\lambda$）；非相干 OTF 为光瞳自相关，截止加倍：
+\[
+f_c=\frac{2\,\mathrm{NA}}{\lambda}.
+\]
+\textbf{(ii)} 两束平面波波矢与 $z$ 轴夹角 $\pm\theta/2$，在物面 $z=0$ 上（公共相位 $\ee^{ikz\cos\frac\theta2}$ 略去）：
+\begin{align*}
+\tilde E&=A\ee^{ikx\sin\frac\theta2}+A\ee^{-ikx\sin\frac\theta2}=2A\cos\!\left(kx\sin\tfrac\theta2\right)\\
+I_{\text{ill}}&=|\tilde E|^2=4A^2\cos^2\!\left(kx\sin\tfrac\theta2\right)=2A^2\left[1+\cos\!\left(2kx\sin\tfrac\theta2\right)\right]=2A^2[1+\cos(2\pi f_0x)],
+\end{align*}
+其中 $2k\sin\frac\theta2=2\pi\cdot\frac{2\sin(\theta/2)}{\lambda}$，故条纹频率 $f_0=\dfrac{2\sin(\theta/2)}{\lambda}$，周期 $\dfrac{\lambda}{2\sin(\theta/2)}$。
+
+\textbf{(iii)} 物强度透过率 $T(x)$，透射强度 $I(x)=I_{\text{ill}}(x)T(x)=2A^2\big[T+\frac12T\ee^{i2\pi f_0x}+\frac12T\ee^{-i2\pi f_0x}\big]$。由调制定理 $\F\{T\ee^{i2\pi f_0x}\}=\mathcal T(u-f_0)$：
+\[
+\F\{I\}(u)=2A^2\left[\mathcal T(u)+\tfrac12\mathcal T(u-f_0)+\tfrac12\mathcal T(u+f_0)\right].
+\]
+\textbf{(iv)} 物镜（非相干）只传递 $|u|\le f_c$。通带内，$\mathcal T(u)$ 给出物的 $|u|\le f_c$；$\mathcal T(u+f_0)$ 在 $|u|\le f_c$ 时对应物频率 $u+f_0\in[f_0-f_c,\,f_0+f_c]$；$\mathcal T(u-f_0)$ 对应 $[-f_0-f_c,\,-f_0+f_c]$。即高频信息被“搬”进了通带。取 $f_0=f_c$，即
+\[
+\frac{2\sin(\theta/2)}{\lambda}=\frac{2\mathrm{NA}}{\lambda}\iff\sin\frac\theta2=\mathrm{NA},
+\]
+三段拼起来无缝覆盖 $|u|\le2f_c$，物镜采集到了原截止频率 2 倍以内的全部信息。（通过移动条纹相位拍 3 幅图解出三份频谱，再数字平移回原位拼接。照明光经同一物镜时 $\sin\frac\theta2\le\mathrm{NA}$，故最多提高 2 倍。）
+\end{exam}
+
+\begin{center}
+\begin{tikzpicture}[x=1.1cm,y=1.1cm,>=Stealth]
+\draw[->] (-4.4,0)--(4.6,0) node[right,font=\scriptsize]{$u$};
+\fill[green!12] (-1,0) rectangle (1,1.25);
+\draw[green!50!black,dashed] (-1,0)--(-1,1.25) (1,0)--(1,1.25);
+\node[font=\scriptsize,green!40!black] at (0,1.4){物镜通带 $|u|\le f_c$（灰底）};
+\draw[blue,thick] (-1.6,0)--(0,1)--(1.6,0);
+\draw[black,thick,dashed] (-0.6,0)--(1,0.5)--(2.6,0);
+\draw[black,very thick,densely dotted] (-2.6,0)--(-1,0.5)--(0.6,0);
+\foreach \x/\l in {-2/{-2f_c},-1/{-f_c},1/{f_c},2/{2f_c}} \draw (\x,0.05)--(\x,-0.05) node[below,font=\scriptsize]{$\l$};
+\node[font=\scriptsize,blue] at (0,-0.55){$\mathcal T(u)$（实线）};
+\node[font=\scriptsize,red,right] at (2.1,0.35){$\frac12\mathcal T(u-f_0)$（虚线）};
+\node[font=\scriptsize,orange,left] at (-2.1,0.35){$\frac12\mathcal T(u+f_0)$（点线）};
+\end{tikzpicture}
+\end{center}
+\begin{center}\small 示意：$f_0=f_c$ 时三份频谱（原位、左右各移 $f_0$）进入通带的部分合起来覆盖物的 $|u|\le2f_c$。\end{center}
+
+\begin{exam}{【适配/变式】与【数值例】}
+\begin{itemize}
+\item \textbf{给夹角 $\theta$ 求条纹频率}：$f_0=\frac{2\sin(\theta/2)}{\lambda}$；若一束沿轴、一束斜 $\theta$：$f_0=\frac{\sin\theta}{\lambda}$。
+\item \textbf{浸没介质（折射率 $n$）}：波长换成 $\lambda/n$：$f_0=\frac{2n\sin(\theta/2)}{\lambda}$，条件变为 $n\sin\frac\theta2=\mathrm{NA}$。
+\item \textbf{两束不等幅 $A,B$}：$I_{\text{ill}}=A^2+B^2+2AB\cos(2\pi f_0x)$，条纹对比度 $\frac{2AB}{A^2+B^2}$，频谱侧带系数变为 $\frac{AB}{A^2+B^2}$，结论不变。
+\item \textbf{$f_0>2f_c$}：中间会出现采不到的频段（不连续），所以取 $f_0\le f_c$ 最合适。
+\item \textbf{问最终分辨的最小周期}：$\frac{1}{2f_c}=\frac{\lambda}{4\mathrm{NA}}$（普通非相干为 $\frac{\lambda}{2\mathrm{NA}}$）。
+\end{itemize}
+\textbf{数值}：$\lambda=0.5\,\mu$m，NA $=1.2$（水浸，$n=1.33$）：$f_c=\frac{2\times1.2}{0.5}=4.8\,\mu$m$^{-1}$（最小周期 208 nm）；SIM 后 $2f_c=9.6\,\mu$m$^{-1}$（104 nm）。所需 $n\sin\frac\theta2=1.2\Rightarrow\sin\frac\theta2=0.90$，$\theta\approx128^\circ$。
+\end{exam}
+
+\needspace{8\baselineskip}\section{阿贝成像原理（显微镜，相干）[F3-p69–77]}\label{sec:abbe}
+\begin{formula}{截止周期与倾斜照明}\ix{阿贝成像原理}\ix{倾斜照明}\ix{数值孔径}
+显微镜：物距 $l\approx f$，像距很长；物镜直径 $D$，$\sin\theta=\dfrac{D}{2f}$，$\mathrm{NA}=n\sin\theta$，介质中波长 $\lambda=\lambda_0/n$。
+\begin{itemize}
+\item \textbf{CTF 法}：物空间截止频率 $u=\dfrac1d=\dfrac{D}{2\lambda f}=\dfrac{\sin\theta}{\lambda}$。
+\item \textbf{光栅法}：周期 $d$ 的光栅 $+1$ 级 $d\sin\theta=\lambda$ 恰好进入光瞳边缘 $\Rightarrow$ 最小可分辨周期 $\boxed{d=\dfrac{\lambda_0}{\mathrm{NA}}=\dfrac{2\lambda f}{D}}$。
+\item \textbf{两次傅里叶变换}：物 $\to$ 后焦面（频谱，光瞳截掉高频）$\to$ 像面（再变换、干涉成像）。至少要 0 级和一个 1 级进光瞳才有条纹。
+\item \textbf{倾斜照明}：让 0 级打在光瞳一侧边缘、$-1$ 级在另一侧，两者在频谱面相距 $D$：$\dfrac1d=\dfrac{D}{\lambda f}\Rightarrow d=\dfrac{\lambda_0}{2\mathrm{NA}}$，分辨本领\textbf{至多提高一倍}（与 SIM 同理）。
+\item 为什么 NA 用 $\sin$ 不用 $\tan$：满足正弦条件的系统，主面是以焦点为心的球面，入瞳半径 $=f\sin\theta$ [F3-p72]。
+\end{itemize}
+\end{formula}
+
+\begin{exam}{题型：显微镜最小可分辨周期（正入射 / 倾斜照明）——答题模板}
+\textbf{正入射}。周期 $d$ 的物（光栅）衍射级满足 $d\sin\theta_m=m\lambda$（$\lambda=\lambda_0/n$）。成像至少需要 0 级与 $\pm1$ 级同时进入物镜（只有 0 级时像面是均匀亮度，没有条纹）。物镜最大接收角 $\theta$：$\sin\theta=\frac{D}{2f}$。$+1$ 级恰好进入：$d\sin\theta=\lambda\Rightarrow d_{\min}=\frac{\lambda}{\sin\theta}=\frac{\lambda_0}{n\sin\theta}=\frac{\lambda_0}{\mathrm{NA}}$。
+（等价的 CTF 说法：物方截止 $\frac{\sin\theta}{\lambda}=\frac{\mathrm{NA}}{\lambda_0}$，周期为其倒数。）
+
+\textbf{倾斜照明}。照明光倾斜，使 0 级沿光瞳一侧边缘进入（倾角 $\theta$），$-1$ 级偏向另一侧，恰好从另一侧边缘进入：两级的方向正弦差 $\sin\theta-(-\sin\theta)=2\sin\theta=\frac{\lambda}{d}$，得 $d_{\min}=\frac{\lambda_0}{2\mathrm{NA}}$，比正入射小一半；因 0 级、$-1$ 级都必须在光瞳内，方向正弦差最大只有 $2\sin\theta$，故\textbf{至多提高一倍} [F3-p74]。
+\end{exam}
+
+\begin{exam}{【数值例与变式】}
+$\lambda_0=0.55\,\mu$m。干物镜 NA $=0.65$：正入射 $d_{\min}=0.85\,\mu$m，倾斜 $0.42\,\mu$m。油浸 NA $=1.25$：正入射 $0.44\,\mu$m，倾斜 $0.22\,\mu$m。
+\begin{itemize}
+\item \textbf{给 $D$、$f$ 不给 NA}：$\sin\theta=\frac{D}{2f}$，$d_{\min}=\frac{2\lambda f}{D}$。
+\item \textbf{非相干照明（荧光）}：截止 $\frac{2\mathrm{NA}}{\lambda_0}$，最小周期 $\frac{\lambda_0}{2\mathrm{NA}}$，和相干倾斜照明一样。
+\item \textbf{滤波实验（阿贝–波特）}：在后焦面挡住某些级，像只由剩下的级干涉而成，见第 4 章 4f 滤波。
+\end{itemize}
+\end{exam}
+
+\needspace{8\baselineskip}\section{分辨率判据}
+\begin{formula}{分辨率与截止频率的换算}\ix{瑞利判据}\ix{分辨率}\ix{阿贝衍射极限}
+\par\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}lll@{}}
+\toprule
+判据 & 最小分辨距离（物面） & 备注\\ \midrule
+瑞利（圆孔，非相干） & $\delta=0.61\dfrac{\lambda}{\mathrm{NA}}$ & 一个艾里斑中心落在另一个第一暗环上\\
+阿贝（相干，正入射） & $\dfrac{\lambda}{\mathrm{NA}}$ & 0 级和 $\pm1$ 级都要进光瞳\\
+阿贝（相干，斜照明）/非相干截止 & $\dfrac{\lambda}{2\mathrm{NA}}$ & 周期 $=1/f_c$\\
+角分辨率（望远镜、人眼） & $\theta=1.22\dfrac{\lambda}{D}$ & $D$ 为入瞳直径\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+角度空间频率换算：截止 $\dfrac{D}{\lambda}$（周期/弧度），$\times\dfrac{\pi}{180}$ 得周期/度（CPD）。
+\end{formula}
+
+\textbf{【推导：瑞利 $0.61\lambda/\mathrm{NA}$ 从哪来】}
+\begin{align*}
+\text{像面艾里斑第一暗环半径}\quad r'&=1.22\frac{\lambda l'}{D} &&\text{(圆孔 PSF 第一零点)}\\
+\text{换到物面}\quad\delta&=\frac{r'}{|M|}=1.22\frac{\lambda l}{D} &&\text{($|M|=l'/l$)}\\
+&=0.61\frac{\lambda}{D/(2l)}=0.61\frac{\lambda}{\mathrm{NA}} &&\text{(物方 NA $\approx\frac{D}{2l}$)}
+\end{align*}
+其中第一行：圆孔 PSF $\propto\frac{2J_1(\pi D\rho)}{\pi D\rho}$，第一零点 $\pi D\rho=3.832$，$\rho=\frac{r'}{\lambda l'}$，得 $r'=\frac{3.832}{\pi}\frac{\lambda l'}{D}=1.22\frac{\lambda l'}{D}$。望远镜、人眼看远处用角度：$\theta=\frac{r'}{f}=1.22\frac{\lambda}{D}$。
+
+\begin{exam}{【数值例】}
+人眼瞳孔 $D=3$ mm，$\lambda=0.55\,\mu$m：$\theta=1.22\times\frac{0.55\times10^{-3}}{3}=2.24\times10^{-4}$ rad $=0.77'$。非相干截止 $\frac{D}{\lambda}=5455$ 周期/弧度 $\times\frac{\pi}{180}=95$ CPD（第 7 章）。
+显微镜 NA $=0.9$，$\lambda=0.5\,\mu$m：瑞利 $\delta=0.34\,\mu$m；非相干截止周期 $\frac{\lambda}{2\mathrm{NA}}=0.28\,\mu$m。两者差一个系数（0.61 vs 0.5），都是“衍射极限”的说法，答题时写清用的哪个判据。
+\end{exam}

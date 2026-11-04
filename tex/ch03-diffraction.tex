@@ -1,0 +1,449 @@
+\chapter{衍射：惠更斯-菲涅耳、菲涅耳、夫琅禾费、角谱}\label{ch:diff}
+
+\begin{idea}[本章在全景图上的位置（总图\pageref{sec:p-whole}）]
+\whereami{3,5}
+本章只讲\textbf{传播}这一格。输入是上一章的 $\tilde E_1$，输出是下一个面上的场。没有透镜的题（场景 ①②）只用这一格；有透镜的题，传播带来的二次相位要和透镜的二次相位抵消，所以这里的“展开平方”写法下一章还要用。
+\end{idea}
+
+\begin{idea}[衍射就是“自由传播一段距离”]
+光从一个面传到另一个面，有两种等价算法：
+\textbf{空域}：每个点发次波 $\to$ 叠加（卷积）；\textbf{频域}：每个平面波分量只多一个相位（乘传递函数）。
+距离很远时，观察面上的图样就是输入面的傅里叶变换（夫琅禾费）；透镜能把“很远”搬到焦面上。
+
+\textbf{本章题型}：
+\textbf{A} 判断/比较近似条件（傍轴、远场、菲涅耳、夫琅禾费）$\to$ §\ref{ex:approxcmp}；
+\textbf{B} 推导菲涅耳、夫琅禾费公式 $\to$ §\ref{sec:diffderiv}；
+\textbf{C} 求周期结构自由传播后的场（角谱、Talbot）$\to$ §\ref{sec:angspec}；
+\textbf{D} 求孔径的远场图样、零点位置、条纹数 $\to$ §\ref{sec:aperturepatterns}。
+\end{idea}
+
+\needspace{8\baselineskip}\section{惠更斯-菲涅耳原理}
+\begin{formula}{惠更斯-菲涅耳积分}\ix{惠更斯-菲涅耳原理}\ix{倾斜因子}
+\[
+\tilde E(x,y)=\frac{1}{i\lambda}\iint_\Sigma\tilde E(x_1,y_1)\frac{\exp(ikr)}{r}K(\theta)\dd x_1\dd y_1,\qquad r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}
+\]
+傍轴时 $K(\theta)\approx1$，振幅中 $r\approx z$；系统变成线性空不变：$\tilde E(x,y)=\tilde E(x_1,y_1)\conv h(x,y)$。[F2-p02]
+\end{formula}
+
+\begin{idea}[为什么能写成卷积]
+积分核 $h$ 一般依赖 $(x,y,x_1,y_1)$ 四个量。傍轴后 $K\equiv1$，$r$ 只依赖差值 $(x-x_1,y-y_1)$，核变成 $h(x-x_1,y-y_1)$：
+输入点挪一挪，输出的“次波图样”只是跟着挪，形状不变 $\Rightarrow$ 线性空不变系统 $\Rightarrow$ 输出 = 输入 $\conv h$，频域里就是乘 $H=\F\{h\}$。
+这就是后面“角谱传递函数”和“成像 = 卷积 PSF”的共同根源。
+\end{idea}
+
+\needspace{8\baselineskip}\section{菲涅耳衍射与夫琅禾费衍射}
+
+\begin{formula}{菲涅耳衍射（近场，傍轴）}\ix{菲涅耳衍射}\ix{菲涅耳近似}
+近似：$r\approx z+\dfrac{(x-x_1)^2+(y-y_1)^2}{2z}$（展开到二次）。
+\[
+\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\iint\tilde E(x_1,y_1)\exp\!\left[ik\frac{(x-x_1)^2+(y-y_1)^2}{2z}\right]\dd x_1\dd y_1
+\]
+\textbf{卷积形式}：$\tilde E=\tilde E_1\conv h$，$h(x,y)=\dfrac{\ee^{ikz}}{i\lambda z}\exp\!\left(i\pi\dfrac{x^2+y^2}{\lambda z}\right)$。
+
+\textbf{傅里叶形式}（展开平方）：
+\[
+\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}\;\F\!\left\{\tilde E_1(x_1,y_1)\,\ee^{ik\frac{x_1^2+y_1^2}{2z}}\right\}\Big|_{u=\frac{x}{\lambda z},v=\frac{y}{\lambda z}}
+\]
+比夫琅禾费多了变换号里面的\textbf{正二次相位} $\exp\!\left(ik\frac{x_1^2+y_1^2}{2z}\right)$。[F1-p65]
+\end{formula}
+
+\begin{formula}{夫琅禾费衍射（远场）}\ix{夫琅禾费衍射}\ix{远场近似}
+条件：$z\gg\dfrac{k(x_1^2+y_1^2)_{\max}}{2}=\dfrac{\pi a^2}{\lambda}$（$a$：孔的半宽），此时变换号内二次相位 $\approx1$：
+\[
+\boxed{\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\exp\!\left(ik\frac{x^2+y^2}{2z}\right)\F\{\tilde E_1(x_1,y_1)\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lambda z}}}
+\]
+强度：$I(x,y)=\dfrac{1}{\lambda^2z^2}\left|\F\{\tilde E_1\}\left(\dfrac{x}{\lambda z},\dfrac{y}{\lambda z}\right)\right|^2$。
+角度形式：方向 $\sin\theta_x=\lambda u$。透镜焦面上把 $z$ 换成 $f$。[F1-p36]
+\end{formula}
+
+\subsection{题型 B：从惠更斯-菲涅耳积分推出菲涅耳、夫琅禾费公式}\label{sec:diffderiv}
+\textbf{【题型】}“由惠更斯-菲涅耳原理推导菲涅耳衍射公式，并说明夫琅禾费衍射是它的特例 / 写出成立条件。”课件 [F1-p36, p65]、[F2-p02]。
+
+\begin{exam}{完整推导（每一步都可照抄）}\ix{菲涅耳近似!推导}
+\textbf{第 1 步（出发点）}　惠更斯-菲涅耳积分，取 $C=\frac{1}{i\lambda}$：
+\[
+\tilde E(x,y)=\frac1{i\lambda}\iint_\Sigma\tilde E(x_1,y_1)\frac{\ee^{ikr}}{r}K(\theta)\dd x_1\dd y_1,\qquad r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}.
+\]
+\textbf{第 2 步（傍轴）}　观察区和孔都比 $z$ 小得多，$\theta$ 很小：$K(\theta)\approx1$。
+
+\textbf{第 3 步（把 $r$ 展开）}　记 $s=\dfrac{(x-x_1)^2+(y-y_1)^2}{z^2}\ll1$，用 $\sqrt{1+s}=1+\frac s2-\frac{s^2}8+\cdots$：
+\[
+r=z\sqrt{1+s}\approx z+\frac{(x-x_1)^2+(y-y_1)^2}{2z}.
+\]
+\textbf{第 4 步（振幅和相位区别对待）}
+\begin{itemize}
+\item 分母（振幅）中的 $r$：相对误差约 $s/2\ll1$，直接取 $r\approx z$。（依据：振幅对 $r$ 的小变化不敏感。）
+\item 指数（相位）中的 $r$：被 $k=2\pi/\lambda$ 放大，不能只取 $z$，必须保留二次项。被扔掉的下一项 $k\,\dfrac{zs^2}{8}$ 要 $\ll\pi$（实际上约 $\ll1$ rad），得菲涅耳近似成立的（充分）条件
+$\boxed{z^3\gg\dfrac{\pi}{4\lambda}\big[(x-x_1)^2+(y-y_1)^2\big]^2_{\max}}$。
+\end{itemize}
+\textbf{第 5 步（代回，得卷积形式）}
+\[
+\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\iint\tilde E(x_1,y_1)\exp\!\left[\frac{ik}{2z}\big((x-x_1)^2+(y-y_1)^2\big)\right]\dd x_1\dd y_1=\tilde E_1\conv h,\quad h=\frac{\ee^{ikz}}{i\lambda z}\ee^{i\pi\frac{x^2+y^2}{\lambda z}}
+\]
+（用了 $\frac{k}{2z}=\frac{2\pi}{2\lambda z}=\frac{\pi}{\lambda z}$。）
+
+\textbf{第 6 步（展开平方，得傅里叶形式）}　$(x-x_1)^2=x^2-2xx_1+x_1^2$（$y$ 同理），三类项分别处理：
+\begin{itemize}
+\item 只含 $x,y$ 的 $\ee^{ik\frac{x^2+y^2}{2z}}$：与积分变量无关，提到积分外；
+\item 只含 $x_1,y_1$ 的 $\ee^{ik\frac{x_1^2+y_1^2}{2z}}$：留在积分里，乘在输入上；
+\item 交叉项 $\exp\!\left(-ik\dfrac{xx_1+yy_1}{z}\right)=\exp\!\left[-i2\pi\left(\dfrac{x}{\lambda z}x_1+\dfrac{y}{\lambda z}y_1\right)\right]$：正是傅里叶核，频率 $u=\dfrac{x}{\lambda z}$，$v=\dfrac{y}{\lambda z}$。
+\end{itemize}
+\[
+\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}\,\F\!\left\{\tilde E_1(x_1,y_1)\,\ee^{ik\frac{x_1^2+y_1^2}{2z}}\right\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lambda z}}.
+\]
+\textbf{第 7 步（夫琅禾费 = 再扔掉输入面二次相位）}　若孔径半宽为 $a$，且
+$\dfrac{k(x_1^2+y_1^2)_{\max}}{2z}=\dfrac{\pi a^2}{\lambda z}\ll1$（即 $z\gg\dfrac{\pi a^2}{\lambda}$，或写成菲涅耳数 $N_F=\dfrac{a^2}{\lambda z}\ll1$），
+则 $\ee^{ik\frac{x_1^2+y_1^2}{2z}}\approx1$，得
+\[
+\tilde E(x,y)=\frac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}\,\F\{\tilde E_1(x_1,y_1)\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lambda z}}.\qquad\text{证毕。}
+\]
+\textbf{第 8 步（物理含义）}　$u=\dfrac{x}{\lambda z}\approx\dfrac{\sin\theta_x}{\lambda}=\dfrac{\cos\alpha}{\lambda}$：观察屏上每个位置对应一个传播方向，也就对应一个空间频率；远场图样就是输入的频谱。
+\end{exam}
+
+\begin{warn}[推导题易错]
+\begin{enumerate}
+\item 振幅里的 $r$ 换成 $z$，相位里的 $r$ \textbf{不能}只换成 $z$——要说明理由（$k$ 很大，$r$ 的微小变化造成很大相位变化）。
+\item 菲涅耳：输入面二次相位是\textbf{正}的 $\ee^{+ik x_1^2/2z}$；透镜给的是\textbf{负}的 $\ee^{-ikx_1^2/2f}$，二者在 $z=f$ 时恰好抵消——这就是“透镜焦面上得到夫琅禾费图样”的原因（第 \ref{ch:lens} 章）。
+\item 夫琅禾费条件里的“$\ll$”有几种写法：$\ll1$ rad、$\ll\pi$、$N_F\ll1$、$z\gg a^2/\lambda$，量级相同，答题任取一种并写清 $a$ 是半宽还是全宽。
+\item 观察面上的 $\ee^{ik\frac{x^2+y^2}{2z}}$ 在夫琅禾费公式里\textbf{仍然保留}，只是不影响强度。
+\end{enumerate}
+\end{warn}
+
+\begin{exam}{数值例：要多远才算夫琅禾费？}
+$\lambda=0.6328\,\mu$m（He-Ne）。
+\begin{itemize}
+\item 半宽 $a=1$ mm 的孔：$\dfrac{\pi a^2}{\lambda}=\dfrac{\pi\times(10^{-3})^2}{0.6328\times10^{-6}}\approx5.0$ m，要 $z\gg5$ m，实验室放不下 $\Rightarrow$ 用透镜，在焦面上看。
+\item 半宽 $a=0.05$ mm 的缝：$\dfrac{\pi a^2}{\lambda}\approx1.2$ cm，屏放在 1 m 处（$N_F=\frac{a^2}{\lambda z}=0.004$）完全是夫琅禾费。
+\end{itemize}
+\end{exam}
+
+\subsection{题型 A：近似条件的定量比较}\label{ex:approxcmp}
+
+\begin{formula}{近似条件的定量比较}\ix{傍轴近似}\ix{近似条件}\ix{菲涅耳数}\label{box:approx}
+点源发出球面波，传到距离 $z$、半径 $\rho$ 的接收面：$r=\sqrt{z^2+\rho^2}$。
+\begin{enumerate}
+\item \textbf{振幅近似为常数}（傍轴，振幅部分）：$\dfrac1r\approx\dfrac1z$，相对误差
+$\dfrac{1/z-1/r}{1/z}=1-\dfrac{z}{\sqrt{z^2+\rho^2}}\approx\dfrac{\rho^2}{2z^2}$。只要 $\rho\ll z$ 就满足，\textbf{与波长无关}。
+\item \textbf{相位近似为常数}（远场）：相位 $kr\approx kz+\dfrac{k\rho^2}{2z}$，要求相位起伏
+$\dfrac{k\rho^2}{2z}=\dfrac{\pi\rho^2}{\lambda z}\ll\pi$，即 $\boxed{z\gg\dfrac{\rho^2}{\lambda}}$。
+\end{enumerate}
+\textbf{比较}：两者之比 $\dfrac{\pi\rho^2/\lambda z}{\rho^2/2z^2}=\dfrac{2\pi z}{\lambda}\gg1$（$z\gg\lambda$），相位误差远大于振幅误差，所以\textbf{相位近似（远场）更难满足}。
+
+\textbf{两类衍射中各面满足哪个近似}：
+\begin{itemize}
+\item 菲涅耳衍射：衍射屏和观察屏都只满足\textbf{振幅近似（傍轴）}；相位保留到二次项，相位近似不成立。
+\item 夫琅禾费衍射：衍射屏（孔径尺寸 $a$）满足\textbf{相位近似} $z\gg a^2/\lambda$；观察屏只满足\textbf{傍轴（振幅近似）}，观察屏上的二次相位 $\exp(ik\frac{x^2+y^2}{2z})$ 仍保留，只是不影响强度。
+\end{itemize}
+菲涅耳数 $N_F=\dfrac{a^2}{\lambda z}$：$N_F\gtrsim1$ 菲涅耳区，$N_F\ll1$ 夫琅禾费区。
+\end{formula}
+
+\textbf{【题型】}“一点光源发出球面波，入射到距离为 $z$、半径为 $\rho$ 的接收面上……(i) 定量讨论傍轴（振幅可视为常数）与远场（相位可视为常数）哪个条件更难满足；(ii) 菲涅耳衍射和夫琅禾费衍射中，衍射屏和观察屏分别满足哪个近似（需含公式半定量讨论）。”
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9,>=Stealth]
+\fill (0,0) circle (2pt) node[left]{点源 $S$};
+\draw[thick] (6,-1.6)--(6,1.6) node[above]{接收面};
+\draw[->] (0,0)--(6,0) node[midway,below]{$z$};
+\draw[->,red] (0,0)--(6,1.3) node[midway,above,sloped]{$r=\sqrt{z^2+\rho^2}$};
+\draw[<->] (6.3,0)--(6.3,1.3) node[midway,right]{$\rho$};
+\draw[dashed,gray] (6,1.3) arc[start angle=12.2,end angle=-12.2,radius=6.14];
+\node[gray,font=\scriptsize,align=left] at (8.6,-0.9){虚线：过中心的球面\\边缘多走 $r-z\approx\rho^2/2z$};
+\end{tikzpicture}
+\end{center}
+
+\begin{idea}[一句话看懂为什么相位更难]
+振幅近似比的是 $r$ 和 $z$ 这两个\textbf{长度之比}（差一点点无所谓）；相位近似比的是\textbf{多走的路程} $r-z\approx\rho^2/2z$ 和\textbf{波长} $\lambda$（零点几微米）。
+$\lambda$ 极小，所以边缘多走一丁点路，相位就转了好几圈。
+\end{idea}
+
+\begin{exam}{近似条件比较：答题模板（可直接抄）}
+\textbf{解：(i)} 接收面上一点到点源的距离 $r=\sqrt{z^2+\rho^2}=z\sqrt{1+\rho^2/z^2}\approx z+\dfrac{\rho^2}{2z}$（$\rho\ll z$）。
+接收到的球面波 $\tilde E=\dfrac{A}{r}\ee^{ikr}$。比较接收面中心（$r=z$）与边缘（$r=\sqrt{z^2+\rho^2}$）：
+
+\textbf{振幅}：$\dfrac{|\tilde E_{\text{中心}}|-|\tilde E_{\text{边缘}}|}{|\tilde E_{\text{中心}}|}=1-\dfrac zr\approx\dfrac{\rho^2}{2z^2}$。
+傍轴近似（振幅为常数）要求 $\dfrac{\rho^2}{2z^2}\ll1$，即 $\rho\ll z$，与 $\lambda$ 无关。
+
+\textbf{相位}：$\Delta\varphi=k(r-z)\approx\dfrac{k\rho^2}{2z}=\dfrac{\pi\rho^2}{\lambda z}$。
+远场近似（相位为常数）要求 $\Delta\varphi\ll\pi$（或 $\ll1$），即 $z\gg\dfrac{\rho^2}{\lambda}$。
+
+\textbf{比较}：把两个条件都写成对 $z$ 的要求：傍轴 $z\gg\rho$；远场 $z\gg\rho\cdot\dfrac{\rho}{\lambda}$。
+因为 $\rho\gg\lambda$（毫米对微米，$\rho/\lambda\sim10^3$–$10^4$），远场要求的距离比傍轴大 $\rho/\lambda$ 倍。
+或者看同一 $z$ 下两种相对偏差之比：$\dfrac{\Delta\varphi}{\rho^2/2z^2}=\dfrac{2\pi z}{\lambda}=kz\gg1$。
+（相位偏差 $\Delta\varphi$ 小时，$|\ee^{i\Delta\varphi}-1|\approx\Delta\varphi$，与振幅相对偏差可直接比较。）
+\textbf{故远场近似（相位为常数）比傍轴近似难满足得多}；满足远场必然满足傍轴，反之不然。
+例：$\lambda=0.5\,\mu$m，$\rho=1$ mm，$z=1$ m 时，振幅偏差 $5\times10^{-7}$，相位偏差 $2\pi$ rad。
+
+\textbf{(ii)} 由惠更斯-菲涅耳原理，衍射屏上每点 $(x_1,y_1)$ 发出次波到观察点 $(x,y)$：
+\[
+r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}\approx z+\frac{x^2+y^2}{2z}-\frac{xx_1+yy_1}{z}+\frac{x_1^2+y_1^2}{2z}.
+\]
+\begin{itemize}
+\item \textbf{观察屏}：固定衍射屏上一个次波源，它的球面波落在观察屏（半径 $\sim X$）上，正是 (i) 的情形。
+\item \textbf{衍射屏}：固定一个观察点，由光路可逆，相当于从观察点发出的球面波落在衍射屏（孔半宽 $a$）上，也是 (i) 的情形。
+\end{itemize}
+\textbf{菲涅耳衍射}：振幅中取 $r\approx z$，即两屏都满足\textbf{傍轴（振幅）近似}（$a,X\ll z$）；
+相位中保留了 $\dfrac{k(x_1^2+y_1^2)}{2z}$ 和 $\dfrac{k(x^2+y^2)}{2z}$ 两个二次项，即两屏都\textbf{不满足}远场（相位）近似，
+要求 $N_F=\dfrac{a^2}{\lambda z}\gtrsim1$ 时就必须保留。
+
+\textbf{夫琅禾费衍射}：在菲涅耳基础上进一步略去 $\dfrac{k(x_1^2+y_1^2)}{2z}$，要求 $\dfrac{\pi a^2}{\lambda z}\ll\pi$，即 $z\gg\dfrac{a^2}{\lambda}$：
+\textbf{衍射屏满足远场（相位）近似}，从观察点看，孔上的波前可视为平面（轴上观察点为等相位，轴外为线性相位，即傅里叶核）。
+\textbf{观察屏只满足傍轴（振幅）近似}：$\ee^{ik\frac{x^2+y^2}{2z}}$ 仍保留在结果中（观察屏范围 $X$ 一般不满足 $z\gg X^2/\lambda$），但它是纯相位，不影响强度 $I\propto|\F\{\tilde E_1\}|^2$。
+\end{exam}
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& \multicolumn{2}{c}{衍射屏（孔半宽 $a$）} & \multicolumn{2}{c}{观察屏（范围 $X$）}\\
+& 傍轴（振幅） & 远场（相位） & 傍轴（振幅） & 远场（相位）\\ \midrule
+菲涅耳衍射 & \checkmark & $\times$（$N_F\gtrsim1$）& \checkmark & $\times$\\
+夫琅禾费衍射 & \checkmark & \checkmark（$z\gg a^2/\lambda$）& \checkmark & $\times$（相位因子保留）\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\smallskip
+\needspace{6\baselineskip}\noindent\textbf{【适配 / 变式】}
+\begin{enumerate}
+\item \textbf{给了具体数，问满足哪个近似}：算 $\dfrac{\rho^2}{2z^2}$（傍轴）和 $\dfrac{\pi\rho^2}{\lambda z}$ 或 $N_F=\dfrac{\rho^2}{\lambda z}$（远场）。$N_F\gtrsim1$ 写“菲涅耳区”，$N_F\ll1$ 写“夫琅禾费区”，$\rho\not\ll z$ 写“傍轴不成立，需用完整惠更斯-菲涅耳积分”。
+\item \textbf{问“至少多远才算远场”}：令相位偏差 $\le$ 某个允许值。常用标准：光程差 $\le\lambda/16$（相位 $\le\pi/8$）$\Rightarrow\dfrac{\rho^2}{2z}\le\dfrac{\lambda}{16}\Rightarrow z\ge\dfrac{8\rho^2}{\lambda}=\dfrac{2D^2}{\lambda}$（$D=2\rho$，即天线的“瑞利距离”）。题目没给标准时写 $z\gg\rho^2/\lambda$ 并说明取的判据。
+\item \textbf{孔被球面波照明}（点源在孔前 $z_0$）：孔上入射场带 $\ee^{ik\frac{x_1^2+y_1^2}{2z_0}}$，与菲涅耳因子 $\ee^{ik\frac{x_1^2+y_1^2}{2z}}$ 相乘，夫琅禾费条件变为
+$\dfrac{\pi a^2}{\lambda}\left|\dfrac1{z_0}+\dfrac1z\right|\ll1$。若用\textbf{会聚}球面波（$z_0=-z$，会聚到观察屏）则恰好抵消，任何距离都得到夫琅禾费图样——这就是透镜的作用 [F2-p16]。
+\item \textbf{用了透镜，观察面在后焦面}：$z$ 换成 $f$，输入面的二次相位被透镜抵消，不再需要 $z\gg a^2/\lambda$（第 \ref{ch:lens} 章）。
+\item \textbf{问倾斜因子}：$K(\theta)=\frac{1+\cos\theta}{2}\approx1-\frac{\theta^2}{4}$，偏差 $\sim\frac{\rho^2}{4z^2}$，与振幅近似同量级，同属傍轴近似。
+\item \textbf{问“菲涅耳近似本身的条件”}：被扔掉的四次项相位 $\ll1$：$z^3\gg\dfrac{\pi}{4\lambda}\big[(x-x_1)^2+(y-y_1)^2\big]^2_{\max}$（见 §\ref{sec:diffderiv} 第 4 步）。
+\end{enumerate}
+
+\begin{exam}{数值例：同一个 $\rho$，不同距离}
+$\lambda=0.5\,\mu$m，$\rho=1$ mm：
+\begin{center}\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}ccccl@{}}
+\toprule
+$z$ & 振幅偏差 $\rho^2/2z^2$ & 相位偏差 $\pi\rho^2/\lambda z$ & $N_F=\rho^2/\lambda z$ & 结论\\ \midrule
+1 cm & $5\times10^{-3}$ & $200\pi$ & 200 & 傍轴勉强成立，远场完全不成立\\
+1 m & $5\times10^{-7}$ & $2\pi$ & 2 & 菲涅耳区\\
+20 m & $1.25\times10^{-9}$ & $0.1\pi$ & 0.1 & 接近夫琅禾费\\
+100 m & $5\times10^{-11}$ & $0.02\pi$ & 0.02 & 夫琅禾费\\
+\bottomrule
+\end{tabular}
+\end{center}
+单位换算提醒：$\rho^2/\lambda=(10^{-3}\text{ m})^2/(0.5\times10^{-6}\text{ m})=2$ m。
+\end{exam}
+
+\begin{warn}[近似条件比较的易错]
+\begin{enumerate}
+\item 说“傍轴更难”是错的：傍轴只要 $\rho\ll z$，与 $\lambda$ 无关；远场要 $z\gg\rho^2/\lambda$。
+\item 夫琅禾费并不是“两个屏都远场”：观察屏上的二次相位一直在，只是不影响强度。
+\item (ii) 要写出\textbf{公式}：至少写 $r$ 的展开式，指出哪一项保留、哪一项略去，以及对应的条件。
+\end{enumerate}
+\end{warn}
+
+\needspace{8\baselineskip}\section{角谱传播（频域算衍射）}\label{sec:angspec}
+\begin{formula}{角谱传递函数}\ix{角谱}\ix{传递函数!自由空间}
+输入面频谱 $A(u,v;0)=\F\{U(x,y;0)\}$，传播 $z$ 后：
+\[
+A(u,v;z)=A(u,v;0)\,H(u,v),\qquad H(u,v)=\exp\!\left[ikz\sqrt{1-(\lambda u)^2-(\lambda v)^2}\right]
+\]
+傍轴（$\lambda u,\lambda v\ll1$）：$\boxed{H(u,v)\approx\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]}$，正好是菲涅耳 $h$ 的傅里叶变换。
+\begin{itemize}
+\item $u^2+v^2>1/\lambda^2$：根号变虚，指数衰减（倏逝波），携带的细节传不远。
+\item 物理图像：方向 $\gamma$ 的平面波走过 $z$，相位增加 $kz\cos\gamma$，$\cos\gamma=\sqrt{1-\cos^2\alpha-\cos^2\beta}$。[F2-p03]
+\end{itemize}
+\end{formula}
+
+\begin{exam}{推导：角谱传递函数及其傍轴形式 [F2-p03, p06, p07]}
+\textbf{第 1 步}　输入场分解为平面波：$U(x,y;0)=\iint A(u,v;0)\,\ee^{i2\pi(ux+vy)}\dd u\dd v$，每个分量是方向余弦 $\cos\alpha=\lambda u$、$\cos\beta=\lambda v$ 的平面波。
+
+\textbf{第 2 步}　一个平面波 $\ee^{i\bm k\cdot\bm r}$ 从 $z=0$ 走到 $z$，同一 $(x,y)$ 处相位增加 $k_z z=kz\cos\gamma$，
+$\cos\gamma=\sqrt{1-\cos^2\alpha-\cos^2\beta}=\sqrt{1-(\lambda u)^2-(\lambda v)^2}$。（依据：$\cos^2\alpha+\cos^2\beta+\cos^2\gamma=1$。）
+
+\textbf{第 3 步}　各分量互不干扰（线性），所以 $A(u,v;z)=A(u,v;0)\exp\!\left[ikz\sqrt{1-\lambda^2(u^2+v^2)}\right]$。
+
+\textbf{第 4 步（傍轴）}　$\lambda^2(u^2+v^2)\ll1$ 时 $\sqrt{1-q}\approx1-\frac q2$：
+\[
+H\approx\exp\!\left\{ikz\Big[1-\tfrac{\lambda^2(u^2+v^2)}{2}\Big]\right\}=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]\qquad\Big(k\tfrac{\lambda^2}{2}=\tfrac{2\pi}{\lambda}\cdot\tfrac{\lambda^2}{2}=\pi\lambda\Big).
+\]
+\textbf{第 5 步（与菲涅耳统一）}　对 $h=\frac{\ee^{ikz}}{i\lambda z}\ee^{i\pi\frac{x^2+y^2}{\lambda z}}$ 作傅里叶变换（查表 $\ee^{i\pi ax^2}\leftrightarrow\frac{1}{\sqrt{-ia}}\ee^{-i\pi u^2/a}$，$a=\frac1{\lambda z}$，二维相乘得 $\frac{1}{-ia}=i\lambda z$）得到同一个 $H$：两种理论在傍轴下一致。
+\end{exam}
+
+\subsection*{同一段传播的三种写法：选哪个}\phantomsection\label{sec:propforms}\ix{菲涅耳衍射!三种写法}\ix{相位延迟!传递函数}
+\begin{center}\small\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}P{2.4cm}P{6.9cm}P{7.1cm}@{}}
+\toprule
+写法 & 公式 & 适合的题\\ \midrule
+卷积 & $\tilde E=\tilde E_1\conv h$，$h=\dfrac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}$ & 证明系统线性空不变；只有一个点物，直接得球面波\\
+传递函数 & $\hat E=\hat E_1H$，$H=\ee^{ikz}\ee^{-i\pi\lambda z(u^2+v^2)}$ & 物只有几个频率（光栅、Talbot）；多走一段距离（4f 输入面离焦）；几段传播级联，距离直接相加\\
+展开平方 & $\tilde E=\dfrac{\ee^{ikz}}{i\lambda z}\ee^{ik\frac{x^2+y^2}{2z}}\F\Big\{\tilde E_1\ee^{ik\frac{x_1^2+y_1^2}{2z}}\Big\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lambda z}}$ & 推夫琅禾费；前面有透镜或会聚波，要抵消变换号内的二次相位\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{idea}[传递函数里的相位是什么延迟]
+$H$ 由两部分组成。$\ee^{ikz}$ 是所有频率共同的延迟，单路光可略。$\ee^{-i\pi\lambda z(u^2+v^2)}$ 随频率变：斜平面波在同一 $(x,y)$ 处每走 $z$ 累积 $kz\cos\gamma$，比正入射的 $kz$ 少 $\pi\lambda z(u^2+v^2)$。
+
+\textbf{数值}：$\lambda=0.5\,\mu$m，$z=100$ mm。$\pi\lambda zu^2=\pi\times5\times10^{-4}\times100\times u^2=0.05\pi u^2$（$u$ 以 mm$^{-1}$ 计）。于是 $u=1$ 时 $0.05\pi$，$u=10$ 时 $5\pi$，$u=20$ 时 $20\pi$。频率越高转得越多，而且按平方增长。
+
+\textbf{类比}：相位对频率是二次函数的全通系统，就是色散信道。脉冲经过它会展宽，但能量和幅度谱不变。光走一段距离后图样散开，是同一回事。
+\end{idea}
+
+\begin{warn}[二次相位的正负号]
+\begin{itemize}
+\item 同一段正向传播：\textbf{空域} $h$ 里是 $+$，\textbf{频域} $H$ 里是 $-$。
+\item 往回走一段（4f 离焦例题里的 $x_2$）：把 $z$ 换成 $-z$，$H$ 里变成 $+$。
+\item 透镜是\textbf{空域}的 $-$，会聚球面波也是\textbf{空域}的 $-$。它们抵消的是 $h$ 展开后的 $+$，不是 $H$ 里的 $-$。
+\end{itemize}
+\end{warn}
+
+\subsection{题型 C：周期结构自由传播后的场}
+\textbf{【题型】}“透过率为 $t(x)=\ldots$（余弦光栅 / 两束平面波 / 周期结构）的屏用单色平面波照明，求距离 $z$ 处的复振幅和强度；何处重现原图样（Talbot）？”
+
+\begin{recipe}{求自由传播后的场}
+\begin{enumerate}
+\item \textbf{把输入写成平面波之和}：$U(x;0)=\sum_n c_n\ee^{i2\pi u_nx}$。余弦用欧拉公式拆：$\cos(2\pi f_0x)=\frac12(\ee^{i2\pi f_0x}+\ee^{-i2\pi f_0x})$。
+\item \textbf{每个分量乘自己的传递函数}：$c_n\ee^{i2\pi u_nx}\to c_nH(u_n)\ee^{i2\pi u_nx}$，傍轴 $H(u_n)=\ee^{ikz}\ee^{-i\pi\lambda zu_n^2}$；$\lambda u_n$ 不小时用严格形式；$|u_n|>1/\lambda$ 为倏逝波。
+\item \textbf{合并}：公共的 $\ee^{ikz}$ 提出来；$\pm u_n$ 两项的 $H$ 相同，可以重新合成 $\cos$。
+\item \textbf{求强度}：$I=|U|^2$，展开交叉项。
+\item 孔、远处观察：直接夫琅禾费（§\ref{sec:aperturepatterns}）；任意输入、中间距离：频域乘 $\exp[-i\pi\lambda z(u^2+v^2)]$ 或空域与菲涅耳 $h$ 卷积。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{例 1：余弦光栅自由传播（Talbot 自成像）——完整解}\ix{Talbot 效应}\label{ex:talbot}
+\textbf{题}：$t(x)=\frac12+\frac m2\cos(2\pi f_0x)$，单位振幅平面波正入射。求 $z$ 处复振幅、强度，及自成像距离。
+
+\textbf{解}：第 1 步，拆成三个平面波：
+$U(x;0)=\frac12+\frac m4\ee^{i2\pi f_0x}+\frac m4\ee^{-i2\pi f_0x}$，频率 $u=0,\pm f_0$。
+
+第 2 步，各乘传递函数：$H(0)=\ee^{ikz}$，$H(\pm f_0)=\ee^{ikz}\ee^{-i\pi\lambda zf_0^2}$。
+
+第 3 步，合并：
+\[
+U(x;z)=\ee^{ikz}\left[\tfrac12+\tfrac m2\,\ee^{-i\pi\lambda zf_0^2}\cos(2\pi f_0x)\right].
+\]
+第 4 步，强度（记 $\phi=\pi\lambda zf_0^2$）：
+\[
+I(x;z)=\tfrac14+\tfrac m2\cos\phi\,\cos(2\pi f_0x)+\tfrac{m^2}4\cos^2(2\pi f_0x).
+\]
+第 5 步，讨论：
+\begin{itemize}
+\item $\phi=2\pi n$，即 $\boxed{z_T=\dfrac{2n}{\lambda f_0^2}=\dfrac{2n\Lambda^2}{\lambda}}$（$\Lambda=1/f_0$）：复振幅与 $z=0$ 完全相同（\textbf{Talbot 自成像}）。
+\item $\phi=\pi(2n+1)$，即 $z=\dfrac{(2n+1)}{\lambda f_0^2}$：$\cos$ 项变号，等于原图样\textbf{平移半个周期}（反衬自成像）。
+\item $\phi=\pi/2$，即 $z=\dfrac{1}{2\lambda f_0^2}$：$I=\frac14+\frac{m^2}{4}\cos^2(2\pi f_0x)$，基频消失，条纹频率加倍、对比度很低。
+\end{itemize}
+\textbf{数值}：$\Lambda=0.1$ mm，$\lambda=0.5\,\mu$m：$z_T=\dfrac{2\times(10^{-4})^2}{0.5\times10^{-6}}$ m $=0.04$ m $=40$ mm；20 mm 处为平移半周期的像。
+傍轴检查：$\lambda f_0=0.5\times10^{-3}/0.1=5\times10^{-3}\ll1$ \checkmark。
+\end{exam}
+
+\needspace{6\baselineskip}\noindent\textbf{【适配 / 变式】}
+\begin{enumerate}
+\item \textbf{任意周期结构}（周期 $\Lambda$，谐波 $u_n=n/\Lambda$）：第 $n$ 级相位 $\pi\lambda zn^2/\Lambda^2$。$z_T=2\Lambda^2/\lambda$ 时都是 $2\pi n^2$ 的整数倍 $\Rightarrow$ 自成像；$z=\Lambda^2/\lambda$ 时相位 $\pi n^2$，因子 $(-1)^n$ 等于平移 $\Lambda/2$。结论与余弦光栅相同。
+\item \textbf{相位光栅} $t=\ee^{i\varphi_0\cos(2\pi f_0x)}$：$z=0$ 时强度均匀；在 $z_T/4$ 处出现强度条纹（相位变振幅）。小相位时 $t\approx1+i\varphi_0\cos$，套例 1 把 $\frac m2$ 换成 $i\varphi_0$：$I\approx1+2\varphi_0\sin\phi\cos(2\pi f_0x)$。
+\item \textbf{两束对称平面波} $\ee^{i2\pi u_0x}+\ee^{-i2\pi u_0x}$：两项 $H$ 相同，干涉条纹 $\cos^2(2\pi u_0x)$ \textbf{不随 $z$ 变}（SIM 照明条纹稳定的原因）；不对称的两束（如 $u=0$ 与 $u_0$）条纹会随 $z$ 平移。
+\item \textbf{单个斜平面波} $\ee^{i2\pi u_0x}$：只多一个常数相位，强度不变——平面波传播后还是平面波。
+\item \textbf{亚波长周期}（$\Lambda<\lambda$，$u_0>1/\lambda$）：$H=\exp\!\left[-kz\sqrt{(\lambda u_0)^2-1}\right]$ 指数衰减。例：$\Lambda=0.4\,\mu$m，$\lambda=0.5\,\mu$m，$\lambda u_0=1.25$，衰减到 $1/\ee$ 的距离 $\dfrac{1}{k\sqrt{1.25^2-1}}=\dfrac{\lambda}{2\pi\times0.75}\approx0.11\,\mu$m——比波长还细的结构传不出去，这是衍射极限的根源。
+\item \textbf{$\lambda u$ 不够小}：用严格 $H=\ee^{ikz\sqrt{1-\lambda^2u^2}}$，Talbot 距离要按严格相位差算，不再是 $2\Lambda^2/\lambda$。
+\end{enumerate}
+
+\begin{warn}[角谱题易错]
+\begin{enumerate}
+\item 传递函数作用在\textbf{频谱}上，不是直接乘在 $U(x)$ 上；对 $\ee^{i2\pi u_nx}$ 这种单频项，才可以直接乘 $H(u_n)$。
+\item $\cos$ 拆开后每项系数是 $\frac m4$，合回去才是 $\frac m2\cos$。
+\item 常数 $\ee^{ikz}$ 对所有分量相同，可以提出来；$\ee^{-i\pi\lambda zu^2}$ 各分量不同，绝不能扔。
+\end{enumerate}
+\end{warn}
+
+\needspace{8\baselineskip}\section{常见孔径的夫琅禾费图样（直接套用）}\label{sec:aperturepatterns}
+\begin{formula}{孔径 $\to$ 远场强度（$u=x/\lambda z$ 或 $x/\lambda f$）}\ix{单缝衍射}\ix{矩孔衍射}\ix{圆孔衍射}\ix{双缝}
+\par\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}P{3.6cm}P{6.6cm}P{5.4cm}@{}}
+\toprule
+孔径 & 强度 $I(u,v)$（未归一化）& 特征尺寸\\ \midrule
+单缝 宽 $a$ & $a^2\sinc^2(au)$ & 中央亮纹半宽 $x_1=\lambda z/a$\\
+矩孔 $a\times b$ & $a^2b^2\sinc^2(au)\sinc^2(bv)$ & 两方向分别 $\lambda z/a$、$\lambda z/b$\\
+圆孔 直径 $D$ & $\left(\frac{\pi D^2}{4}\right)^2\left[\frac{2J_1(\pi D\rho)}{\pi D\rho}\right]^2$ & 艾里斑半径 $1.22\lambda z/D$\\
+双缝 宽 $a$、间距 $d$ & $4a^2\sinc^2(au)\cos^2(\pi du)$ & 条纹间距 $\lambda z/d$\\
+$N$ 缝 & $a^2\sinc^2(au)\dfrac{\sin^2(N\pi du)}{\sin^2(\pi du)}$ & 主极大 $u=m/d$，相邻主极大间 $N-1$ 个零点\\
+余弦光栅 $\frac12+\frac m2\cos2\pi f_0x$ & 三个点：$u=0$（$\frac14$），$u=\pm f_0$（$\frac{m^2}{16}$） & $\pm1$ 级位置 $x=\pm\lambda zf_0$\\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\subsection{题型 D：求孔径的远场图样}\label{sec:fraunrecipe}
+\textbf{【题型】}“波长 $\lambda$ 的平面波照射某孔径（缝、双缝、矩孔、圆孔、光栅），在 $z$ 远处 / 透镜焦面上观察：写出强度分布，求暗纹/亮纹位置、中央亮纹宽度、条纹数，并作图。”[F1-p49–51, p64]
+
+\begin{recipe}{远场图样六步}\label{rcp:fraun}
+\begin{enumerate}
+\item \textbf{写透过率}：用 $\rect$、$\circf$、$\delta$ 的乘积/卷积表示孔径（多个相同单元 = 单元 $\conv$ 一组 $\delta$）。
+\item \textbf{求频谱}：查变换对表（§\ref{sec:pairs}），用缩放、平移、卷积定理（§\ref{sec:props}）。
+\item \textbf{换坐标}：$u=\dfrac{x}{\lambda z}$，$v=\dfrac{y}{\lambda z}$（透镜焦面：$z\to f$；角度：$u=\sin\theta/\lambda$）。
+\item \textbf{写强度}：$I(x,y)=\dfrac{1}{\lambda^2z^2}\Big|T\Big(\dfrac{x}{\lambda z},\dfrac{y}{\lambda z}\Big)\Big|^2$，常数可写成 $I_0$。
+\item \textbf{特征位置}：$\sinc$ 零点 $au=m\ (m\ne0)$ $\Rightarrow x=m\lambda z/a$；$\cos^2(\pi du)$ 极大 $du=m\Rightarrow x=m\lambda z/d$；艾里斑 $x=1.22\lambda z/D$。
+\item \textbf{检查条件}：$z\gg\pi a^2/\lambda$ 或用了透镜；需要时作图（横轴标 $x$ 或 $u$，标零点、主极大）。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{例 2：单缝与双缝——完整解}\label{ex:slit}
+\textbf{题}：$\lambda=0.5\,\mu$m，(a) 宽 $a=0.1$ mm 的单缝；(b) 两条这样的缝，中心距 $d=0.3$ mm。屏在 $z=1$ m。求强度分布、暗纹位置、中央包络内亮纹数。
+
+\textbf{(a) 单缝}：$t(x_1)=\rect(x_1/a)$。
+\[
+T(u)=\int_{-a/2}^{a/2}\ee^{-i2\pi ux_1}\dd x_1=\frac{\ee^{-i\pi ua}-\ee^{i\pi ua}}{-i2\pi u}=\frac{\sin(\pi au)}{\pi u}=a\sinc(au).
+\]
+$I(x)=\dfrac{a^2}{\lambda^2z^2}\sinc^2\!\Big(\dfrac{ax}{\lambda z}\Big)$。暗纹 $\dfrac{ax}{\lambda z}=m$：$x_m=\dfrac{m\lambda z}{a}=m\times\dfrac{0.5\times10^{-6}\times1}{10^{-4}}$ m $=5m$ mm（$m=\pm1,\pm2,\ldots$）。
+中央亮纹全宽 $2\lambda z/a=10$ mm，其他亮纹宽 5 mm。
+条件：$\pi(a/2)^2/\lambda=\pi\times(5\times10^{-5})^2/(5\times10^{-7})\approx1.6$ cm $\ll1$ m \checkmark。
+
+\textbf{(b) 双缝}：$t(x_1)=\rect(x_1/a)\conv\big[\delta(x_1-\tfrac d2)+\delta(x_1+\tfrac d2)\big]$。
+由卷积定理和 $\F\{\delta(x-x_0)\}=\ee^{-i2\pi ux_0}$：
+\[
+T(u)=a\sinc(au)\big(\ee^{-i\pi du}+\ee^{i\pi du}\big)=2a\sinc(au)\cos(\pi du),\qquad
+I\propto4a^2\sinc^2(au)\cos^2(\pi du).
+\]
+\begin{itemize}
+\item 干涉亮纹（$\cos^2$ 极大）：$du=m\Rightarrow x=m\lambda z/d=1.67m$ mm；
+\item 包络零点（$\sinc^2$）：$au=\pm1\Rightarrow x=\pm5$ mm，即 $u=\pm1/a=\pm3/d$，第 $\pm3$ 级亮纹恰好落在零点上\textbf{缺级}；
+\item 中央包络内亮纹：$m=0,\pm1,\pm2$，共 $5$ 条（一般公式：$d/a$ 为整数时 $2d/a-1$ 条）。
+\end{itemize}
+\end{exam}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[width=13cm,height=4.6cm,axis lines=left,xmin=-3.6,xmax=3.6,ymin=0,ymax=4.4,
+  xlabel={$au$},ylabel={$I$（归一化 $a^2$）},xtick={-3,-2,-1,0,1,2,3},ytick={0,4},
+  every axis x label/.style={at={(current axis.right of origin)},anchor=west},
+  tick label style={font=\scriptsize},label style={font=\small}]
+\addplot[domain=-3.5:3.5,samples=400,blue,thick]{4*(sin(deg(pi*x))/(pi*x))^2*(cos(deg(pi*3*x)))^2};
+\addplot[domain=-3.5:3.5,samples=400,red,dashed]{4*(sin(deg(pi*x))/(pi*x))^2};
+\node[font=\scriptsize,red] at (axis cs:1.55,2.4){包络 $4\sinc^2(au)$};
+\node[font=\scriptsize,blue] at (axis cs:-2.2,1.6){$d=3a$：$au=\pm1$ 处缺第 $\pm3$ 级};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{exam}{例 3：圆孔（艾里斑）}
+\textbf{题}：直径 $D=2$ mm 的圆孔，$\lambda=0.5\,\mu$m，紧贴焦距 $f=100$ mm 的透镜，求焦面艾里斑半径。
+
+\textbf{解}：$t=\circf\big(\frac{r_1}{D/2}\big)$，$T(\rho)=\dfrac{\pi D^2}{4}\cdot\dfrac{2J_1(\pi D\rho)}{\pi D\rho}$，$\rho=\dfrac{r}{\lambda f}$。
+第一暗环 $\pi D\rho=3.832\Rightarrow D\rho=1.22\Rightarrow r_1=1.22\dfrac{\lambda f}{D}=1.22\times\dfrac{0.5\times10^{-3}\text{ mm}\times100\text{ mm}}{2\text{ mm}}=0.0305$ mm $=30.5\,\mu$m。
+角半径 $\theta_1=1.22\lambda/D=3.05\times10^{-4}$ rad。艾里斑内集中约 84\% 的能量。
+\end{exam}
+
+\needspace{6\baselineskip}\noindent\textbf{【适配 / 变式】}（都从“六步”出发，只改第 1–2 步）
+\begin{enumerate}
+\item \textbf{孔不在中心}（平移 $x_0$）：$T\to T\,\ee^{-i2\pi ux_0}$，\textbf{强度不变}，图样仍以光轴为中心。
+\item \textbf{斜入射照明}（入射角 $\theta_0$，孔上多一个 $\ee^{i2\pi u_0x_1}$，$u_0=\sin\theta_0/\lambda$）：$T(u)\to T(u-u_0)$，整个图样平移到 $x=\lambda zu_0=z\sin\theta_0$，即几何光线方向。
+\item \textbf{孔放大 $M$ 倍}：$t(x_1/M)\to|M|T(Mu)$，图样缩小 $M$ 倍、中心变亮（一维孔中心强度 $\propto M^2$，二维孔 $\propto M^4$）。
+\item \textbf{矩孔 / 二维可分离}：两个方向各套一维结果相乘；$x$ 方向宽 $a$ 决定 $x$ 方向条纹宽 $\lambda z/a$（窄的方向衍射得宽）。
+\item \textbf{$N$ 缝 / 二维阵列}：单元频谱 $\times$ 阵列因子 $\sum_n\ee^{-i2\pi(u\Delta x_n+v\Delta y_n)}$ [F1-p64]；$N$ 缝：$\dfrac{\sin(N\pi du)}{\sin(\pi du)}$，主极大强度 $\propto N^2$，主极大宽度 $\propto1/N$。
+\item \textbf{余弦振幅光栅}：只有 0、$\pm1$ 三个亮点，强度比 $1:\frac{m^2}{4}:\frac{m^2}{4}$，位置 $x=0,\pm\lambda zf_0$；乘有限孔径 $L$ 后每个点变成宽 $\lambda z/L$ 的 $\sinc^2$ 斑（第 \ref{ch:math} 章例题）。
+\item \textbf{互补屏（巴比涅原理）}：挡板与孔互补，两者夫琅禾费强度除中心点外相同。
+\end{enumerate}
+
+\begin{warn}[远场图样易错]
+\begin{enumerate}
+\item $\sinc(x)=\frac{\sin\pi x}{\pi x}$，零点在整数处；若写成 $\frac{\sin x}{x}$，零点在 $m\pi$——换坐标前先确认用的是哪种。
+\item 缝宽 $a$ 是\textbf{全宽}，$\rect(x/a)$ 的零点 $u=1/a$；艾里斑公式里 $D$ 是\textbf{直径}。
+\item 频率 $u$ 的单位是 mm$^{-1}$，乘 $\lambda z$（长度$^2$）才回到屏上位置 mm；$\lambda$ 记得换成 mm（$0.5\,\mu$m $=5\times10^{-4}$ mm）。
+\item 双缝的 $\cos^2(\pi du)$ 来自两个 $\delta$ 的频谱 $2\cos(\pi du)$，强度要平方。
+\end{enumerate}
+\end{warn}

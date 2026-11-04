@@ -1,0 +1,723 @@
+\chapter{视光学}\label{ch:visual}
+
+\begin{idea}[视光学的考法]
+视光学按“计算 + 画图”准备：
+\textbf{屈光度加减}（眼、眼镜、透镜组）、\textbf{三种放大率}、\textbf{孔径光阑 / 入瞳 / 出瞳的判断与作图}、
+\textbf{角分辨率与 CPD / 视力换算}、\textbf{CSF 与 MTF}、\textbf{gamma 计算}、\textbf{像素采样的频谱}。
+其中后几项和傅里叶光学直接相连（人眼 = 一个成像系统 + 一个采样器 + 一个低通滤波器）。
+\end{idea}
+
+\begin{warn}[{本章的符号约定 [VO-p30,31,35,36]}]
+\textbf{高斯约定}：物距 $l$、像距 $l'$ 都取\textbf{正值表示实物、实像}（物在透镜左边、像在透镜右边）；虚像 $l'<0$（像和物在同一侧），虚物 $l<0$。
+会聚透镜 $f>0$，发散透镜 $f<0$。屈光度（光焦度）$\Phi=1/f$，\textbf{$f$ 必须用米}，单位 D $=$ m$^{-1}$。
+空气中写 $\Phi_{\text{物}}=1/l$、$\Phi_{\text{像}}=1/l'$。物方空气、像方折射率 $n'$ 时，改写为 $\Phi_{\text{像}}=n'/l'$ [VO-p30]。
+课件 p31、p35 的图用放大率大小 $|\beta|=|l'/l|$、$|\gamma|=1/|\beta|$；本章用带符号的像高和光线倾角，倒像 $\beta<0$。入射、出射倾角均以向右光轴为基准，向上偏转为正；轴向坐标 $Z_o,Z_i$ 也向右为正，位移比 $\alpha=\dd Z_i/\dd Z_o$ [VO-p36]。
+\end{warn}
+
+\needspace{8\baselineskip}\section{薄透镜、放大率、基点}
+\begin{formula}{高斯公式与三种放大率（课件约定：$l,l'$ 取正 = 实物、实像）}\ix{高斯公式}\ix{横向放大率}\ix{角放大率}\ix{纵向放大率}
+\[
+\frac1l+\frac1{l'}=\frac1f\qquad\Longleftrightarrow\qquad\Phi_{\text{物}}+\Phi_{\text{像}}=\Phi\quad(\Phi=1/\text{距离，单位 D=m}^{-1})
+\]
+空气薄透镜的牛顿形式：$(l-f)(l'-f)=f^2$，两侧焦距均用上式的 $f$。
+\par\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}lll@{}}
+\toprule
+横向（垂轴）放大率 & $\beta=\dfrac{y'}{y}=-\dfrac{l'}{l}$ & [VO-p30,31]\\
+角放大率（有向角） & $\gamma=\dfrac{\tan u'}{\tan u}=-\dfrac{l}{l'}=\dfrac1\beta$ & [VO-p35]\\
+纵向（轴向）放大率 & $\alpha=\dfrac{\dd Z_i}{\dd Z_o}=\beta^2$ & [VO-p36]\\
+关系（同一介质） & $\beta=\alpha\gamma$ & [VO-p37]\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+物像方折射率为 $n,n'$ 时，傍轴关系为 $\alpha=(n'/n)\beta^2$、$\gamma=(n/n')/\beta$，仍有 $\beta=\alpha\gamma$。
+同一介质的纵向放大率 $=\beta^2$ 正是 4f 偏离补偿题 $x_2=M^2x_1$ 的几何解释（§\ref{sec:4foffset}）。
+\end{formula}
+
+\subsection{题型：单个薄透镜成像（求像的位置、大小、正倒、虚实）}\label{sec:lensimg}
+\textbf{【题型】}“物高 $y$、物距 $l$，焦距 $f$（或屈光度 $\Phi$）的透镜，求像距、放大率、像的性质”；或反过来“要在某处成像，透镜需要多少度”。
+
+\textbf{【完整推导】}（每一步都可以照抄）
+\begin{enumerate}
+\item 统一单位：距离全部换成\textbf{米}，才能和 D 相加减。依据：$\Phi=1/f[\text{m}]$。
+\item 写聚散度：$\Phi_{\text{物}}=\dfrac1l$。依据：高斯公式左边第一项。
+\item 求像方聚散度：$\Phi_{\text{像}}=\Phi-\Phi_{\text{物}}$。依据：$\Phi_{\text{物}}+\Phi_{\text{像}}=\Phi$（成像只是\textbf{加减法} [VO-p49]）。
+\item 像距 $l'=1/\Phi_{\text{像}}$。$l'>0$：实像，在透镜右侧；$l'<0$：虚像，在透镜左侧（与物同侧）距离 $|l'|$。
+\item 横向放大率 $\beta=-\dfrac{l'}{l}$（带符号）：$\beta<0$ 倒立，$\beta>0$ 正立；$|\beta|>1$ 放大。依据：过光心的光线不偏折，两个相似三角形 $\dfrac{|y'|}{|y|}=\dfrac{|l'|}{|l|}$ [VO-p31]。
+\item 像高 $y'=\beta y$；角放大率 $\gamma=1/\beta$，纵向放大率 $\alpha=\beta^2$（永远为正：物沿轴往右移，像也往右移）。
+\end{enumerate}
+
+\textbf{纵向放大率的推导 [VO-p30,36]}：固定透镜位置，$l$ 向左量、$l'$ 向右量，故 $\dd l=-\dd Z_o$、$\dd l'=\dd Z_i$。对 $1/l+1/l'=1/f$ 微分，得 $\dd l'/\dd l=-l'^2/l^2$，因此
+\[
+\alpha=\frac{\dd Z_i}{\dd Z_o}=-\frac{\dd l'}{\dd l}=\frac{l'^2}{l^2}=\beta^2.
+\]
+一般介质下由 $n/l+n'/l'=\Phi$、$\beta=-nl'/(n'l)$ 同样得到 $\alpha=(n'/n)\beta^2$。
+
+\begin{exam}{答题模板：薄透镜成像}
+\textbf{解}：取高斯约定（实物、实像距离为正）。已知 $l=\underline{\quad}$ m，$\Phi=1/f=\underline{\quad}$ D。\\
+由 $\Phi_{\text{物}}+\Phi_{\text{像}}=\Phi$：$\Phi_{\text{像}}=\Phi-\dfrac1l=\underline{\quad}$ D，故 $l'=\dfrac1{\Phi_{\text{像}}}=\underline{\quad}$ m（$>0$ 实像在透镜后 / $<0$ 虚像在透镜前）。\\
+横向放大率 $\beta=-\dfrac{l'}{l}=\underline{\quad}$，像高 $y'=\beta y=\underline{\quad}$（倒立/正立，放大/缩小）。
+\end{exam}
+
+\begin{exam}{数值例：$f=+10$ cm 的透镜，物高 2 cm}
+(a) $l=30$ cm：$\Phi=10$ D，$\Phi_{\text{物}}=3.33$ D，$\Phi_{\text{像}}=6.67$ D，$l'=15$ cm（实像）；$\beta=-15/30=-0.5$，像高 $-1$ cm（倒立缩小）。\\
+(b) $l=5$ cm（物在焦内，放大镜）：$\Phi_{\text{物}}=20$ D，$\Phi_{\text{像}}=10-20=-10$ D，$l'=-10$ cm（虚像在透镜前 10 cm）；$\beta=-(-10)/5=+2$，像高 $+4$ cm（正立放大虚像）。\\
+(c) 换成 $f=-10$ cm（$-10$ D），$l=30$ cm：$\Phi_{\text{像}}=-10-3.33=-13.33$ D，$l'=-7.5$ cm（虚像）；$\beta=+0.25$（正立缩小）。发散透镜对实物永远成正立缩小虚像。
+\end{exam}
+
+\textbf{【适配/变式】}
+\begin{itemize}
+\item \textbf{物在无穷远}：$\Phi_{\text{物}}=0\Rightarrow l'=f$（像在焦面）。像大小用角度算：$y'=f\tan\theta$（$\theta$ 为物对透镜的张角）。
+\item \textbf{物在焦点上}：$\Phi_{\text{像}}=0\Rightarrow l'=\infty$，出射平行光（放大镜、准直）。
+\item \textbf{虚物}（会聚光射来，若无透镜会聚到透镜后 $s$ 处）：$l=-s$，$\Phi_{\text{物}}=-1/s$，其余照算。
+\item \textbf{反求透镜}：要物距 $l$ 成像到 $l'$：$\Phi=\dfrac1l+\dfrac1{l'}$（虚像代负值）。这就是配眼镜的计算（\pageref{sec:correct}套路）。
+\item \textbf{物像方折射率不同}（如眼内为 $n'$）：$\dfrac{1}{l}+\dfrac{n'}{l'}=\Phi$，像方聚散度写成 $n'/l'$；放大率 $\beta=-\dfrac{l'}{n'l}$。
+\end{itemize}
+
+\begin{formula}{透镜组与屈光度}\ix{屈光度}\ix{透镜组}\ix{光焦度}
+\[
+\Phi=\Phi_1+\Phi_2-d\,\Phi_1\Phi_2,\qquad f=\frac{f_1f_2}{f_1+f_2-d}
+\]
+密接（$d=0$）：$\Phi=\Phi_1+\Phi_2$。凸透镜 $f=20$ cm $\Rightarrow+5$ D；凹透镜 $f=-20$ cm $\Rightarrow-5$ D。\\
+眼镜“度数” $=$ 屈光度 $\times100$（$-3$ D $=$ 300 度近视）。
+\end{formula}
+
+\subsection{题型：两片透镜（透镜组）——等效光焦度或逐次成像}\label{sec:lenscombo}
+\textbf{【推导】组合光焦度公式}（跟踪一条平行于轴、高度 $h_1$ 的光线）：
+\begin{enumerate}
+\item 过透镜 1 后光线的倾角（向轴偏折）$u_1=h_1\Phi_1$。依据：薄透镜把高度 $h$ 的平行光偏折 $h/f$，使其射向焦点。
+\item 走过间距 $d$ 后高度 $h_2=h_1-d\,u_1=h_1(1-d\Phi_1)$。
+\item 过透镜 2 后倾角 $u_2=u_1+h_2\Phi_2=h_1[\Phi_1+\Phi_2-d\Phi_1\Phi_2]$。依据：薄透镜对任意入射光线的偏折量都是 $h\Phi$。
+\item 等效光焦度定义为“入射平行光高度 $h_1$ $\to$ 出射倾角”：$\Phi=u_2/h_1=\Phi_1+\Phi_2-d\Phi_1\Phi_2$。
+\item 后截距（透镜 2 到像方焦点）$\mathrm{BFL}=h_2/u_2=\dfrac{1-d\Phi_1}{\Phi}$；等效焦距 $f=1/\Phi$ 从像方主面量起，主面 H$'$ 在透镜 2 左边 $f-\mathrm{BFL}=\dfrac{d\Phi_1}{\Phi}$ 处。
+\end{enumerate}
+
+\begin{recipe}{逐次成像法（任何多透镜题都适用，最不容易错）}
+\begin{enumerate}
+\item 第 1 片：照 §\ref{sec:lensimg} 求 $l_1'$、$\beta_1$。
+\item 第 1 片的像就是第 2 片的物：$l_2=d-l_1'$。$l_2>0$ 实物（像在第 2 片左边）；$l_2<0$ 虚物（$l_1'>d$，光还没会聚就进了第 2 片）。
+\item 第 2 片：再求 $l_2'$、$\beta_2$。
+\item 总放大率 $\beta=\beta_1\beta_2$，总像高 $y'=\beta y$。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例：$f_1=+10$ cm、$f_2=+20$ cm，相距 $d=15$ cm，物在第 1 片前 30 cm}
+第 1 片：$l_1'=15$ cm，$\beta_1=-0.5$。第 2 片：$l_2=15-15=0$？物恰在第 2 片上 $\Rightarrow$ 像也在第 2 片上，$\beta_2=1$（贴着透镜的物不被它改变）。\\
+改 $d=25$ cm：$l_2=25-15=10$ cm，$\Phi_{\text{像}}=5-10=-5$ D，$l_2'=-20$ cm（虚像在第 2 片前 20 cm），$\beta_2=-(-20)/10=+2$；总 $\beta=-1$（倒立等大虚像）。\\
+等效光焦度（$d=25$ cm）：$\Phi=10+5-0.25\times10\times5=2.5$ D，$f=40$ cm。
+\end{exam}
+
+\begin{formula}{基点：焦点 F/F$'$、主点 H/H$'$、节点 N/N$'$}\ix{基点}\ix{主点}\ix{节点}\ix{有效焦距 EFL}
+\begin{itemize}
+\item 主面：横向放大率 $+1$ 的一对共轭面；光线在 H 面上的高度 = 从 H$'$ 面出射的高度。\textbf{EFL 从主面量起}，不是从顶点。
+\item 节点：射向 N 的光线从 N$'$ 以\textbf{相同方向}射出（角放大率 $+1$）。物像方折射率相同时 N$\equiv$H，N$'$$\equiv$H$'$。
+\item 焦点和主点的位置见 [VO-p39,41]。此处用有向焦距 $f_o=\overline{HF}$、$f_i=\overline{H'F'}$（向右为正）：$f_o=-n/\Phi$、$f_i=n'/\Phi$，所以 $-f_i/f_o=n'/n$。节点满足 $\overline{HN}=f_o+f_i$ [VO-p44,45]。空气会聚系统中 $f_o=-f$、$f_i=f$，与前面高斯公式的 $f>0$ 对应。
+\item 作图三条线：平行轴入射 $\to$ 在 H$'$ 折向 F$'$；过 F 入射 $\to$ 自 H$'$ 平行出射；射向 N $\to$ 自 N$'$ 平行出射。
+\end{itemize}
+\end{formula}
+
+\begin{recipe}{画图题：已知基点，作出某物点的像 [VO-p41,44]}\ix{画图题!基点作图}
+\begin{enumerate}
+\item 画光轴，按比例标出 F、H、H$'$、F$'$（有节点就标 N、N$'$）。H、H$'$ 之间光线\textbf{水平平移}（不画实际折射）。
+\item 光线①：物点平行于轴射到 \textbf{H$'$ 面}（高度不变穿过 H、H$'$），从 H$'$ 折向 F$'$。
+\item 光线②：物点经 F 射到 \textbf{H 面}，从 H$'$ 平行于轴射出（高度与在 H 面上相同）。
+\item 光线③（可选，校核）：物点射向 N，从 N$'$ 射出，方向与入射\textbf{平行}。
+\item 两条出射光线交点即像点；若出射光线发散，反向延长（虚线）交于虚像。标出像高与像距（从 H$'$ 量）。
+\end{enumerate}
+\end{recipe}
+
+\begin{center}
+\begin{tikzpicture}[x=0.55cm,y=0.55cm,>=Stealth,font=\scriptsize]
+\draw[->] (-8,0)--(10,0) node[right]{光轴};
+\draw[thick,gray] (0,-2.2)--(0,3) node[above]{H}; \draw[thick,gray] (1,-2.2)--(1,3) node[above]{H$'$};
+\fill (-3,0) circle (2pt) node[below]{F}; \fill (4,0) circle (2pt) node[below]{F$'$};
+\draw[->,very thick,blue] (-6,0)--(-6,1.5) node[above]{物 $y$};
+\draw[red,thick] (-6,1.5)--(0,1.5)--(1,1.5)--(9,-2.5); \node[red] at (-3,1.85){①};
+\draw[red!60!black,thick,dashed] (-6,1.5)--(-3,0)--(0,-1.5)--(1,-1.5)--(9,-1.5); \node[red!60!black] at (-4.8,1.25){②};
+\draw[->,very thick,blue] (7,0)--(7,-1.5) node[below]{像 $y'$};
+\draw[<->] (0,-2.6)--(-3,-2.6) node[midway,below]{$|f_o|$}; \draw[<->] (1,-2.6)--(4,-2.6) node[midway,below]{$f_i$};
+\end{tikzpicture}
+
+{\scriptsize 例图：$f_o=-3$，$f_i=3$，物距 6（从 H 量），像距 6（从 H$'$ 量），$\beta=-1$。}
+\end{center}
+
+\needspace{8\baselineskip}\section{人眼的光学参数}
+\begin{formula}{Gullstrand 模型眼数据（从角膜顶点量，mm）}\ix{人眼!参数}\ix{模型眼}
+\par\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+物方焦点 F & $-15.707$ & 有向物方焦距 $f_o$ & $-17.055$\\
+物方主点 H & $1.348$ & 有向像方焦距 $f_i$ & $+22.785$\\
+像方主点 H$'$ & $1.602$ & 总光焦度 & $\frac{n'}{f_i}=\frac1{|f_o|}=58.6$ D（约 60 D）\\
+节点 N / N$'$ & $7.078$ / $7.332$ & 角膜 / 晶状体 & 约 40 D / 20 D（晶状体可调）\\
+视网膜 & $24.4$（眼轴约 24 mm） & 玻璃体 $n'$ & $1.336$\\
+角膜 $n$ & $1.376$ & 晶状体 $n$ & 1.386（皮质）~1.406（核）\\
+瞳孔 & 亮 2–3 mm，暗 7 mm & 瞳距 PD & 约 63 mm\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+简化眼：$\dfrac1s+\dfrac{n'}{s'}=\dfrac1f$（$f$ 为空气中等效焦距 $\approx16.7$ mm）。
+\textbf{视网膜像大小}：$y'\approx\theta\cdot\overline{N'R}\approx\theta\times17$ mm（$\theta$ 为物对节点张角，弧度）。
+$1^\circ\to0.29$ mm，$1'\to4.9\,\mu$m。中央凹视锥间距约 2.5 $\mu$m（峰值密度约 $1.5\times10^5$/mm$^2$）。
+\end{formula}
+
+\subsection{题型：视网膜像有多大 / 眼要调节多少}\label{sec:retimg}
+\textbf{【推导】}
+\begin{enumerate}
+\item 射向物方节点 N 的光线从 N$'$ 以\textbf{同样的角度}射出（节点的定义，[VO-p44]）。
+\item 所以物对 N 的张角 $\theta$ = 像对 N$'$ 的张角。物高 $y$、物到 N 的距离 $L_N$（$\approx$ 到角膜距离 $+7$ mm，远处可忽略）：$\tan\theta=y/L_N$。
+\item 像在视网膜上，N$'$ 到视网膜 $\overline{N'R}=24.4-7.33=17.07$ mm，所以 $y'=\overline{N'R}\tan\theta\approx17\text{ mm}\times\theta$。像是倒立的。
+\item 换算：$1^\circ=0.01745$ rad $\Rightarrow0.298$ mm；$1'=2.909\times10^{-4}$ rad $\Rightarrow4.96\,\mu$m（约等于 2 个视锥间距）。
+\end{enumerate}
+\textbf{调节量}：眼的像距（眼轴）固定，看近物要增大光焦度。简化眼 $\Phi_{\text{物}}+\Phi_{\text{像}}=\Phi_{\text{眼}}$：看无穷远 $\Phi_{\text{眼}}=\Phi_{\text{像}}\approx60$ D；看 $l$ 处需 $\Phi_{\text{眼}}=60+1/l$。所以“看 25 cm 要调节 4 D”，“看 $l$ 米要调节 $1/l$ D”。
+
+\begin{exam}{数值例}
+(a) 身高 1.75 m 的人站在 10 m 外：$\theta=0.175$ rad，视网膜像 $17\times0.175=2.98$ mm（倒立）。\\
+(b) 满月张角约 $0.5^\circ$：像 $0.5\times0.298=0.15$ mm。\\
+(c) 视力 1.0 能分辨 $1'$：对应视网膜上 $4.96\,\mu$m $\approx$ 两个视锥间距（一黑一白各占一个视锥，与采样定理一致，见 §\ref{sec:cpd}）。\\
+(d) 在 40 cm 处看书：调节 $1/0.4=2.5$ D，眼光焦度 $\approx62.5$ D。
+\end{exam}
+
+\needspace{8\baselineskip}\section{屈光不正与矫正}\label{sec:ametropia}
+\begin{formula}{远点、近点、调节幅度}\ix{远点}\ix{近点}\ix{调节幅度}\ix{近视}\ix{远视}\ix{老花}
+用“物方聚散度” $V=1/\text{物距}$（m$^{-1}$）描述：
+\begin{itemize}
+\item 远点 $V_{\text{远}}$：放松时看清的最远处；近点 $V_{\text{近}}$：最大调节时看清的最近处。
+\item 调节幅度 $A=V_{\text{近}}-V_{\text{远}}$（单位 D）。正常青年眼：$V_{\text{远}}=0$（无穷远），近点 20–25 cm（4–5 D）。
+\item 近视：眼轴变长 $\Rightarrow$ 远点、近点整体往近处移（$V_{\text{远}}>0$），$A$ 不变。
+\item 远视：整体往“比无穷远还远”移（$V_{\text{远}}<0$，远点是眼后的虚物点）。
+\item 老花：$V_{\text{远}}$ 不变，$A$ 变小（晶状体调节能力下降）。
+\item 散光：两个方向（子午、弧矢）的屈光度不同，像不能聚成一点。
+\end{itemize}
+\end{formula}
+
+\begin{idea}[{一张图看懂：调节范围是一根“条带”[VO-p88]}]
+横轴是物方聚散度 $V$（0 D = 无穷远，5 D = 20 cm）。眼能看清的物，$V$ 落在一根长度为 $A$ 的条带 $[V_{\text{远}},\,V_{\text{远}}+A]$ 上。
+正常眼：$[0,5]$。近视：整根右移（$[2,7]$ 表示远点 50 cm、近点 14 cm）。远视：整根左移（$[-2,3]$：看无穷远也要调节 2 D，近点只到 33 cm）。老花：左端不动，条带变短（$[0,1]$：近点 1 m）。
+\textbf{戴眼镜 = 把条带平移}：镜片光焦度 $\Phi_L$ 把物方聚散度从 $V$ 变成 $V-\Phi_L$（近似贴眼）。
+\end{idea}
+
+\subsection{题型：由眼的参数求远点、近点（屈光不正有多少度）}\label{sec:farpoint}
+\textbf{【推导】}（简化眼，像方折射率 $n'=1.336$，眼轴即像距 $s'$）
+\begin{enumerate}
+\item 成像条件：$\Phi_{\text{物}}+\dfrac{n'}{s'}=\Phi_{\text{眼}}$。依据：$\Phi_{\text{物}}+\Phi_{\text{像}}=\Phi$，像方在折射率 $n'$ 的介质中，像方聚散度写成 $n'/s'$ [VO-p30,87]。
+\item 远点（放松，$\Phi_{\text{眼}}=\Phi_0$）：$V_{\text{远}}=\Phi_0-\dfrac{n'}{s'}$。近点（最大调节，$\Phi_{\text{眼}}=\Phi_0+A$）：$V_{\text{近}}=V_{\text{远}}+A$。
+\item $V>0$：实物点在眼前 $1/V$ 处；$V<0$：远点是眼后 $1/|V|$ 处的虚物点（远视）。
+\item 屈光不正度数 = $-V_{\text{远}}$（矫正需要的贴眼镜片光焦度，见下一题型）。
+\end{enumerate}
+\begin{exam}{数值例：轴性近视}
+正视眼 $\Phi_0=60$ D，眼轴 $s'=n'/\Phi_0=1.336/60=22.27$ mm。若眼轴长 1 mm（23.27 mm）：$n'/s'=1.336/0.02327=57.41$ D，$V_{\text{远}}=60-57.41=2.59$ D，远点 $1/2.59=38.6$ cm，即约 $-2.6$ D（260 度）近视。\textbf{结论：眼轴每长 1 mm 约近视 2.5–3 D。}\\
+若 $A=4$ D：近点 $V_{\text{近}}=6.59$ D，即 15.2 cm（近视眼看得更近）。
+\end{exam}
+
+\begin{recipe}{求矫正镜片的屈光度}\label{sec:correct}\ix{矫正镜片}
+原则：镜片把\textbf{无穷远}成像到\textbf{眼的远点}上。
+\begin{enumerate}
+\item 近视，远点在眼前 $r$ 处：镜片紧贴眼（隐形眼镜）$\Phi=-\dfrac1r$；框架眼镜离眼 $d$：$\Phi=-\dfrac{1}{r-d}$。
+\item 远视，远点在眼后 $r$ 处（虚）：$\Phi=+\dfrac1r$（贴眼）或 $+\dfrac{1}{r+d}$（离眼 $d$）。
+\item 老花阅读附加（Add）：要在距离 $p$ 处看书，需要 $1/p$ 的调节；可用调节 $A$（常留一半储备）。$\text{Add}=\dfrac1p-A$（再加上远用处方）。
+\end{enumerate}
+例：近视远点 50 cm，隐形眼镜 $-2$ D（200 度）；框架眼镜距眼 12 mm：$-1/0.488=-2.05$ D。
+例：60 岁正视眼 $A=1$ D，在 25 cm 读书：Add $=4-1=+3$ D。
+\end{recipe}
+
+\textbf{【矫正公式的推导】}（近视、框架镜）
+\begin{enumerate}
+\item 眼放松时只能看清远点处的物，所以镜片必须把无穷远物（$\Phi_{\text{物}}=0$）的像成在远点处。
+\item 远点在眼前 $r$、镜片在眼前 $d$，远点在镜片\textbf{前方}（物方一侧）$r-d$ 处 $\Rightarrow$ 是虚像，$l'=-(r-d)$。
+\item 高斯公式：$\Phi_L=\dfrac1\infty+\dfrac1{l'}=-\dfrac{1}{r-d}$。
+\item 远视：远点在眼后 $r$，在镜片后方 $r+d$ 处 $\Rightarrow$ 实像侧，$l'=+(r+d)$，$\Phi_L=+\dfrac{1}{r+d}$。
+\item 框架镜与隐形镜换算（同一只眼）：$\Phi_{\text{贴眼}}=\dfrac{\Phi_{\text{框架}}}{1-d\,\Phi_{\text{框架}}}$。验证：$\Phi_{\text{框架}}=-\frac1{r-d}$ 代入得 $-\frac1r$。高度近视（$-10$ D，$d=12$ mm）：贴眼 $=-10/1.12=-8.93$ D，差 1 D，必须考虑；低度数（$<4$ D）差别可忽略。
+\end{enumerate}
+
+\begin{exam}{答题模板：配近视镜}
+\textbf{解}：远点 $r=\underline{\quad}$ m（眼前），镜眼距 $d=\underline{\quad}$ m。镜片应使无穷远物成虚像于远点，即像距 $l'=-(r-d)$。
+由高斯公式 $\Phi_L=\dfrac1\infty+\dfrac1{l'}=-\dfrac1{r-d}=\underline{\quad}$ D，即约 $\underline{\quad}$ 度近视镜。
+戴镜后近点：眼的条带 $[V_{\text{远}},V_{\text{远}}+A]$ 平移 $\Phi_L$ 变成 $[0,A]$，近点 $1/A=\underline{\quad}$ m。
+\end{exam}
+
+\subsection{题型：戴镜后能看清的范围、老花与渐进镜片}\label{sec:presby}
+\textbf{【推导】}（镜片近似贴眼）物在镜片前 $l$ 处，镜片成虚像在前方 $l_v$ 处：$\dfrac1l+\dfrac1{-l_v}=\Phi_L\Rightarrow\dfrac1{l_v}=\dfrac1l-\Phi_L$。眼看到的是这个虚像，要求 $V_{\text{远}}\le\dfrac1{l_v}\le V_{\text{远}}+A$，所以
+\[
+\boxed{V_{\text{远}}+\Phi_L\ \le\ \frac1l\ \le\ V_{\text{远}}+A+\Phi_L}
+\]
+\textbf{整根条带右移 $\Phi_L$}（正镜片）或左移（负镜片）。
+
+\begin{exam}{数值例}
+(a) 老花：正视眼（$V_{\text{远}}=0$），$A=1$ D，戴 $+2$ D 阅读镜：$2\le1/l\le3$，看清 33–50 cm；看不清远处（所以要“老花镜摘戴”或用渐进镜）。\\
+(b) 近视又老花：远点 50 cm（$V_{\text{远}}=2$），$A=1$ D。不戴镜看清 $[2,3]$ D 即 33–50 cm（读书刚好，“近视的人老花晚”的原因）；戴 $-2$ D 远用镜：$[0,1]$，看清 1 m 到无穷远，读书要摘镜或镜片下部加 Add。\\
+(c) 渐进镜片：上部远用处方，下部远用处方 $+$Add，中间连续过渡 [VO-p89]。在 (b) 中要在 33 cm 读书：需要的条带右端 $\ge3$ D，戴远用镜后右端为 1 D，Add $=3-1=+2$ D，下部光焦度 $=-2+2=0$ D。
+\end{exam}
+
+\begin{warn}[屈光不正题易错]
+\begin{itemize}
+\item 距离必须换成\textbf{米}再取倒数；cm 直接取倒数会差 100 倍。
+\item 近视眼 $V_{\text{远}}>0$ 但\textbf{矫正镜片是负的}；“近视 300 度” = $-3$ D 镜片 = 远点 33 cm。
+\item 框架眼镜要减镜眼距 $d$（近视 $r-d$，远视 $r+d$），高度数时不能忽略。
+\item 老花不改远点，只缩短条带；近视不改条带长度，只平移。
+\end{itemize}
+\end{warn}
+
+\begin{formula}{眼镜处方（Sph / Cyl / Axis / Add / PD）}\ix{眼镜处方}\ix{散光!处方}
+Sph：球镜屈光度（$+$远视、$-$近视）；Cyl：柱镜屈光度（散光）；Axis：柱镜轴向（度）；Add：近用附加；PD：瞳距。
+\begin{itemize}
+\item 某子午方向 $\theta$ 的屈光度：$\Phi(\theta)=\text{Sph}+\text{Cyl}\cdot\sin^2(\theta-\text{Axis})$。沿轴向为 Sph，垂直轴向为 Sph+Cyl。
+\item 处方换算（正负柱镜互换）：$(S,C,a)\equiv(S+C,\ -C,\ a\pm90^\circ)$。
+\item 等效球镜：$S+C/2$。
+\end{itemize}
+例：$+1.75\,/-0.75\times87$：$87^\circ$ 方向 $+1.75$ D，$177^\circ$ 方向 $+1.00$ D。
+\end{formula}
+
+\subsection{题型：读处方、散光的两个主子午线}\label{sec:rx}
+\textbf{【推导】}
+\begin{enumerate}
+\item 柱镜只在一个方向弯曲：沿\textbf{柱轴}方向是平的（光焦度 0），垂直柱轴方向光焦度为 Cyl。
+\item 与柱轴成 $\varphi$ 角的子午线上，柱镜的光焦度为 $\text{Cyl}\sin^2\varphi$（$\varphi=0$ 为 0，$\varphi=90^\circ$ 为 Cyl）。
+\item 加上各方向相同的球镜 Sph：$\Phi(\theta)=\text{Sph}+\text{Cyl}\sin^2(\theta-\text{Axis})$。两个\textbf{主子午线}：Axis 方向 $=$ Sph，Axis$\pm90^\circ$ 方向 $=$ Sph$+$Cyl。
+\item 换算：$\text{Sph}+\text{Cyl}\sin^2\varphi=(\text{Sph}+\text{Cyl})-\text{Cyl}\cos^2\varphi=(\text{Sph}+\text{Cyl})+(-\text{Cyl})\sin^2(\varphi-90^\circ)$，所以 $(S,C,a)\equiv(S+C,-C,a\pm90^\circ)$。
+\item 等效球镜 $S+C/2$：两条主子午线光焦度的平均，此时最小弥散圆落在视网膜上。
+\end{enumerate}
+
+\begin{exam}{数值例：课件处方 [VO-p94]}
+OD（右眼）$+1.75/-0.75\times87$，Add $+2.00$：$87^\circ$ 方向 $+1.75$ D，$177^\circ$ 方向 $+1.00$ D；正柱镜写法 $+1.00/+0.75\times177$；等效球镜 $+1.375$ D。近用：两主子午线各加 2，变成 $+3.75$ / $+3.00$ D。\\
+OS（左眼）$+1.50/-1.00\times170$：$170^\circ$ 方向 $+1.50$，$80^\circ$ 方向 $+0.50$；换算 $+0.50/+1.00\times80$；等效球镜 $+1.00$ D。\\
+PD 33 / 32 是单眼瞳距，合计 65 mm。“175 度远视、75 度散光，轴 87°”就是 OD 的口语说法。
+\end{exam}
+\begin{idea}[{散光眼看十字 [VO-p93]}]
+两个主子午线的光焦度不同，平行光会聚成前后两条\textbf{焦线}（子午焦线、弧矢焦线），中间是最小弥散圆。
+在一条焦线处，与该焦线同方向的线条清晰、垂直的线条模糊。两焦线的轴向距离 = 像散差，对应屈光度差 $|\text{Cyl}|$。
+\end{idea}
+
+\needspace{8\baselineskip}\section{放大镜与目视仪器}
+\begin{formula}{放大镜、望远镜、出瞳匹配}\ix{放大镜}\ix{望远镜}\ix{出瞳!匹配}\ix{适眼距}
+\begin{itemize}
+\item 放大镜（明视距离 $D_0=250$ mm，课件 [VO-p88] 也用 20 cm/5 D）：像在无穷远 $M=\dfrac{D_0}{f}$；像在明视距离 $M=1+\dfrac{D_0}{f}$。
+\item 眼睛看虚像：人眼是会聚系统，在视网膜上仍成\textbf{实像}；虚像只是方便分析的“物” [VO-p55,56]。
+\item 望远镜：角放大率 $M=-\dfrac{f_o}{f_e}$；出瞳直径 $D'=\dfrac{D_o}{|M|}$；出瞳应与眼瞳重合、且 $\ge$ 眼瞳（暗处 7 mm）才不变暗；目镜最后一面到出瞳的距离 = 适眼距 eye relief [VO-p84–86]。
+\item Maxwellian view：光会聚到瞳孔中心再散开，视网膜上的图案与调节无关（视网膜投影）[VO-p57]。
+\end{itemize}
+\end{formula}
+
+\subsection{题型：放大镜的放大率}\label{sec:magnifier}
+\textbf{【关键概念】}目视仪器比的是\textbf{视网膜像大小}，即\textbf{张角}，所以用\textbf{角放大率} $M=\theta'/\theta_0$：$\theta'$ 是用仪器时像对眼的张角，$\theta_0$ 是不用仪器、把物放在明视距离 $D_0$ 处裸眼看的张角（§\ref{sec:retimg}：视网膜像 $\approx17$ mm $\times$ 张角）。
+
+\textbf{【推导】}（放大镜紧贴眼，物高 $y$）
+\begin{enumerate}
+\item 裸眼最好的情况：物放在明视距离，$\theta_0=y/D_0$。
+\item 像在无穷远（眼放松）：物放在焦点上，出射平行光，$\theta'=y/f$。所以 $M=\dfrac{\theta'}{\theta_0}=\dfrac{D_0}{f}=D_0\Phi$。
+\item 像在明视距离（眼最大调节）：虚像距 $l'=-D_0$，由 $\dfrac1l-\dfrac1{D_0}=\dfrac1f$ 得 $\dfrac1l=\dfrac1f+\dfrac1{D_0}$；$\theta'=\dfrac yl=y\left(\dfrac1f+\dfrac1{D_0}\right)$，所以 $M=\dfrac{D_0}f+1$。
+\end{enumerate}
+\begin{exam}{数值例与变式}
+$f=50$ mm（20 D）的放大镜：像在无穷远 $M=250/50=5\times$；像在明视距离 $M=6\times$。\\
+\textbf{变式 1}：课件用 $D_0=20$ cm 时 $M=\Phi/5$（20 D $\to4\times$）。答题时写明所用 $D_0$。\\
+\textbf{变式 2}：问“物应放在哪”：像在无穷远时物在焦点（50 mm）；像在 250 mm 时 $1/l=20+4=24$ D，物在 41.7 mm。\\
+\textbf{变式 3}：放大镜离眼 $e$ 时，像在无穷远的 $M=D_0/f$ 不变（平行光与 $e$ 无关）；像在有限远时 $M$ 随 $e$ 变化，按“像对眼的张角”重新算。
+\end{exam}
+
+\subsection{题型：望远镜（角放大率、出瞳、适眼距、亮不亮）}\label{sec:telescope}
+\textbf{【推导】}（开普勒望远镜：物镜 $f_o$、目镜 $f_e$，间距 $f_o+f_e$，物镜框是孔径光阑）
+\begin{enumerate}
+\item 远物张角 $\theta$，物镜在后焦面成中间实像，高 $y_1=-f_o\theta$（倒立）。
+\item 中间像在目镜前焦面，目镜出射平行光，张角 $\theta'=y_1/f_e=-\dfrac{f_o}{f_e}\theta$。所以 $M=\dfrac{\theta'}{\theta}=-\dfrac{f_o}{f_e}$（负号 = 倒像）。
+\item \textbf{出瞳} = 孔径光阑（物镜框）经其后方元件（目镜）所成的像。物镜在目镜前 $l=f_o+f_e$：$\dfrac1{l'}=\dfrac1{f_e}-\dfrac1{f_o+f_e}=\dfrac{f_o}{f_e(f_o+f_e)}$，所以 $l'=\dfrac{f_e(f_o+f_e)}{f_o}$（目镜后方的实像，就是\textbf{适眼距}，略大于 $f_e$）。
+\item 出瞳大小：放大率 $l'/l=f_e/f_o$，所以 $D'=D_o\dfrac{f_e}{f_o}=\dfrac{D_o}{|M|}$。
+\item 亮度条件：眼瞳放在出瞳处；若 $D'<$ 眼瞳，系统出瞳成为限光孔径，像变暗 [VO-p84]。
+\end{enumerate}
+\begin{exam}{数值例：$8\times42$ 双筒（$f_o=160$ mm，$f_e=20$ mm，物镜口径 42 mm）}
+$M=-160/20=-8$；出瞳 $42/8=5.25$ mm；适眼距 $20\times180/160=22.5$ mm。
+白天眼瞳 2–3 mm $<5.25$，亮度足够；夜间眼瞳 7 mm $>5.25$，偏暗。要夜间不暗需 $D_o\ge7\times8=56$ mm（$8\times56$）。\\
+\textbf{变式}：伽利略望远镜（目镜为负透镜，$f_e<0$）：$M=-f_o/f_e>0$，正像，间距 $f_o+f_e=f_o-|f_e|$；出瞳是虚像在镜筒内，眼瞳无法放到出瞳处，视场小。
+\end{exam}
+
+\needspace{8\baselineskip}\section{光阑与光瞳（画图题重点）}\label{sec:stops}
+\begin{formula}{定义}\ix{孔径光阑}\ix{入瞳}\ix{出瞳}\ix{视场光阑}\ix{入射窗}\ix{渐晕}\ix{主光线}\ix{边缘光线}
+\par\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{3cm}P{12.6cm}@{}}
+\toprule
+孔径光阑 & 限制\textbf{轴上点}光束大小的实际光孔（相机光圈）\\
+入瞳 / 出瞳 & 孔阑经其\textbf{前方}元件（逆光路）所成的像 / 经其\textbf{后方}元件所成的像；三者互为共轭\\
+主光线 C.R. & 过孔阑中心（因而过入瞳、出瞳中心）的光线\\
+边缘光线 M.R. & 轴上点发出、过孔阑边缘（入瞳、出瞳边缘）的光线\\
+视场光阑 & 限制\textbf{主光线}角度（成像范围）的光孔；其物方、像方像为入射窗、出射窗\\
+视场角 FOV & 入瞳中心对入射窗边缘的张角\\
+NA / $F/\#$ & $\mathrm{NA}=n\sin\theta$（轴上物点对\textbf{入瞳}边缘的半角）；$F/\#=f/D_{\text{入瞳}}$\\
+渐晕 & 轴外点的光束不能充满入瞳，轴外像变暗\\
+\bottomrule
+\end{tabular}
+\end{formula}
+
+\begin{idea}[{为什么要“逆向成像”？[VO-p67–69]}]
+入射光看到的不是 $D_2$ 本身，而是\textbf{透过前面的透镜看到的 $D_2$}——就像隔着放大镜看东西，看到的是放大的虚像。
+一条光线只要在物空间射向 $D_2'$（$D_2$ 的逆向像）的边缘，经过透镜后就一定擦过 $D_2$ 的边缘（物像共轭）。
+所以把所有光孔都“搬”到物空间再比较，就是在同一个空间里比谁挡光最狠（木桶效应）。
+\end{idea}
+
+\begin{recipe}{判断孔径光阑（木桶效应）}\ix{孔径光阑!判断方法}
+\begin{enumerate}
+\item 把每个光孔\textbf{逆向}通过它\textbf{前方}（物方一侧）的所有元件成像到物空间；最前面的光孔就是它自己。
+\item 从\textbf{轴上物点}看这些像，算张角 $\tan\theta_i=\dfrac{h_i}{d_i}$（$h_i$ 像的半径，$d_i$ 物点到像的距离）。
+\item \textbf{张角最小}者对应的光孔是孔径光阑，它的像就是入瞳。
+\item 视场光阑：从\textbf{入瞳中心}看其余光孔的像，张角最小者。
+\item 注意：结论与物点位置有关；不能直接比较实际孔径大小。
+\end{enumerate}
+\textbf{逆向成像的计算}：光孔在透镜后 $a$ 处（$a<f$），逆向看透镜成正立放大虚像，位于透镜后 $a'=\dfrac{af}{f-a}$ 处，半径放大 $\dfrac{f}{f-a}$ 倍。
+\end{recipe}
+
+\textbf{【逆向成像公式的推导】}（光孔在透镜\textbf{后方} $a$ 处，半径 $h$）
+\begin{enumerate}
+\item 把光反过来走：光孔是“物”，光从右往左射向透镜，物距 $a$（实物，取正）。
+\item 高斯公式 $\dfrac1a+\dfrac1{a''}=\dfrac1f\Rightarrow a''=\dfrac{af}{a-f}$。
+\item $a<f$：$a''<0$，虚像，和光孔在\textbf{同一侧}（透镜后方），距透镜 $\dfrac{af}{f-a}$，正立，半径 $h\cdot\dfrac{|a''|}{a}=h\dfrac{f}{f-a}$（放大）。
+\item $a>f$：$a''>0$，实像在透镜\textbf{前方}（物空间）$\dfrac{af}{a-f}$ 处，倒立，半径 $h\dfrac{f}{a-f}$。
+\item $a=f$：该光孔逆向成像到无穷远。它作为孔径光阑时，\textbf{入瞳在无穷远，物方主光线平行光轴，系统物方远心}；孔半径 $h$ 给出傍轴接收半角 $\theta\approx h/f$。依据入瞳及主光线定义 [VO-p72,74,76]。
+\item 光孔在透镜\textbf{前方}（它前面没有别的元件）：不用成像，就是它自己。
+\item 多片透镜：从光孔开始，向左一片一片逆向成像，每次把上一次的像当物。
+\end{enumerate}
+
+\begin{exam}{薄透镜 $D_1$（直径 40 mm，$f=100$ mm），其后 50 mm 处光孔 $D_2$（直径 24 mm），物在透镜前 300 mm}
+$D_2$ 逆向成像：$a'=\frac{50\times100}{100-50}=100$ mm（透镜后 100 mm，虚像），直径 $24\times2=48$ mm。\\
+张角：$D_1$：$\tan\theta_1=\frac{20}{300}=0.0667$；$D_2'$：$\tan\theta_2=\frac{24}{300+100}=0.060$。$\theta_2<\theta_1$，\textbf{$D_2$ 是孔径光阑}，入瞳是 $D_2'$（透镜后 100 mm，直径 48 mm）。
+出瞳就是 $D_2$ 本身（后面没有元件）。若物移到 150 mm：$\frac{20}{150}=0.133$ 对 $\frac{24}{250}=0.096$，仍是 $D_2$。
+\end{exam}
+
+\begin{exam}{同一例的完整答案（续）：NA、像距、校核、视场光阑}
+\textbf{像距}：$\frac1{l'}=\frac1{100}-\frac1{300}$，$l'=150$ mm。\\
+\textbf{NA}（空气 $n=1$）：$\sin\theta=\dfrac{24}{\sqrt{400^2+24^2}}=0.0599$，NA $\approx0.060$。\\
+\textbf{校核}（证明 $D_2$ 确实挡光）：物空间边缘光线射向 $D_2'$ 边缘 $(400,24)$，到透镜处高度 $24\times\frac{300}{400}=18$ mm $<20$（$D_1$ 不挡）；过透镜后射向像点 $(150,0)$，斜率 $18/150=0.12$，在 $D_2$ 处高度 $18-0.12\times50=12$ mm，恰好擦过 $D_2$ 边缘。\\
+\textbf{视场光阑}：从入瞳中心（透镜后 100 mm）看 $D_1$：$\tan\omega=20/100=0.2$，半视场 $11.3^\circ$，FOV $\approx22.6^\circ$；$D_1$ 是视场光阑，入射窗就是 $D_1$ 本身。
+\end{exam}
+
+\begin{center}
+\begin{minipage}{\linewidth}
+\centering
+\begin{tikzpicture}[x=0.032cm,y=0.06cm,>=Stealth]
+\draw[->] (-320,0)--(175,0) node[right,font=\scriptsize]{光轴};
+\draw[thick,fill=blue!10] (0,0) ellipse (3 and 20); \node[above,font=\scriptsize] at (0,21){$D_1$};
+\draw[very thick] (50,12)--(50,26); \draw[very thick] (50,-12)--(50,-26); \node[above,font=\scriptsize] at (50,26){$D_2$（孔阑、出瞳）};
+\draw[dashed,green!50!black,thick] (100,24)--(100,30); \draw[dashed,green!50!black,thick] (100,-24)--(100,-30); \node[right,font=\scriptsize,green!50!black] at (100,30){入瞳 $D_2'$};
+\fill (-300,0) circle (1.2); \node[below,font=\scriptsize] at (-300,0){物点};
+\fill (150,0) circle (1.2); \node[below,font=\scriptsize] at (150,0){像点};
+\draw[red] (-300,0)--(0,18); \draw[red,dashed] (0,18)--(100,24);
+\draw[red] (0,18)--(50,12)--(150,0);
+\draw[blue,thick,dotted] (-300,0)--(0,20)--(50,13.3); \node[blue,font=\scriptsize] at (50,13.3){$\times$};
+\node[font=\scriptsize,red] at (-170,17){边缘光线（指向入瞳边缘）};
+\end{tikzpicture}
+
+{\scriptsize 实线：边缘光线，物空间指向入瞳 $D_2'$ 边缘，过透镜后恰擦过 $D_2$ 边缘到像点；点线：指向 $D_1$ 边缘的光线，过透镜后会被 $D_2$ 挡住。}
+\end{minipage}
+\end{center}
+
+\subsection{题型：孔径光阑随物距改变（临界物距）、物在无穷远}\label{sec:stopswitch}
+\textbf{【推导】}同一系统，物距 $L$ 变化时比较 $\tan\theta_1=\dfrac{h_1}{L+z_1}$ 与 $\tan\theta_2=\dfrac{h_2}{L+z_2}$（$z_i$ 为各光孔像在透镜后方的位置，在前方取负）。令两者相等得\textbf{临界物距}：
+\[
+\frac{h_1}{L+z_1}=\frac{h_2}{L+z_2}\ \Rightarrow\ L^*=\frac{h_1z_2-h_2z_1}{h_2-h_1}
+\]
+上例：$h_1=20,z_1=0$；$h_2=24,z_2=100$：$L^*=\dfrac{2000}{4}=500$ mm。$L<500$ mm 时 $D_2$ 是孔阑；$L>500$ mm 时 $D_1$ 是孔阑。\\
+\textbf{物在无穷远}：所有光线平行入射，张角比较变成\textbf{比较各光孔像的半径 $h_i$}，最小者为孔阑。上例 $20<24$，$D_1$ 是孔阑，入瞳就是 $D_1$（40 mm），$F/\#=f/D_{\text{入瞳}}=100/40=2.5$。
+
+\begin{warn}[光阑题易错]
+\begin{itemize}
+\item 不能凭实际孔径大小判断（$D_2=24<40$ 不代表它是孔阑，要看它的像 48 mm 在哪里）。
+\item NA、$F/\#$ 都用\textbf{入瞳}（不是孔阑本身）的尺寸和位置算 [VO-p73]。
+\item 物距变了要重新判断，题目给两个物距时多半就是考这个。
+\item 张角从\textbf{轴上物点}量（孔阑）；视场光阑的张角从\textbf{入瞳中心}量。
+\end{itemize}
+\end{warn}
+
+\begin{recipe}{画图题：画主光线和边缘光线 [VO-p77,80–82]}\ix{画图题!光阑}
+\begin{enumerate}
+\item 先算出入瞳、出瞳的位置和大小，画在图上（虚线表示是像）。
+\item \textbf{边缘光线}（轴上物点）：物空间射向\textbf{入瞳边缘}；实际在系统内擦过孔阑边缘；像空间从\textbf{出瞳边缘}射向轴上像点。两条（上下）夹角 = 2 倍孔径角（定 NA）。
+\item \textbf{主光线}（视场边缘物点）：物空间射向\textbf{入瞳中心}；系统内穿过孔阑中心、擦过视场光阑边缘；像空间从出瞳中心射向像点。上下两条在入瞳中心的夹角 = FOV。
+\item 物空间部分画实线到第一片元件；指向入瞳的延长线画虚线（入瞳若在元件后方，延长线穿过元件画成虚线）。
+\item 标注：孔阑、入瞳、出瞳、视阑、NA、FOV。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例：相机视场角（视场光阑 = 传感器）}
+物在无穷远，孔阑贴着透镜，传感器在焦面上，视场光阑就是传感器边框（也是出射窗）。半视场 $\omega$ 满足 $\tan\omega=y'_{\max}/f$。
+全画幅 $36\times24$ mm（对角线 43.3 mm），$f=50$ mm：对角 FOV $=2\arctan\frac{21.6}{50}=46.8^\circ$；水平 FOV $=2\arctan\frac{18}{50}=39.6^\circ$。$f$ 越长视场越小。
+\end{exam}
+
+\needspace{8\baselineskip}\section{人眼的空间分辨}\label{sec:cpd}
+\begin{formula}{角分辨率、CPD、PPD、视力}\ix{CPD}\ix{PPD}\ix{视力}\ix{Snellen}\ix{小数视力}\ix{视网膜屏}
+\begin{itemize}
+\item \textbf{1 CPD = 2 PPD}（一周期 = 一黑一白两个像素）。用角度不用 mm$^{-1}$：视网膜像只由张角决定，与物距无关 [VO-p119,120]。
+\item 像素间距 $p$、观看距离 $L$：单像素张角 $\approx p/L$ rad；$\mathrm{PPD}=\dfrac{\pi L}{180p}$，$\mathrm{CPD}=\mathrm{PPD}/2$。
+\item 例：326 ppi（$p=78\,\mu$m），$L=254$ mm：像素张角 $3.07\times10^{-4}$ rad $=1.06'$，约 57 PPD $\approx$ 28–30 CPD，相当于 20/20 视力（“Retina Display”）。
+\item 小数视力 $V=\dfrac{1}{\alpha_{\min}[\text{角分}]}$，Snellen 分数 $=\dfrac{\text{测试距离}}{\text{标准观察者看清该行的距离}}$，数值相等：20/20 $=1.0$（$1'$，30 CPD）；20/40 $=0.5$（$2'$，15 CPD）；20/200 $=0.1$。E 字母高 $5'$，笔画 $1'$。
+\item 一般截止 30 CPD（60 PPD，$1'$），最高可达 50–60 CPD；CSF 峰值 5–10 CPD。
+\end{itemize}
+\end{formula}
+
+\subsection{题型：屏幕的 PPD / CPD，是不是“视网膜屏”}\label{sec:screencpd}
+\textbf{【推导】}
+\begin{enumerate}
+\item 像素间距 $p$：由 ppi 换算 $p=\dfrac{25.4\text{ mm}}{\text{ppi}}$（1 英寸 $=25.4$ mm）。
+\item 单像素对眼的张角（小角近似）：$\delta=\dfrac pL$ rad $=\dfrac pL\cdot\dfrac{180}{\pi}$ 度。精确写法 $2\arctan\dfrac{p}{2L}$，$p\ll L$ 时相同 [VO-p119]。
+\item 每度像素数 $\mathrm{PPD}=\dfrac{1}{\delta[\text{度}]}=\dfrac{\pi L}{180\,p}$。
+\item 一个周期要一黑一白两个像素（采样定理：每周期至少 2 个采样），所以屏幕能显示的最高频率 $\mathrm{CPD}=\mathrm{PPD}/2$。
+\item 与人眼比较：$\mathrm{CPD}\ge30$（$\delta\le1'$）即达到 1.0 视力的分辨极限，“看不出像素”。
+\end{enumerate}
+
+\begin{exam}{答题模板}
+\textbf{解}：像素间距 $p=25.4/\text{ppi}=\underline{\quad}$ mm，观看距离 $L=\underline{\quad}$ mm。单像素张角 $\delta=p/L=\underline{\quad}$ rad $=\underline{\quad}'$。
+$\mathrm{PPD}=\pi L/(180p)=\underline{\quad}$，$\mathrm{CPD}=\mathrm{PPD}/2=\underline{\quad}$。
+与人眼 30 CPD（$1'$）比较：$\ge30$ 则看不出像素结构（视网膜屏），否则可见。
+\end{exam}
+
+\textbf{【适配/变式与数值例】}
+\begin{itemize}
+\item \textbf{反求“视网膜距离”}：要 $\delta=1'=2.909\times10^{-4}$ rad，$L=\dfrac{p}{2.909\times10^{-4}}=3438\,p$。326 ppi：$L=3438\times0.078=268$ mm，比这更远就看不出像素。
+\item \textbf{反求所需 ppi}：距离 $L$ 处要 60 PPD，$p=L\times2.909\times10^{-4}$。电视 3 m：$p=0.87$ mm（约 29 ppi 就够）；手机 25 cm：$p=73\,\mu$m（约 350 ppi）。
+\item \textbf{VR / 近眼显示}（看的是虚像，直接用视场角）：$\mathrm{PPD}=\dfrac{\text{水平像素数}}{\text{水平视场角（度）}}$。2000 像素铺满 $100^\circ$：20 PPD $=10$ CPD，等效视力 $10/30\approx0.33$。要达到 1.0 需 $60\times100=6000$ 像素。
+\item \textbf{等效视力}：$V=\mathrm{CPD}/30$（因为 1.0 $\leftrightarrow$ 30 CPD）。
+\end{itemize}
+
+\subsection{题型：视力表换算（小数视力、Snellen、角分、CPD、视标大小）}\label{sec:acuity}
+\textbf{【换算链】}最小可分辨的\textbf{一笔}（一黑或一白）张角 $\alpha_{\min}$（角分）：
+\[
+V_{\text{小数}}=\frac{1}{\alpha_{\min}}=\text{Snellen 分数的值}=\frac{\text{截止 CPD}}{30}
+\]
+\begin{itemize}
+\item 一个周期 = 一黑一白 $=2\alpha_{\min}$，所以截止 $=\dfrac{60}{2\alpha_{\min}}=\dfrac{30}{\alpha_{\min}}$ CPD。
+\item Snellen 20/40：你在 20 ft 刚看清的行，标准观察者在 40 ft 就能看清 [VO-p123] $\Rightarrow$ 你需要 2 倍大的视标，$\alpha_{\min}=2'$，$V=0.5$，15 CPD。
+\item E 字视标高 $5\alpha_{\min}$（3 黑笔画 + 2 白缝，每段 $\alpha_{\min}$）[VO-p124]。
+\end{itemize}
+\begin{exam}{数值例：设计 5 m 视力表}
+$V=1.0$ 行：E 高 $5'$，$h=5000\text{ mm}\times5\times2.909\times10^{-4}=7.27$ mm，笔画 1.45 mm。
+$V=0.1$ 行：$\alpha_{\min}=10'$，E 高 72.7 mm。$V=0.5$：E 高 14.5 mm。\\
+\textbf{变式}：在 2.5 m 测（距离减半），视标也减半；或用原视标，读到的值要乘 1/2（10/20 记作 20/40）。
+\end{exam}
+
+\begin{formula}{眼的衍射极限与视网膜采样（傅里叶光学视角）}\ix{人眼!衍射极限}\ix{人眼!采样}
+瞳孔直径 $D$ 的非相干截止（角频率）：$\nu_c=\dfrac{D}{\lambda}$ 周期/弧度 $=\dfrac{D}{\lambda}\cdot\dfrac{\pi}{180}$ CPD。
+\begin{center}
+\par\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+$D$（$\lambda=555$ nm） & 截止 $\nu_c$ & 艾里斑角半径 $1.22\lambda/D$ & \\ \midrule
+2 mm & 63 CPD & $1.16'$ & 衍射主导\\
+3 mm & 94 CPD & $0.78'$ & 像差与衍射平衡，视力最好\\
+6 mm & 189 CPD & $0.39'$ & 像差主导\\
+\bottomrule
+\end{tabular}
+\end{center}
+视锥间距 $\approx2.5\,\mu$m，对应角度 $2.5/17000$ rad $=0.0084^\circ$，奈奎斯特 $\approx\frac{1}{2\times0.0084}\approx60$ CPD。
+所以：光学截止（3 mm 时约 94 CPD）与采样极限（约 60 CPD）都高于常人的 30 CPD；像差、神经处理进一步限制。
+\end{formula}
+
+\subsection{题型：人眼的光学截止频率与视锥采样极限}\label{sec:eyediff}
+\textbf{【推导】}（把眼当成第 \ref{ch:imaging} 章的非相干成像系统）
+\begin{enumerate}
+\item 圆形光瞳直径 $D$，像方距离 $z_i$，像面上非相干截止 $\rho_c=\dfrac{D}{\lambda z_i}$（周期/mm，相干截止的 2 倍）。
+\item 换成角频率：像面上 1 mm 对应张角 $1/z_i$ rad，所以每弧度周期数 $\nu_c=\rho_c z_i=\dfrac{D}{\lambda}$——\textbf{与眼的焦距无关}，只看瞳孔和波长。（眼内介质 $n'$ 会把 $\lambda$ 和 $z_i$ 同时缩小 $n'$ 倍，结果不变。）
+\item 换成 CPD：$1^\circ=\pi/180$ rad，$\nu_c[\text{CPD}]=\dfrac{D}{\lambda}\cdot\dfrac{\pi}{180}$。
+\item 瑞利分辨角 $1.22\lambda/D$ rad，乘 $3438$ 换成角分。
+\item 采样极限：视锥中心距 $s$ 对应张角 $s/\overline{N'R}$（$\overline{N'R}\approx17$ mm），采样率 $=1/(\text{张角[度]})$，奈奎斯特频率是它的一半。
+\end{enumerate}
+\begin{exam}{数值例（$\lambda=555$ nm）}
+$D=3$ mm：$\nu_c=\dfrac{3\times10^{-3}}{555\times10^{-9}}=5405$ 周期/rad $\times0.01745=94.3$ CPD；瑞利角 $2.26\times10^{-4}$ rad $=0.78'$。\\
+视锥 $s=2.5\,\mu$m：$2.5\times10^{-3}/17=1.47\times10^{-4}$ rad $=0.00843^\circ$，采样率 119 个/度，奈奎斯特 59 CPD。\\
+\textbf{结论}（简答题用）：光学截止（94）$>$ 采样极限（60）$>$ 常人视力（30 CPD）。超过 60 CPD 的光学信号会混叠，但眼的像差使高频 MTF 很低，实际混叠很弱。
+\textbf{变式}：瞳孔 3 mm $\to$ 6 mm，衍射截止翻倍，但球差按 $D^4$ 增大 16 倍、彗差按 $D^3$ 增大 8 倍、离焦按 $D^2$ 增大 4 倍 [VO-p96]，视力反而不提高。
+\end{exam}
+
+\begin{formula}{对比敏感度函数 CSF}\ix{CSF}\ix{对比敏感度}
+CSF $=1/$阈值对比度，随空间频率变化：
+\begin{itemize}
+\item 亮度 CSF：\textbf{带通}，峰值约 2–10 CPD（敏感度约 100–500），高频截止约 50–60 CPD；低频下降来自神经侧抑制，高频下降来自光学与视锥密度。
+\item 色度 CSF（红绿、黄蓝）：\textbf{低通}，截止约 3 CPD / 1.5 CPD $\Rightarrow$ 色度子采样、子像素渲染的依据 [VO-p109,131,132]。
+\item 亮度越高、视场越大，CSF 峰值越高且向高频移；暗视觉截止约 10 CPD [VO-p127]。
+\item 时间 CSF：高照度为带通，峰值 15–20 Hz，临界闪烁频率 CFF 约 60 Hz；CRT 需 75–85 Hz 以上 [VO-p134,174]。
+\end{itemize}
+\end{formula}
+
+\begin{recipe}{MTF 与 CSF 联立求“人眼能看到的最高频率”}\ix{MTF!与 CSF 联立}\ix{画图题!CSF}
+在同一坐标（横轴空间频率，纵轴对比度）画系统 MTF（单调下降）和 CSF$^{-1}$（阈值对比度，随频率上升）。
+MTF $>$ CSF$^{-1}$ 的频率看得见；\textbf{交点横坐标 = 视觉分辨率}。MTF 越好交点越靠右 [VO-p128]。
+半色调：二值图 $\conv$ 人眼 PSF = 连续灰度（人眼 MTF 低通滤掉高频量化噪声）[VO-p129,173]。
+\end{recipe}
+
+\subsection{画图题：CSF 曲线、MTF 与 CSF$^{-1}$ 联立}\label{sec:mtfcsf}
+\textbf{【为什么交点就是视觉分辨率】}物是满对比度（$K_o=1$）的正弦条纹，系统输出对比度 $K_i=\mathrm{MTF}(f)$（第 \ref{ch:imaging} 章 $K_i=K_o\cdot\mathrm{MTF}$）。人眼在频率 $f$ 处要对比度至少达到阈值 $C_{\text{th}}(f)=1/\mathrm{CSF}(f)$ 才看得见。所以看得见 $\Leftrightarrow\mathrm{MTF}(f)\ge\mathrm{CSF}^{-1}(f)$，边界就是两曲线交点。
+若物本身对比度 $K_o<1$，比较的是 $K_o\cdot\mathrm{MTF}$ 与 $\mathrm{CSF}^{-1}$（MTF 曲线整体下移，交点左移）。
+
+\textbf{【画图步骤】}
+\begin{enumerate}
+\item \textbf{CSF 本身}：双对数坐标，横轴 CPD（0.1–100），纵轴对比敏感度（1–1000）。带通：从低频 $\sim$50 上升，峰值约 300（明视觉，5–10 CPD），高频迅速下降，在约 50–60 CPD 降到 1（截止）。标出峰值频率、截止频率。降亮度：峰值降低、左移，截止降到暗视觉约 10 CPD。
+\item \textbf{联立图}：线性横轴频率（标单位：CPD、lp/mm 或 LW/PH），纵轴对比度 0–1。MTF 从 1 单调下降到截止频率；CSF$^{-1}$ 从约 0.01 缓慢上升、高频陡升。
+\item 标出交点及其横坐标 $f_{\text{vis}}$，写“$f<f_{\text{vis}}$ 可见”。若画两个系统，MTF 高者交点更靠右。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=0.6cm,y=3.4cm,>=Stealth,font=\scriptsize]
+\draw[->] (0,0)--(11,0) node[right]{空间频率 $f$};
+\draw[->] (0,0)--(0,1.12) node[above]{对比度};
+\foreach \y in {0.5,1} \draw (0,\y)--(-0.12,\y) node[left]{\y};
+\draw[blue,thick,domain=0:10,samples=50] plot (\x,{(1-\x/10)^1.5}); \node[blue,right] at (0.9,1.03){系统 MTF$_1$（实线）};
+\draw[blue!50,thick,dashed,domain=0:10.6,samples=50] plot (\x,{(1-\x/14)^1.5}); \node[black] at (6.6,0.74){MTF$_2$（更好，虚线）};
+\draw[black,very thick,dash dot,domain=0:10.6,samples=50] plot (\x,{0.02*exp(0.3*\x)}); \node[right] at (10.6,0.48){CSF$^{-1}$（阈值对比度，点划线）};
+\fill (7.0,0.163) circle (1.6pt); \draw[dotted] (7.0,0.163)--(7.0,0) node[below]{$f_{\text{vis},1}$};
+\fill (8.4,0.249) circle (1.6pt); \draw[dotted] (8.4,0.249)--(8.4,0) node[below]{$f_{\text{vis},2}$};
+\node[black,align=center] at (2.2,0.2){可见：MTF 高于\\CSF$^{-1}$ 曲线};
+\end{tikzpicture}
+\hspace{0.6cm}
+\begin{tikzpicture}[x=1.45cm,y=1.05cm,>=Stealth,font=\scriptsize]
+\draw[->] (-1,0)--(2.05,0) node[right]{CPD};
+\draw[->] (-1,0)--(-1,3.2) node[above]{CSF};
+\foreach \x/\l in {-1/0.1,0/1,1/10,1.778/60} \draw (\x,0)--(\x,-0.08) node[below]{\l};
+\foreach \y/\l in {0/1,1/10,2/100,3/1000} \draw (-1,\y)--(-1.06,\y) node[left]{\l};
+\draw[thick,blue,domain=-1:1.79,samples=70] plot (\x,{log10(300*2.6*(0.0192+0.114*pow(10,\x))*exp(-pow(0.114*pow(10,\x),1.1)))});
+\draw[dotted] (0.9,0)--(0.9,2.47) node[above]{峰值 5–10};
+\node[blue] at (0.1,1.0){带通};
+\end{tikzpicture}
+
+{\scriptsize 左：联立图（交点横坐标 = 视觉分辨率）；右：明视觉亮度 CSF 示意（双对数，截止约 60 CPD）。}
+\end{center}
+
+\needspace{8\baselineskip}\section{强度：动态范围与 gamma}\label{sec:gamma}
+\begin{formula}{sRGB 与 gamma}\ix{gamma}\ix{sRGB}\ix{动态范围}
+灰阶 $C$（0–1）$\to$ 线性亮度：
+\[
+C_{\text{lin}}=\begin{cases}C/12.92,&C\le0.04045\\[2pt]\left(\dfrac{C+0.055}{1.055}\right)^{2.4},&C>0.04045\end{cases}\qquad\text{近似 }C_{\text{lin}}\approx C^{2.2}
+\]
+线性亮度 $\to$ 灰阶：$C=1.055\,C_{\text{lin}}^{1/2.4}-0.055$（$C_{\text{lin}}>0.0031308$），近似 $C_{\text{lin}}^{1/2.2}$。
+\begin{itemize}
+\item \textbf{8 bit 灰阶 128}：$C=128/255=0.502$，$C_{\text{lin}}=0.216$，约为最大亮度的 \textbf{20\%}。
+\item 50\% 灰阶 + 50\% 灰阶：$0.214+0.214=0.428\to$ \textbf{69\%} 灰阶（灰阶不能直接相加，只有亮度能加）[VO-p145]。
+\item 系统 gamma = 拍摄 gamma（$1/2.2$）$\times$ 显示 gamma（2.2）$=1$ [VO-p146]。CRT 本身 $L\propto V^{2.2}$，恰与人眼感知曲线近似互逆。
+\item 人眼感知近似 CIE $L^*=116Y^{1/3}-16$（$Y=0.18$ 时约 50\%）。
+\end{itemize}
+动态范围：人眼全范围 $10^{-6}\sim10^8$ cd/m$^2$（14 个数量级）；某一适应状态约 $10^4:1$；普通显示器约 $10^3:1$；HDR 约 $10^5:1$。晴天室外亮度约 $10^4$ cd/m$^2$（= nit）。
+\end{formula}
+
+\subsection{题型：灰阶与亮度互换、图像相加/平均}\label{sec:gammacalc}
+\textbf{【核心原则】}灰阶（编码值）$\approx$ 感知量，\textbf{不能直接加减平均}；光的叠加、混合、模糊都发生在\textbf{线性亮度}上。所以一切运算走三步 [VO-p144,145]：
+\[
+\text{灰阶}\xrightarrow{\ \text{解码}\ C_{\text{lin}}=f(C)\ }\text{线性亮度}\xrightarrow{\ \text{加/减/平均}\ }\text{线性亮度}\xrightarrow{\ \text{编码}\ C=f^{-1}(C_{\text{lin}})\ }\text{灰阶}
+\]
+\textbf{【计算步骤】}
+\begin{enumerate}
+\item 8 bit 码值 $N$ 先归一化：$C=N/255$。
+\item 解码：$C>0.04045$ 用 $C_{\text{lin}}=\left(\frac{C+0.055}{1.055}\right)^{2.4}$（否则 $C/12.92$）；只要近似时用 $C^{2.2}$。
+\item 在线性亮度上做运算（相加、按面积比例平均、乘透过率等），结果超过 1 则饱和为 1。
+\item 编码回去：$C=1.055\,C_{\text{lin}}^{1/2.4}-0.055$（近似 $C_{\text{lin}}^{1/2.2}$），码值 $N=255C$。
+\end{enumerate}
+\textbf{手算幂次的技巧}（考场无计算器，只能笔算）：$x^{a}=\exp(a\ln x)$；常用值 $\ln0.5=-0.693$，$\ln0.526=-0.642$，$\ln0.25=-1.386$，$\ln0.428=-0.849$；$e^{-1.54}=0.214$，$e^{-0.354}=0.702$，$e^{-0.289}=0.749$。或直接用表：
+\begin{center}\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+灰阶 $C$ & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.735 & 0.8 \\
+线性亮度（sRGB） & 0.010 & 0.033 & 0.073 & 0.133 & 0.214 & 0.319 & 0.500 & 0.604 \\
+线性亮度（$C^{2.2}$） & 0.006 & 0.029 & 0.071 & 0.133 & 0.218 & 0.325 & 0.508 & 0.612 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{exam}{答题模板：两幅图相加}
+\textbf{解}：sRGB 为非线性编码，须在线性亮度上相加。\\
+解码：$C_{\text{lin}}=\left(\frac{0.5+0.055}{1.055}\right)^{2.4}=0.214$；相加：$0.214+0.214=0.428$；\\
+编码：$C=1.055\times0.428^{1/2.4}-0.055=0.686$。故 50\% 灰阶 $+$ 50\% 灰阶 $=$ \textbf{约 69\%} 灰阶（而不是 100\%）。
+\end{exam}
+
+\textbf{【适配/变式与数值例】}
+\begin{itemize}
+\item \textbf{棋盘格 / 半色调远看是什么灰}：黑白像素各半，人眼低通后得到\textbf{平均亮度} $0.5$（不是平均灰阶），编码 $C=1.055\times0.5^{1/2.4}-0.055=0.735$，码值约 \textbf{188}（不是 128）。这就是“128 灰比远看的黑白棋盘暗”的原因。
+\item \textbf{要显示 25\% 亮度用多少灰阶}：$C=1.055\times0.25^{1/2.4}-0.055=0.537$，码值约 137（近似式 $0.25^{1/2.2}=0.533$）。
+\item \textbf{亮度减半}（如加 50\% 透过率的滤光片）：灰阶 $C\to f^{-1}(0.5f(C))$；满白 $1\to0.735$。
+\item \textbf{只用 gamma 2.2 近似}：$0.5^{2.2}=0.218$，$0.436^{1/2.2}=0.686$，结果同样 69\%，答题写明“近似 $\gamma=2.2$”即可。
+\item \textbf{感知亮度（$L^*$）}：$Y=0.18$（18\% 灰卡）$\to L^*=116\times0.18^{1/3}-16=49.5\approx50$，即“中灰”只有 18\% 的亮度。
+\item \textbf{为什么要 gamma 编码}：线性 8 bit 时暗部相邻码值的感知差很大（第一档 0$\to$0.1 感知就跳 0.38）而亮部浪费码值 [VO-p141,142]；gamma 编码让码值在感知上均匀。直接原因是 CRT 的 $L\propto V^{2.2}$ 恰与感知互逆 [VO-p143]。
+\end{itemize}
+
+\begin{exam}{数值例：动态范围}
+对比度 $1000:1$ $=3$ 个数量级 $=\log_2 1000\approx10$ 档（stop）；HDR $10^5:1\approx16.6$ 档；人眼单一适应状态 $10^4:1\approx13.3$ 档，全范围 14 个数量级 $\approx46.5$ 档。
+HD 电视 100 nit / 黑位 0.1 nit $=1000:1$ [VO-p138]。
+\end{exam}
+
+\needspace{8\baselineskip}\section{显示器的采样与重建}\label{sec:display}
+\begin{formula}{像素 = 零阶保持；频谱分析}\ix{零阶保持}\ix{像素!频谱}\ix{混叠}\ix{运动模糊}
+像素间距 $p$（采样周期 = 像素大小）：
+\[
+\tilde f(x)=\Big[f(x)\sum_n\delta(x-np)\Big]\conv\rect\!\left(\frac xp\right)\ \Rightarrow\
+\tilde F(u)=\Big[\sum_mF\!\left(u-\frac mp\right)\Big]\cdot\sinc(pu)
+\]
+\begin{itemize}
+\item 理想重建：矩形低通，截止 $\frac1{2p}$，时域为 sinc 插值（无限长、有负值，物理上做不到）。
+\item 零阶保持：乘 $\sinc(pu)$，在奈奎斯特频率 $\frac1{2p}$ 处衰减到 $\frac2\pi=0.637$；第一零点 $u=\frac1p$；带外有残余镜像。
+\item 人眼是另一个低通：像素足够密时（$\frac{1}{2p}$ 换算成 CPD 远大于 30–60 CPD），零阶保持与理想重建的差别看不出来 [VO-p169]。
+\item 降采样前要先低通（抗混叠），否则高频折叠成低频莫尔纹（zone plate 例子）[VO-p158–160]。
+\item 量化：$n$ bit 共 $2^n$ 级，最大误差半个台阶；位数不够出现伪轮廓 [VO-p171]。
+\item 时间域：CRT $\approx$ 冲激采样；LCD/OLED $\approx$ sample-and-hold。人眼跟踪运动物体时模糊宽度 $\approx v\cdot T_{\text{hold}}$；背光闪烁（blinking）把保持时间缩短到 $A$，模糊变成 $v\cdot A$ [VO-p175–177]。
+\end{itemize}
+\end{formula}
+
+\subsection{题型：推导像素重建（零阶保持）的频谱并画图}\label{sec:zoh}
+\textbf{【完整推导】}
+\begin{enumerate}
+\item \textbf{采样}：$f_s(x)=f(x)\sum_n\delta(x-np)$。依据：冲激串乘信号只保留 $x=np$ 处的值 [VO-p151]。
+\item \textbf{采样的频谱}：$\F\{\sum_n\delta(x-np)\}=\dfrac1p\sum_m\delta\!\left(u-\dfrac mp\right)$（周期 $p$ 的点阵 $\to$ 间隔 $1/p$ 的点阵，F3 表）；乘积 $\to$ 卷积，与 $\delta(u-m/p)$ 卷积就是平移：$F_s(u)=\dfrac1p\sum_mF\!\left(u-\dfrac mp\right)$——\textbf{原频谱以 $1/p$ 为周期复制}。
+\item \textbf{重建（每个采样值撑满一个像素）}：$\tilde f=f_s\conv\rect(x/p)$。依据：与 rect 卷积 = 每个冲激换成一个宽 $p$ 的矩形块 [VO-p166]。
+\item 卷积 $\to$ 乘积，$\F\{\rect(x/p)\}=p\,\sinc(pu)$：$\tilde F(u)=\Big[\sum_mF(u-\tfrac mp)\Big]\sinc(pu)$（$1/p$ 与 $p$ 抵消）。
+\item \textbf{和理想重建比较}：理想是乘 $\rect(pu)$（只留 $m=0$ 一份、带内增益 1）。零阶保持的误差：①带内被 $\sinc(pu)$ 衰减，在 $u=\frac1{2p}$ 处 $\sinc(\frac12)=\frac{\sin(\pi/2)}{\pi/2}=\frac2\pi=0.637$；②带外 $m=\pm1,\dots$ 的复制品没完全去掉，只被 sinc 旁瓣压低（第一零点 $u=1/p$，第一旁瓣约 $-0.217$）[VO-p168]。
+\item 不混叠条件：$F(u)$ 带宽 $B\le\dfrac1{2p}$（奈奎斯特）。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[x=2.1cm,y=1.9cm,>=Stealth,font=\scriptsize]
+\draw[->] (-2.3,0)--(2.4,0) node[right]{$u$};
+\draw[->] (0,-0.35)--(0,1.25);
+\draw[black,very thick,dashed] (-0.5,0)--(-0.5,1)--(0.5,1)--(0.5,0);
+\draw[blue,thick,domain=-2.2:2.2,samples=200] plot (\x,{ (abs(\x)<0.001) ? 1 : sin(deg(pi*\x))/(pi*\x) });
+\foreach \x/\l in {-2/-\frac2p,-1/-\frac1p,-0.5/-\frac1{2p},0.5/\frac1{2p},1/\frac1p,2/\frac2p} \draw (\x,0)--(\x,-0.05) node[below]{$\l$};
+\draw[dotted] (0.5,0.637)--(-0.05,0.637) node[left]{$0.637$};
+\node[green!50!black] at (-0.95,1.1){理想重建 $\rect(pu)$（虚线）};
+\node[blue] at (1.35,0.55){零阶保持 $\sinc(pu)$（实线）};
+\end{tikzpicture}
+
+{\scriptsize 画图要点：虚线矩形截止 $\pm\frac1{2p}$ 高 1；实线 sinc 在 $\frac1{2p}$ 处 0.637，零点 $\frac mp$，旁瓣有负值。}
+\end{center}
+
+\textbf{【适配/变式】}
+\begin{itemize}
+\item \textbf{像素填充率不到 100\%}（发光区宽 $a<p$）：重建核 $\rect(x/a)$，乘 $\sinc(au)$。$a=p/2$ 时奈奎斯特处 $\sinc(\frac14)=0.90$，带内衰减小，但第一零点移到 $2/p$，带外复制品漏得更多（“纱窗效应”）。
+\item \textbf{二维方像素}：$\rect\frac xp\rect\frac yp\to\sinc(pu)\sinc(pv)$；圆形像素 $\to$ jinc（艾里型旁瓣）[VO-p170]。
+\item \textbf{换成人眼单位}：奈奎斯特 $\frac1{2p}$（周期/mm）$\times$ 每度对应的屏上长度 $\frac{\pi L}{180}$（mm/度）= CPD。326 ppi @ 254 mm：$6.41\times4.43=28.4$ CPD，与 §\ref{sec:screencpd} 一致。
+\item \textbf{时间域}：把 $x\to t$、$p\to$ 帧周期 $T$ 即得 sample-and-hold 显示的时间频谱；CRT 是冲激采样（不乘 sinc），靠人眼的时间低通重建 [VO-p174]。
+\end{itemize}
+
+\subsection{题型：混叠频率、量化误差、运动模糊}\label{sec:alias}
+\textbf{混叠}：采样间隔 $p$（采样率 $u_s=1/p$），信号频率 $u_0>\frac{u_s}2$ 时，复制品 $u_0-mu_s$ 落进基带，看到的频率是
+\[
+u_{\text{alias}}=\big|u_0-m\,u_s\big|\quad(\text{取 }m\text{ 使结果落在 }[0,\tfrac{u_s}2])
+\]
+例：$u_s=10$ 周期/mm，$u_0=7\to|7-10|=3$ 周期/mm 的假条纹（莫尔纹）。图像降采样 2 倍：新奈奎斯特减半，原图中 $\frac1{4p}$–$\frac1{2p}$ 的内容会折叠，必须先低通再抽取 [VO-p158–160]。
+
+\textbf{量化}：$n$ bit 共 $2^n$ 级，步长 $\Delta=\frac{1}{2^n-1}$（满量程归一化），四舍五入最大误差 $\Delta/2$，均方根误差 $\Delta/\sqrt{12}$，正弦满幅信噪比 $\approx6.02n+1.76$ dB。8 bit：256 级，SQNR $\approx50$ dB；2 bit 时出现明显伪轮廓 [VO-p171]。
+
+\textbf{运动模糊}（sample-and-hold）[VO-p177]：
+\begin{enumerate}
+\item 物体以速度 $v$ 移动，眼睛平滑跟踪，眼认为物体应沿直线连续运动。
+\item 显示器在一帧内把物体保持在原位，时长 $T_{\text{hold}}$（全保持 $=$ 帧周期 $1/f_{\text{刷新}}$）。
+\item 视网膜上物体相对眼的位置在一帧内滑过 $v\,T_{\text{hold}}$，即模糊宽度 $\approx v\,T_{\text{hold}}$。
+\item 背光闪烁只亮 $A$ 时间：模糊 $\approx v\,A$；CRT 余晖极短，几乎无模糊。
+\end{enumerate}
+\begin{exam}{数值例}
+60 Hz 全保持，物体速度 960 像素/s：模糊 $960/60=16$ 像素；闪烁只亮 2 ms：$960\times0.002\approx1.9$ 像素。\\
+换成角度：$v=10^\circ$/s，60 Hz：$0.167^\circ=10'$，远大于 $1'$ 的分辨极限，看得出模糊；120 Hz 减半为 $5'$。\\
+闪烁：刷新率要高于临界闪烁频率 CFF（约 60 Hz）；CRT 冲激式需 75–85 Hz 以上 [VO-p134,174]。
+\end{exam}
+
+\begin{formula}{其他视觉事实（选择题、简答题用）}\ix{视锥}\ix{视杆}\ix{Stiles-Crawford 效应}\ix{色盲}
+\begin{itemize}
+\item 视锥约 600–700 万，集中在中央凹，明视觉，三种 S/M/L 峰值约 420–440 / 534–545 / 564–580 nm；视杆约 1.25 亿，峰值约 498 nm，暗视觉，中央凹无视杆，约 $\pm20^\circ$ 处最密。
+\item 盲点在鼻侧视网膜约 15–18$^\circ$。中央凹看文字（约 $5^\circ$），周边对运动敏感。
+\item Stiles-Crawford I：$\dfrac{W_B}{W_A}\approx10^{-0.05r^2}$（$r$ 为瞳孔上入射点离中心的距离，mm），$r=2$ mm 时 0.63，$r=4$ mm 时 0.16。相当于“软光阑”，削弱大孔径处像差大的光线。
+\item 红绿色盲：M、L 视蛋白基因相邻，都在 X 染色体上，96\% 同源，男性远多于女性。
+\item 对立色通道：亮度、红-绿、黄-蓝。
+\item 人眼不能感知相位和偏振，只能感知强度与光谱。
+\end{itemize}
+\end{formula}

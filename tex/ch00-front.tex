@@ -1,0 +1,276 @@
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries\sffamily 现代光学 · 开卷手册\par}
+\vspace{0.8cm}
+{\Large\sffamily 傅里叶光学 + 视光学\par}
+\vspace{0.5cm}
+{\large 公式 · 解题套路 · 综合例题 · 索引\par}
+\vfill
+\includegraphics[width=0.55\textwidth]{logo_color.png}\par
+\vfill
+{\large 2026 年第一学期 · 开卷速查\par}
+\vspace{0.3cm}
+{\small 页码一律写 p，都以页面下方印的页码为准。本书页码写作 p.$n$；课件页码按课件右下角印的页码：[F1-p$n$] 傅里叶光学 I，[F2-p$n$] 傅里叶光学 II，[F3-p$n$] 傅里叶光学 III，[VO-p$n$] 视光学，[光 p$n$] 光度学，[色 p$n$] 色度学。\par}
+\vspace{2cm}
+\end{titlepage}
+
+\chapter*{使用说明}
+\addcontentsline{toc}{chapter}{使用说明}
+\begin{idea}[零基础怎么用这本书（没学过物理光学、几何光学也忘了，从这里开始）]
+\begin{enumerate}
+\item \textbf{先读第零章}「零基础入门」（\pageref{ch:primer}，约 1 小时）：用信号与系统的语言讲清每个概念是什么、为什么，每节一张图。读完就能看懂题干在说什么。
+\item \textbf{概念连不起来时看全景图}（\pageref{sec:p-whole}）：所有题都走同一条六格链路，$t$ 与 $P$、照明、传播、相位、场景、相干性都在这一节对照。
+\item \textbf{再看第 9 章每道例题前的「读题」框}（\icoI\,【直觉】框）（从\pageref{rd:v-mtf}起）：生词附入门页和详解页，说明这道题是信号与系统里的什么问题、每一问要交什么。
+\item \textbf{然后按下面的「题型索引」查详细推导}：每类题都有公式框、套路和可以照抄的答卷。
+\item \textbf{考场上}：先用\pageref{fig:dectree}的「解题决策树」或书末「题干信号词表」（\pageref{tab:signal}）判断题型；遇到不认识的词查术语表（\pageref{tab:glossary}，按拼音排序，一句话白话 + 信号与系统对应物 + 关键公式 + 页码）。
+\item \textbf{本次划的重点}在\pageref{sec:kaodian}。平面波怎么写成复振幅、球面波、方波和常规函数、方孔 / 光栅 / 两个光孔，以及衍射屏放在透镜前时哪一个距离才是精确傅里叶变换。
+\end{enumerate}
+\end{idea}
+\begin{itemize}
+\item \textbf{五种框}：靠\textbf{标题前的图标、标题里的文字标签、边框样式}区分（黑白打印也分得清），见下面的图例。
+\item \textbf{查找顺序}：① 本页「题型索引」$\to$ ② 章节目录 $\to$ ③ 文末「公式框一览」$\to$ ④ 文末关键词索引（按拼音排序）。
+\item \textbf{记号}：傅里叶变换核 $\exp[-i2\pi(ux+vy)]$；$\sinc(x)=\sin(\pi x)/(\pi x)$；透镜相位 $\exp\!\left(-ik\frac{x^2+y^2}{2f}\right)$；输入面 $(x_1,y_1)$，输出面 $(x,y)$。与课件一致。
+\end{itemize}
+
+
+\subsection*{五种框的图例}
+{\small
+\begin{tcbraster}[raster columns=2,raster equal height=rows,raster column skip=4mm,raster row skip=3mm]
+\begin{tcolorbox}[fmlstyle,unbreakable,title={\icoF\ 【公式 F$n$】标题}]
+\textbf{公式框}：黑底白字标题 + 粗实线框，图标 \ding{110}（实心方块）。\\
+里面是\textbf{可以直接抄的公式和结论}，全书连续编号，书末有「公式框一览」。\\
+\textsf{什么时候看}：考场上要用某个公式时。
+\end{tcolorbox}
+\begin{tcolorbox}[rcpstyle,unbreakable,title={\icoR\ 【套路 $n$】标题}]
+\textbf{套路框}：左边一条粗黑边，图标 \ding{228}（箭头）。\\
+里面是\textbf{解题步骤}，按 ①②③ 照着写就是答卷，书末有一览。\\
+\textsf{什么时候看}：认出题型以后，照它一步步做。
+\end{tcolorbox}
+\begin{tcolorbox}[warnstyle,unbreakable,title={\icoW\ 【易错】标题}]
+\textbf{易错框}：双线框 + 浅灰底，图标是带感叹号的三角。\\
+里面是\textbf{最容易抄错的符号、系数、约定}。\\
+\textsf{什么时候看}：答案写完，交卷前对照检查。
+\end{tcolorbox}
+\begin{tcolorbox}[ideastyle,unbreakable,title={\icoI\ 【直觉】标题}]
+\textbf{直觉框}：虚线框、标题没有底色，图标是灯泡。\\
+里面是\textbf{大白话讲为什么}；第 9 章每道题前的「读题」也是这种框。\\
+\textsf{什么时候看}：复习时看；考场上可以跳过（「读题」除外）。
+\end{tcolorbox}
+\begin{tcolorbox}[examstyle,unbreakable,title={\icoE\ 【例】标题}]
+\textbf{例题框}：灰底标题 + 细线框，图标 \ding{46}（铅笔）。\\
+里面是\textbf{例题、综合例题的完整解答}，可以照抄格式。\\
+\textsf{什么时候看}：做同类题时对照着写。
+\end{tcolorbox}
+\begin{tcolorbox}[enhanced,colback=white,frame hidden,unbreakable,left=2pt]
+\textbf{图里的线}：全书的图不靠颜色区分，靠\textbf{线型}（实线、虚线、点线、点划线）、粗细和旁边的文字标注；图注里说的「实线」「虚线」就是指这些。
+\end{tcolorbox}
+\end{tcbraster}}
+
+\clearpage
+\section*{解题决策树}\phantomsection\label{fig:dectree}
+\addcontentsline{toc}{section}{解题决策树}
+\noindent 拿到题目，先圈出题干里的关键词，从上往下走：\textbf{第 1 步}判断这道题在算什么（左列），\textbf{第 2 步}在右列找到具体情况，翻到页码处的套路照做。关键词对照更全的表在\pageref{tab:signal}。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small,
+  cat/.style={draw=#1!60!black,fill=#1!10,rounded corners=3pt,text width=4.0cm,align=left,inner sep=4pt,line width=0.6pt},
+  det/.style={draw=gray!55,fill=white,rounded corners=3pt,text width=10.5cm,align=left,inner sep=4pt},
+  pg/.style={color=blue!50!black}]
+\node[draw=blue!50!black,fill=blue!6,rounded corners=3pt,text width=15.6cm,align=center,inner sep=5pt,line width=0.7pt] (root) at (0,0)
+ {\sffamily\bfseries 第 1 步：这道题在算什么？\quad\normalfont\small（相干 / 非相干先判断清楚：激光、单色相干 $\to$ 算复振幅；普通光、荧光、MTF $\to$ 算强度）};
+
+\node[det,anchor=north east] (d1) at ([yshift=-7mm]root.south east)
+ {$\bullet$ 写透射系数 $t=\exp[ik(n-1)\Delta]$：\pageref{sec:screens}\quad
+  $\bullet$ 凑成 $-\frac{k r^2}{2F}$ 读焦距：\pageref{sec:equivlens}\\
+  $\bullet$ 三次面型平移（Alvarez）：\pageref{sec:alvarezi}\quad
+  $\bullet$ 两束光干涉条纹：\pageref{sec:twobeam}};
+\node[cat=orange,anchor=east] (c1) at ([xshift=-5mm]d1.west)
+ {\textbf{① 元件相位 / 等效透镜}\\\scriptsize 面型、厚度、折射率、复透过率、“等效于透镜”};
+
+\node[det,anchor=north] (d2) at ([yshift=-4mm]d1.south)
+ {$\bullet$ 傍轴 / 远场哪个难、菲涅耳 / 夫琅禾费用了什么近似：\pageref{box:approx}\\
+  $\bullet$ 推导衍射公式：\pageref{sec:diffderiv}\quad
+  $\bullet$ 孔径远场图样六步：\pageref{sec:fraunrecipe}\\
+  $\bullet$ 传播 $z$ 后的场（角谱）、Talbot：\pageref{sec:angspec}};
+\node[cat=teal,anchor=east] (c2) at ([xshift=-5mm]d2.west)
+ {\textbf{② 传播 / 衍射}\\\scriptsize 距离 $z$、球面波、傍轴、远场、菲涅耳、夫琅禾费};
+
+\node[det,anchor=north] (d3) at ([yshift=-4mm]d2.south)
+ {$\bullet$ 单透镜焦面场、谱点位置：\pageref{sec:focalplane}\quad
+  $\bullet$ 4f 输出、放大率、级联：\pageref{sec:4fderiv}\\
+  $\bullet$ 频谱面放滤波器求 CTF：\pageref{sec:4fctf}\quad
+  $\bullet$ 光栅挡级：\pageref{sec:gratingfilter}\\
+  $\bullet$ 频谱面线性相位 / SLM：\pageref{sec:linphase}\quad
+  $\bullet$ 物偏离焦面 $x_2=M^2x_1$：\pageref{sec:4foffset}\\
+  $\bullet$ 相衬、暗场：\pageref{sec:phasecontrast}\quad
+  $\bullet$ 显微镜、倾斜照明：\pageref{sec:abbe}};
+\node[cat=green,anchor=east] (c3) at ([xshift=-5mm]d3.west)
+ {\textbf{透镜与 4f}\\\scriptsize 前 / 后焦面、频谱面、4f、滤波器、SLM、级联};
+
+\node[det,anchor=north] (d4) at ([yshift=-4mm]d3.south)
+ {\textbf{相干？}$\to$ CTF = 光瞳，截止 $\frac{\mathrm{NA}}{\lambda}$：\pageref{sec:typeA}\\
+  \textbf{非相干？}$\to$ OTF = 光瞳自相关，截止 $\frac{2\mathrm{NA}}{\lambda}$：方瞳 / 圆瞳 \pageref{sec:typeB}；几条缝 / 几个孔 \pageref{sec:typeC}\\
+  $\bullet$ 求 PSF：\pageref{sec:typeD}\quad
+  $\bullet$ 条纹对比度 $K$：\pageref{sec:typeE}\quad
+  $\bullet$ 离焦：\pageref{sec:typeG}\\
+  $\bullet$ 采样、混叠：\pageref{sec:typeF}\quad
+  $\bullet$ SIM 超分辨：\pageref{sec:sim}};
+\node[cat=blue,anchor=east] (c4) at ([xshift=-5mm]d4.west)
+ {\textbf{③ 成像：PSF / MTF}\\\scriptsize 出射光瞳、衍射受限、截止频率、MTF、对比度};
+
+\node[det,anchor=north] (d5) at ([yshift=-4mm]d4.south)
+ {$\bullet$ 证 $S\approx1-k^2\sigma_W^2$、$\lambda/14\Rightarrow0.8$：\pageref{ex:strehl-tplA}\quad
+  $\bullet$ 证 $S\approx\ee^{-k^2\sigma_W^2}$：\pageref{ex:strehl-tplB}\\
+  $\bullet$ 证有像差 MTF 不升、何种 $W$ 不降：\pageref{sec:mtfproof}\\
+  $\bullet$ 给 $W(\rho,\theta)$ 求 RMS：\pageref{rc:rms}\quad
+  $\bullet$ 最佳补偿：\pageref{rc:balance}\quad
+  $\bullet$ 离焦换算：\pageref{sec:defocus-units}};
+\node[cat=red,anchor=east] (c5) at ([xshift=-5mm]d5.west)
+ {\textbf{④ 像差 / Strehl}\\\scriptsize 波像差 $W$、RMS、$\sigma_W$、Strehl、$\lambda/14$};
+
+\node[det,anchor=north] (d6) at ([yshift=-4mm]d5.south)
+ {$\bullet$ 透镜成像位置、大小：\pageref{sec:lensimg}\quad
+  $\bullet$ 远点近点、配镜：\pageref{sec:farpoint}, \pageref{sec:correct}\\
+  $\bullet$ 光阑与光瞳作图：\pageref{sec:stops}\quad
+  $\bullet$ CPD、视网膜屏：\pageref{sec:screencpd}\quad
+  $\bullet$ 视力：\pageref{sec:acuity}\\
+  $\bullet$ gamma 灰阶：\pageref{sec:gammacalc}\quad
+  $\bullet$ 光度单位、朗伯、正弦条件：\pageref{sec:photounits}, \pageref{sec:abbesine}};
+\node[cat=violet,anchor=east] (c6) at ([xshift=-5mm]d6.west)
+ {\textbf{视光学 / 光度}\\\scriptsize 眼、屈光度、远点、视力、CPD、gamma、亮度、朗伯};
+
+\foreach \i in {1,...,6} \draw[->,thick,gray!70] (c\i.east)--(d\i.west);
+\coordinate (trunk) at ([xshift=-4mm]c1.west);
+\draw[thick,blue!50!black] (root.south -| trunk) -- (c6.west -| trunk);
+\foreach \i in {1,...,6} \draw[->,thick,blue!50!black] (c\i.west -| trunk) -- (c\i.west);
+
+\node[draw=blue!50!black,fill=blue!6,rounded corners=3pt,text width=15.6cm,align=left,inner sep=5pt,anchor=north east] (fin) at ([yshift=-7mm]d6.south east)
+ {\sffamily\bfseries 第 2 步\normalfont\small：在页码处照【套路】框一步步写。\quad
+  \sffamily\bfseries 第 3 步\normalfont\small：翻第 9 章同类例题的解答（\pageref{ch:examples}起）对照格式。\\
+  \sffamily\bfseries 卡住了\normalfont\small：题干的词看不懂 $\to$ 术语表 \pageref{tab:glossary}；概念想不通 $\to$ 第零章 \pageref{ch:primer}；不知道是哪类题 $\to$ 信号词表 \pageref{tab:signal}。};
+\end{tikzpicture}
+\end{center}
+\clearpage
+
+\section*{标注重点}\label{sec:kaodian}
+\addcontentsline{toc}{section}{标注重点}
+
+\noindent 下面是老师划的范围，加上课件「回顾平面波」和「透镜的傅里叶变换性质」里要能默写的两步。右列是代入模板，考场直接翻。
+
+\begin{tcolorbox}[fmlstyle,title={先看这五条}]
+\begin{enumerate}
+\item \textbf{矢量点乘求 OP，并写成复振幅}（课件：同一波面上 $Q$ 与 $P$ 相位相同）。
+\[
+OP=\bm r\cdot\bm k_0,\qquad
+E=A\cos(\bm k\cdot\bm r-\omega t)
+=A\exp[i(\bm k\cdot\bm r-\omega t)].
+\]
+某一时刻各点的 $\ee^{-i\omega t}$ 相同，复振幅只留 $\tilde E=A\exp(i\bm k\cdot\bm r)$。给夹角 $\theta$ 时 $OP=x\sin\theta+z\cos\theta$，$u=\sin\theta/\lambda$。代入模板：\pageref{sec:opwave}题型 8。
+
+\item \textbf{球面波表达式。} 精确式 $\dfrac{A}{r}\ee^{ikr}$，$r=\sqrt{x^2+y^2+z^2}$。傍轴后振幅用 $A/z$，相位多留 $\exp\!\big(ik(x^2+y^2)/(2z)\big)$。会聚把 $z$ 换成 $-R$。代入模板：同页题型 9。
+
+\item \textbf{方波、三角波和常规函数的傅里叶变换。} 方波代周期 $d$ 和高电平宽度 $w$，系数 $c_n=\dfrac{w}{d}\sinc\dfrac{nw}{d}$；三角波代周期 $d$ 和底宽 $w$，系数 $c_n=\dfrac{w}{2d}\sinc^2\dfrac{nw}{2d}$。$\rect$、$\tri$、$\cos$、高斯、二次相位不再积分，把宽度或频率代进变换对表。\pageref{sec:pairs}的代入框，题型 7。
+
+\item \textbf{方孔、光栅、两个光孔。} 先按\pageref{rcp:readfig}的五步把图写成函数，再查\pageref{fml:shapes}的形状表。方孔零点 $\lambda f/a$；余弦光栅亮点在 $\pm\lambda ff_0$；两个光孔的条纹间距 $\lambda f/d$、包络零点 $\lambda f/a$。黑白光栅与方波是同一套 $c_n$。图若是出瞳而不是衍射屏，函数不变，最后一步改交 PSF 和 MTF。
+
+\item \textbf{衍射屏在透镜前距离 $d_0$（课件结论）。} 后焦面上
+\[
+\tilde E(x,y)=\frac{\ee^{ikf}}{i\lambda f}
+\exp\!\left[\frac{ik}{2f}\!\left(1-\frac{d_0}{f}\right)(x^2+y^2)\right]
+\F\{\tilde E_1\}\Big(\frac{x}{\lambda f},\frac{y}{\lambda f}\Big).
+\]
+$d_0=f$ 时括号为 0，二次相位消失，后焦面是屏函数的精确傅里叶变换。$d_0$ 取别的值只多这一份相位，强度分布不变。正面、反面的代入在\pageref{ex:screenpos}。
+\end{enumerate}
+\end{tcolorbox}
+
+\clearpage
+
+\section*{题型索引}\label{tab:typeindex}
+\par\renewcommand{\arraystretch}{1.35}
+\begin{longtable}{@{}P{6.4cm}P{6.2cm}r@{}}
+\toprule
+题目长什么样 & 去看 & 页码\\ \midrule
+\endhead
+\textbf{看不懂题目里的概念} & 第零章（零基础入门）、术语表 & \pageref{ch:primer}, \pageref{ch:glossary}\\
+\textbf{概念连不起来}（$t$ 与 $P$、球面波与平面波、相干与非相干、各种相位） & 全景图：六格链路、相位记账、场景表 & \pageref{sec:p-whole}\\
+\textbf{不知道是哪类题} & 解题决策树、题干信号词表 & \pageref{fig:dectree}, \pageref{tab:signal}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【傅里叶变换与基础】}\\
+看图写成函数再做傅里叶变换 & 固定五步、常见形状对照表 & \pageref{rcp:readfig}, \pageref{fml:shapes}\\
+求某个图形 / 孔的傅里叶变换 & 变换对表、性质表、可抄证明 & \pageref{sec:pairs}, \pageref{sec:ftproofs}\\
+性质怎么对上题目（乘、卷积、平移、缩放） & 先看在哪个域里动函数 & \pageref{rcp:ftuse}\\
+单缝、方孔、多缝、阵列、两个光孔、余弦/黑白光栅、方波的频谱 & 题型例题（缺级、各级强度）& \pageref{sec:ftexamples}\\
+矢量点乘求 OP、球面波的二次相位 & 参数代入模板 & \pageref{sec:opwave}\\
+卷积、相关怎么算怎么画；几条缝叠成几个三角形 & 重叠计数、轴上刻度 & \pageref{sec:convcalc}, \pageref{rcp:mtfoverlap}\\
+平面波方向 $\leftrightarrow$ 空间频率 & 空间频率 & \pageref{sec:spfreq}\\
+两束光干涉的条纹频率、对比度 & 两束平面波干涉 & \pageref{sec:twobeam}\\
+写出光屏的复透射系数 & 九种光屏速查 & \pageref{sec:screens}\\
+采样定理、sinc 插值、DFT 尺度 & 数学工具 & \pageref{sec:sampling}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【衍射】}\\
+判断傍轴 / 远场 / 菲涅耳 / 夫琅禾费& 定量比较、答题模板 & \pageref{box:approx}, \pageref{ex:approxcmp}, \pageref{ex:v-approx}\\
+推导菲涅耳 / 夫琅禾费公式 & 逐步推导 & \pageref{sec:diffderiv}\\
+自由传播后的场（角谱）、Talbot 自成像 & 角谱传递函数、例题 & \pageref{sec:angspec}, \pageref{ex:talbot}\\
+孔径的远场图样、艾里斑、双缝缺级 & 解题六步、例题 & \pageref{sec:fraunrecipe}, \pageref{ex:slit}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【透镜与 4f】}\\
+某个相位分布等效于什么透镜 & 等效透镜 & \pageref{sec:equivlens}\\
+为什么后焦面是傅里叶变换（推导）& 6 步推导 & \pageref{sec:lensFTderiv}\\
+衍射屏在透镜前或透镜后，求焦面场与亮点位置 & 正面 $d_0$、反面 $d$ 的模板 & \pageref{ex:screenpos}\\
+4f 输出、放大率、级联& 4f 推导、模板 & \pageref{sec:4fderiv}, \pageref{ex:v-4f2}\\
+频谱面滤波器 $\to$ 相干传递函数 & 滤波求 CTF & \pageref{sec:4fctf}\\
+输入光栅、挡掉某几级求输出 & 光栅滤波 & \pageref{sec:gratingfilter}\\
+频谱面加线性相位 / 输出平移 & 线性相位 & \pageref{sec:linphase}\\
+4f 物偏离焦面 $x_2=M^2x_1$& 偏离补偿、完整证明 & \pageref{sec:4foffset}, \pageref{ex:v-4fshift}\\
+Alvarez / Lohmann 变焦透镜& 平移版、4f 版 & \pageref{sec:alvarezi}, \pageref{sec:alvarezii}, \pageref{ex:v-alvarez}\\
+光学加减法、相衬、暗场 & 相干光学处理 & \pageref{sec:addsub}, \pageref{sec:phasecontrast}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【成像（PSF / CTF / OTF / MTF）】}\\
+相干截止频率（像方 / 物方）& 题型 A & \pageref{sec:typeA}\\
+方瞳、圆瞳的 OTF 与画图 & 题型 B & \pageref{sec:typeB}\\
+分块光瞳（多缝）画 MTF& 题型 C、三缝例 & \pageref{sec:typeC}, \pageref{ex:3slit}, \pageref{ex:v-3slit}\\
+由光瞳求 PSF & 题型 D & \pageref{sec:typeD}\\
+条纹对比度传递 & 题型 E & \pageref{sec:typeE}\\
+像元采样、双折射低通滤波器 & 题型 F & \pageref{sec:typeF}\\
+离焦 OTF、对比度反转、弥散圆 & 题型 G & \pageref{sec:typeG}\\
+证明像差使 MTF 下降 / 等号条件& 施瓦茨不等式 & \pageref{sec:mtfproof}, \pageref{ex:v-mtf}\\
+SIM、频谱搬移、超分辨& SIM 全流程 & \pageref{sec:sim}, \pageref{ex:v-sim}\\
+阿贝成像、显微镜分辨率、倾斜照明 & 阿贝成像 & \pageref{sec:abbe}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【像差与 Strehl】}\\
+证明 $S\approx1-k^2\sigma_W^2$& 答题模板 A & \pageref{ex:strehl-tplA}, \pageref{ex:v-strehl}\\
+证明 $S\approx\exp(-k^2\sigma_W^2)$& 答题模板 B & \pageref{ex:strehl-tplB}, \pageref{ex:v-strehl2}\\
+Strehl 数值计算、反查、变式 & 数值表、变式套路 & \pageref{sec:strehl-num}, \pageref{rc:strehl-variants}\\
+给 $W(\rho,\theta)$ 求 RMS、最佳补偿 & 求 RMS、线性回归 & \pageref{sec:aberrms}, \pageref{rc:balance}\\
+离焦量换算、焦深 & 四种表示 & \pageref{sec:defocus-units}\\
+Zernike 系数、人眼像差 & Zernike & \pageref{sec:zernike}\\
+波像差与光线像差、Shack-Hartmann & 光线像差 & \pageref{sec:rayaberr}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【视光学】}\\
+单透镜成像、放大率 & 成像与透镜 & \pageref{sec:lensimg}\\
+透镜组、基点作图、逐次成像 & 透镜组 & \pageref{sec:lenscombo}\\
+视网膜像大小、调节量 & 视网膜像 & \pageref{sec:retimg}\\
+由眼轴求远点 / 近点 & 屈光不正 & \pageref{sec:farpoint}\\
+配镜度数、框架 $\leftrightarrow$ 隐形换算 & 配镜推导 & \pageref{sec:correct}\\
+老花、看清范围、读处方 & 老花、处方 & \pageref{sec:presby}, \pageref{sec:rx}\\
+放大镜、望远镜、出瞳与适眼距 & 目视仪器 & \pageref{sec:magnifier}, \pageref{sec:telescope}\\
+孔径光阑、入瞳出瞳、视场光阑、作图 & 光阑与光瞳 & \pageref{sec:stops}, \pageref{sec:stopswitch}\\
+屏幕 PPD / CPD、视网膜屏、所需 ppi & 空间分辨 & \pageref{sec:screencpd}\\
+视力表换算 & 视力 & \pageref{sec:acuity}\\
+眼的衍射截止、视锥采样 & 眼的衍射极限 & \pageref{sec:eyediff}\\
+CSF 与 MTF 联立作图 & 联立套路 & \pageref{sec:mtfcsf}\\
+gamma、sRGB 灰阶 $\leftrightarrow$ 亮度 & 灰阶计算 & \pageref{sec:gammacalc}\\
+零阶保持频谱、混叠、量化、运动模糊 & 显示器 & \pageref{sec:zoh}, \pageref{sec:alias}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【光度与色度】}\\
+光度学单位换算 & 单位关系 & \pageref{sec:photounits}\\
+朗伯体光通量 & 逐步积分 & \pageref{sec:lambert}\\
+阿贝正弦条件、亮度守恒 & 傅里叶证法 & \pageref{sec:abbesine}, \pageref{sec:luminance}, \pageref{sec:exgC}\\
+光度量从哪算起（全章地图）& 题目问法表 & \pageref{sec:photomap}\\
+亮度随距离、介质怎么变 & 亮度传递证明 & \pageref{sec:lumprop}\\
+光学扩展量、眼盒与视场 & 算例 & \pageref{sec:etendue}\\
+色度坐标计算 & 色度 & \pageref{sec:color}\\
+配色实验、色彩匹配函数 & 三刺激值 & \pageref{sec:colormatch}\\
+CIE RGB $\leftrightarrow$ XYZ、色品图 & 转换矩阵、算例 & \pageref{sec:rgb2xyz}, \pageref{sec:chromadiagram}\\
+CIELAB、CIELUV 与色差 & 算例 & \pageref{sec:lab}\\
+色温、相关色温、显色指数 & 定义 & \pageref{sec:cctcri}\\
+\multicolumn{3}{@{}l}{\rule{0pt}{14pt}\sffamily\bfseries\color{blue!50!black}【综合例题】}\\
+成像与像差 / 衍射与光瞳 / 光度色度 & 完整解答 & \pageref{sec:exgA}, \pageref{sec:exgB}, \pageref{sec:exgC}\\
+\bottomrule
+\end{longtable}
+
+\tableofcontents

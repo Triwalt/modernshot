@@ -1,0 +1,722 @@
+\chapter{光度学与色度学（速查，不定量考）}\label{ch:photo}
+
+\begin{idea}[这一章为什么在]
+光度色度一般不作大计算，但\textbf{朗伯体光通量}、\textbf{阿贝正弦条件}、\textbf{亮度守恒}可以和傅里叶光学的缩放定理放在一起考，概念题常问单位、gamma、色彩空间。
+本章把《显示器件测量技术实验》的光度学、色度学两份课件凝聚成一章，只留下定义、结论、推导主线和能算的例子。页码写法：[光 p47] 是光度学课件右下角印的 47 页，[色 p46] 是色度学课件右下角印的 46 页。综合例题在\pageref{sec:exgC}。
+\end{idea}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{全章地图：一条光谱算出所有量}\label{sec:photomap}
+光度学和色度学解决同一个问题：光谱是物理量，人眼的感受是心理量，怎样用数字把后者写出来。做法都是\textbf{光谱乘人眼的加权函数再积分}。加权函数只有一个（$V(\lambda)$），得到“多亮”；加权函数有三个（$\bar x,\bar y,\bar z$），得到“什么颜色”。
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>={Stealth},box/.style={draw,rounded corners=1.5pt,inner sep=4pt,align=center}]
+\node[box,line width=1pt] (s) at (0,0) {光谱 $\varphi(\lambda)$\\物理量，W/nm};
+\node[box] (phi) at (4.7,1.25) {光通量 $\Phi$（lm）\\一个数};
+\node[box] (ill) at (9.8,1.25) {$I$：再按角度分\\$E$：再按面积分\\$L$：按角度和投影面积分};
+\node[box] (xyz) at (4.7,-0.95) {三刺激值 $X,Y,Z$\\三个数，$Y$ 就是亮度};
+\node[box] (xy) at (9.8,-0.95) {色品 $(x,y)$\\色调和饱和度，定 CCT};
+\node[box] (lab) at (4.7,-2.75) {$L^*a^*b^*$\\感知均匀的坐标};
+\node[box] (de) at (9.8,-2.75) {色差 $\Delta E^*_{ab}$\\显色指数 CRI 的基础};
+\draw[->] (s.east) -- node[above,sloped,font=\footnotesize]{$683\!\int\!V\varphi$} (phi.west);
+\draw[->] (s.east) -- node[below,sloped,font=\footnotesize]{$k\!\int\!\bar x\varphi$ 等} (xyz.west);
+\draw[->] (phi) -- (ill);
+\draw[->] (xyz) -- node[above,font=\footnotesize]{除以和} (xy);
+\draw[->] (xyz) -- node[right,font=\footnotesize]{立方根压缩} (lab);
+\draw[->] (lab) -- node[above,font=\footnotesize]{距离} (de);
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}P{0.62\textwidth}P{0.14\textwidth}@{}}
+\toprule
+题目问法 & 页码\\ \midrule
+光通量、发光强度、照度、亮度，单位是什么、怎么换算 & \pageref{sec:photounits}\\
+朗伯体、光锥内的光通量、配光曲线 & \pageref{sec:lambert}\\
+走远了屏幕会变暗吗；跨介质亮度怎么变 & \pageref{sec:lumprop}\\
+光学扩展量、眼盒和视场为什么互相限制 & \pageref{sec:etendue}\\
+阿贝正弦条件、亮度守恒证明、像面照度 & \pageref{sec:abbesine}, \pageref{sec:luminance}\\
+色品坐标、三刺激值、混色、设备相关色彩空间 & \pageref{sec:color}\\
+视锥和视杆、格拉斯曼定律、色彩匹配函数、负值 & \pageref{sec:colorbio}, \pageref{sec:colormatch}\\
+RGB 与 XYZ 转换、色品图上的术语 & \pageref{sec:rgb2xyz}, \pageref{sec:chromadiagram}\\
+CIELAB、CIELUV、色差、JND & \pageref{sec:lab}\\
+色温、相关色温、显色指数 & \pageref{sec:cctcri}\\
+gamma、灰阶和亮度互换 & \pageref{sec:gammacalc}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{光度学量与单位}\label{sec:photounits}
+\begin{idea}[四个量怎么区分]
+想象一盏灯：\textbf{光通量} $\Phi$ 是它每秒发出的“光的总量”（lm）；\textbf{发光强度} $I$ 是某个方向上每单位立体角的光通量（cd），描述“点光源朝这边有多亮”；
+\textbf{照度} $E$ 是落在接收面上每单位面积的光通量（lx），描述“桌面被照得多亮”；\textbf{亮度} $L$ 是发光面每单位\textbf{投影}面积、每单位立体角的光通量（nit），描述“眼睛看这个面有多亮”。
+眼睛和相机感受的是亮度；亮度经过无损光学系统不会增加（§\ref{sec:luminance}）。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>={Stealth}]
+\draw[line width=0.8pt] (0,3) circle (0.28);
+\node[above=3pt] at (0,3.28) {灯：光通量 $\Phi$（总量）};
+\draw[dashed] (0.2,2.8) -- (1.85,0.45);
+\draw[dashed] (0.05,2.72) -- (0.65,0.1);
+\draw[decorate,decoration={brace,amplitude=4pt,mirror}] (0.02,2.2) -- (0.62,2.2);
+\node[right,align=left] at (1.35,2.35) {发光强度 $I$\\某方向单位立体角};
+\draw[line width=0.8pt] (-1.3,0.2) -- (3.4,0.2) -- (4.4,-0.55) -- (-0.3,-0.55) -- cycle;
+\draw[pattern=north east lines] (1.25,-0.1) ellipse (0.72 and 0.22);
+\node[right] at (4.5,-0.2) {照度 $E$：接收面单位面积};
+\draw[->] (1.6,0.1) -- (4.5,2.1);
+\draw[line width=0.8pt] (4.75,2.25) circle (0.25);
+\fill (4.87,2.33) circle (0.08);
+\node[right,align=left] at (5.1,2.25) {亮度 $L$：看这个面时\\单位投影面积、单位立体角};
+\end{tikzpicture}
+\end{center}
+
+\begin{formula}{光度学量}\ix{光通量}\ix{发光强度}\ix{照度}\ix{亮度}\ix{nit}\ix{辐射度学}\ix{坎德拉}
+\par\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}llll@{}}
+\toprule
+量 & 定义 & 单位 & 辐射学对应\\ \midrule
+光通量 $\Phi$ & $683\int V(\lambda)\Phi_e(\lambda)\dd\lambda$ & lm & 辐射通量 $\Phi_e$，W\\
+发光强度 $I$ & $\dd\Phi/\dd\Omega$ & cd = lm/sr & 辐射强度 $I_e$，W/sr\\
+照度 $E$ & $\dd\Phi/\dd S$（接收面）& lx = lm/m$^2$ & 辐照度 $E_e$，W/m$^2$\\
+亮度 $L$ & $\dfrac{\dd^2\Phi}{\dd S\cos\theta\,\dd\Omega}$ & cd/m$^2$ = nit & 辐亮度 $L_e$，W/(m$^2\cdot$sr)\\
+\bottomrule
+\end{tabular}
+
+\smallskip
+$V(\lambda)$：明视觉光谱光视效率，555 nm 处为 1，此处 683 lm/W。典型亮度：手机 200–400 nit（HDR 可上千），SDR 电视 100 nit，晴天室外约 $10^4$ nit，太阳约 $1.6\times10^9$ nit。
+
+坎德拉的定义：频率 540 THz（约 555 nm）的单色光，在某方向的辐射强度为 $\frac1{683}$ W/sr 时，发光强度是 1 cd。683 这个数就从这里来 [光 p60]。
+\end{formula}
+
+\begin{formula}{光通量怎么算 [光 p17--19]}\ix{光通量}\ix{光谱功率分布}\ix{光效}\ix{视见函数}
+\[
+\Phi_V=K_{CD}\int_{380\,\text{nm}}^{780\,\text{nm}}\mathrm{SPD}(\lambda)\,V(\lambda)\dd\lambda
+\]
+\begin{itemize}
+\item SPD 是光谱功率分布（W/nm），$V(\lambda)$ 是相对视见函数。积分就是两个函数的内积。
+\item 明视觉 $K_{CD}=683$ lm/W，峰值在 555 nm；暗视觉 $K_{CD}=1700$ lm/W，峰值在 507 nm。
+\item 光效 $=$ 输出光通量 $\div$ 输入电功率（lm/W）。当前 LED 已超过 150 lm/W。
+\end{itemize}
+\end{formula}
+
+\begin{idea}[和波动光学怎么接上]
+电磁波的能流是坡印廷矢量 $\bm S=\frac1\mu\bm E\times\bm B$（W/m$^2$），变化太快，探测器只能得到时间平均。平面波的平均值是 $I=\frac{A^2}{2}\sqrt{\frac{\varepsilon}{\mu}}$，正比于 $|E|^2$，这就是前面各章的 $I=|U|^2$（略去常数）。严格的名字叫\textbf{辐照度}，单位 W/m$^2$ [光 p10--11]。\par
+光度学只多做一步：按 $V(\lambda)$ 给各波长加权，单位从 W 变成 lm，其余几何关系和辐射度学完全相同。
+\end{idea}
+
+\begin{formula}{常用关系}\ix{距离平方反比}
+\begin{itemize}
+\item 点光源照度（距离平方反比 + 余弦）：$E=\dfrac{I\cos\theta}{r^2}$，$\theta$ 是光线与接收面法线的夹角。
+\item 各向同性点光源（$I$ 与方向无关）：总光通量 $\Phi=4\pi I$；半角 $U$ 锥内 $\Phi=2\pi I(1-\cos U)$。
+\item 亮度 $L$ 的面元 $\dd S$ 在 $\theta$ 方向的强度 $\dd I=L\dd S\cos\theta$（投影面积 $\dd S\cos\theta$）。
+\item 立体角：半角 $U$ 的圆锥 $\Omega=2\pi(1-\cos U)\approx\pi U^2$（小角）；全空间 $4\pi$ sr，半空间 $2\pi$ sr。微元 $\dd\Omega=\sin\theta\dd\theta\dd\varphi$。
+\end{itemize}
+\end{formula}
+
+\begin{warn}[照度和亮度不是一回事]
+\begin{itemize}
+\item \textbf{照度}说落到面上多少光，\textbf{亮度}说这个面朝某方向发出多少光。镜子上照度可以很大，但光只朝反射方向走，从别的方向看并不亮 [光 p33]。
+\item \textbf{亮度不能直接用 $I/S$}：分母是投影面积 $\dd S\cos\theta$，所以亮度和观察角有关。只有朗伯体才各方向相同。
+\item \textbf{cd 和 nit}：cd 是发光强度，nit $=$ cd/m$^2$ 才是亮度。
+\end{itemize}
+\end{warn}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}P{0.13\textwidth}P{0.38\textwidth}P{0.40\textwidth}@{}}
+\toprule
+量 & 怎么测 & 常见数值\\ \midrule
+光通量 & \textbf{积分球}\ix{积分球}：内壁高反射漫反射涂层（如硫酸钡），光多次反射后探测器读数正比于光通量；挡板防止直射探测器；开口面积占比（port fraction）越小越好 & LED 光效 $>150$ lm/W\\
+发光强度 & 测不同角度的强度，画\textbf{配光曲线}\ix{配光曲线} & 朗伯 LED：$I=I_0\cos\theta$\\
+照度 & 照度计放在被照面上 & 阅读、办公、教室 300 lx；黑板 500 lx；走廊 50 lx\\
+亮度 & \textbf{点式亮度计}：快、便宜、准，一次一个点；\textbf{成像式}：一次测整屏，适合均匀度、mura，但各位置视角不同、成本高 & 星光约 $10^{-4}$，月光约 $10^{-1}$，室内约 $10^{2}$，日光约 $10^{4\sim5}$ cd/m$^2$（读图值）；人眼全范围 $10^{-6}\sim10^{8}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{exam}{数值例：单位换算}
+(1) 100 cd 的点光源正下方 2 m 处桌面：$E=\frac{100}{2^2}=25$ lx；偏离 $60^\circ$ 方向、同样距离 2 m：$E=\frac{100\cos60^\circ}{4}=12.5$ lx。\\
+(2) 亮度 300 nit、面积 $0.01$ m$^2$ 的朗伯屏，法向强度 $I_0=LS=3$ cd，总光通量 $\pi LS=9.4$ lm。\\
+(3) 问“亮度”时，单位必须是 nit（cd/m$^2$）；cd 是发光强度的单位，带 cd 而不带面积的选项可直接排除。晴天室外约 $10^4$ nit。\\
+(4) 光谱是两条谱线，555 nm 和 650 nm 各 1 W，$V(650\text{ nm})\approx0.107$：$\Phi=683\times(1\times1+1\times0.107)\approx756$ lm。功率相同，650 nm 那条只贡献约 $\frac1{10}$。\\
+(5) 投影机要多少流明 [光 p32]：光通量 $=$ 照度 $\times$ 面积。8 ft 宽的 16:9 幕 $8\times4.5=36$ ft$^2$，要求 80 lm/ft$^2$，需 $36\times80=2880$ lm，选 3000 lm 以上。
+\end{exam}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{朗伯体的光通量}\label{sec:lambert}
+\textbf{【题型】}“朗伯辐射体（面元 $\dd S$、亮度 $L$）向半角 $U$ 的光锥内发出的光通量是多少 / 占总光通量的比例？”
+
+\begin{center}
+\begin{tikzpicture}[scale=1.35,font=\small,>={Stealth}]
+\draw[->] (-1.6,0) -- (1.6,0);
+\draw[->] (0,0) -- (0,1.35) node[above]{法线，$\theta=0$};
+\draw[line width=1pt,domain=-90:90,samples=80] plot ({cos(\x)*sin(\x)},{cos(\x)*cos(\x)});
+\draw[dashed,line width=0.8pt,domain=-90:90,samples=80] plot ({pow(cos(\x),10)*sin(\x)},{pow(cos(\x),10)*cos(\x)});
+\draw[->] (0,0) -- ({cos(50)*sin(50)},{cos(50)*cos(50)}) node[right,yshift=2pt]{$I_0\cos\theta$};
+\node[align=left,right] at (1.75,0.9) {实线（圆）：朗伯体，$I=I_0\cos\theta$\\虚线：窄光束 LED，出光角更小\\也有不旋转对称的配光 [光 p26--28]};
+\end{tikzpicture}
+\end{center}
+
+\begin{formula}{朗伯辐射体的光通量}\ix{朗伯体}
+朗伯体：亮度 $L$ 与方向无关，$I(\theta)=I_0\cos\theta$，所以 $L=\dfrac{I_0\cos\theta}{\dd S\cos\theta}=\dfrac{I_0}{\dd S}$（漫反射面、LED 都接近这样）。面元 $\dd S$ 向半角 $U$ 的圆锥内发出：
+\[
+\Phi=\int_0^U L\,\dd S\cos\theta\cdot2\pi\sin\theta\dd\theta=\pi L\,\dd S\sin^2U
+\]
+占总光通量（$U=90^\circ$ 时 $\pi L\dd S$）的比例 $=\sin^2U$。像方同理：$\Phi'=\pi L'\dd S'\sin^2U'$。
+\end{formula}
+
+\begin{recipe}{求某个光锥内的光通量（逐步推导，可抄）}
+\begin{enumerate}
+\item 写出 $\theta$ 方向的强度：朗伯体 $\dd I(\theta)=L\dd S\cos\theta$（依据：亮度定义中的投影面积 $\dd S\cos\theta$）。
+\item 取 $\theta\sim\theta+\dd\theta$ 的环带，立体角 $\dd\Omega=2\pi\sin\theta\dd\theta$（依据：球面上环带面积 $2\pi r\sin\theta\cdot r\dd\theta$ 除以 $r^2$）。
+\item 积分：$\Phi=\displaystyle\int_0^U L\dd S\cos\theta\cdot2\pi\sin\theta\dd\theta$。令 $t=\sin\theta$，$\dd t=\cos\theta\dd\theta$：$=2\pi L\dd S\displaystyle\int_0^{\sin U}t\dd t=\pi L\dd S\sin^2U$。
+\item 比例：除以 $U=\frac\pi2$ 的总量 $\pi L\dd S$，得 $\sin^2U$。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[变式]
+\begin{itemize}
+\item \textbf{环带}（$U_1$ 到 $U_2$）：$\Phi=\pi L\dd S(\sin^2U_2-\sin^2U_1)$。
+\item \textbf{各向同性点光源}（不是朗伯体）：$I$ 为常数，$\Phi=\int_0^U I\cdot2\pi\sin\theta\dd\theta=2\pi I(1-\cos U)$，比例 $\frac{1-\cos U}{2}$（对全空间 $4\pi I$）。选择题若说“朗伯”就选 $\sin^2$。
+\item \textbf{用数值孔径表示}：$n\sin U=\mathrm{NA}$，$\Phi=\pi L\dd S\,\frac{\mathrm{NA}^2}{n^2}$。
+\item \textbf{数值}：$U=30^\circ$：$\sin^2U=0.25$，只有 1/4 的光进入；$U=60^\circ$：0.75。（若是各向同性点光源，$U=30^\circ$ 只有 $\frac{1-0.866}{2}=6.7\%$，对全空间计。）
+\end{itemize}
+\end{warn}
+
+\begin{exam}{朗伯 LED 在平面上的照度 [光 p38]}
+LED 法向强度 $I_0$，距离平面 $h$。平面上偏离法线 $\theta$ 处到 LED 的距离 $r=h/\cos\theta$，所以
+\[
+E=\frac{I(\theta)\cos\theta}{r^2}=\frac{I_0\cos^2\theta}{r^2}=\frac{I_0\cos^4\theta}{h^2}.
+\]
+四个余弦的来源：配光一个，斜入射一个，距离变远两个（$1/r^2=\cos^2\theta/h^2$）。$I_0=100$ cd，$h=1$ m：正下方 $100$ lx；$\theta=45^\circ$ 处 $100\times\cos^445^\circ=25$ lx。
+\end{exam}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{亮度的传递：距离和介质}\label{sec:lumprop}
+\textbf{【题型】}“观看距离是否影响亮度？”“光从折射率 $n$ 进入 $n'$，亮度怎么变？”（课件 [光 p43--50]，也是后面亮度守恒证明的另一条路）
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>={Stealth}]
+\draw[line width=1.2pt,rotate around={20:(0,0)}] (0,-0.5) -- (0,0.5);
+\draw[line width=1.2pt,rotate around={-25:(5,0)}] (5,-0.5) -- (5,0.5);
+\node[left] at (-0.2,0.55) {$\dd S_1$};\node[right] at (5.2,0.55) {$\dd S_2$};
+\draw[dashed] (0,0) -- (5,0) node[midway,below]{$r$};
+\draw[->] (0,0) -- ({1.2*cos(20)},{1.2*sin(20)}) node[above]{法线};
+\draw[->] (5,0) -- ({5-1.2*cos(25)},{1.2*sin(25)}) node[above]{法线};
+\draw (0.6,0) arc (0:20:0.6);\node at (0.95,0.13) {$\theta_1$};
+\draw (4.4,0) arc (180:155:0.6);\node at (4.05,0.14) {$\theta_2$};
+\draw (-0.17,0.47) -- (4.8,0.45);\draw (0.17,-0.47) -- (5.21,-0.45);
+\end{tikzpicture}
+\end{center}
+
+\begin{exam}{答卷：自由空间亮度不变（元光管模型）}
+$\dd S_1$ 送到 $\dd S_2$ 的光通量，用亮度定义 $\dd\Phi=L\,\dd S\cos\theta\,\dd\Omega$，其中 $\dd\Omega_1=\dd S_2\cos\theta_2/r^2$：
+\[
+\dd\Phi_1=L_1\,\dd S_1\cos\theta_1\cdot\frac{\dd S_2\cos\theta_2}{r^2}.
+\]
+反过来，$\dd S_2$ 送到 $\dd S_1$：
+\[
+\dd\Phi_2=L_2\,\dd S_2\cos\theta_2\cdot\frac{\dd S_1\cos\theta_1}{r^2}.
+\]
+两式的几何因子完全相同。光路可逆且光通量守恒，$\dd\Phi_1=\dd\Phi_2$，所以 $L_1=L_2$。结论与 $r$ 无关：无吸收、无散射时，亮度沿光线不变。
+\end{exam}
+
+\begin{idea}[为什么走远了屏幕不会变暗]
+距离加倍，进入瞳孔的光通量变成 $\frac14$；视网膜上的像面积也变成 $\frac14$。视网膜上每单位面积的光不变，所以看起来一样亮，只是变小了。照度随距离下降，亮度不随距离变。
+\end{idea}
+
+\begin{exam}{答卷：跨介质时不变量是 $L/n^2$}
+界面上取面元 $\dd S_0$，入射角 $i$，折射角 $i'$。折射前后光通量相等：
+\[
+L\,\dd S_0\cos i\,\dd\omega=L'\,\dd S_0\cos i'\,\dd\omega'
+\quad\Rightarrow\quad
+\frac{L}{L'}=\frac{\cos i'\sin i'\dd i'}{\cos i\sin i\dd i}.
+\]
+这里用了 $\dd\omega=\sin i\dd i\dd\varphi$，且入射、折射、法线共面，$\dd\varphi=\dd\varphi'$。
+
+折射定律 $n\sin i=n'\sin i'$，两边微分得 $n\cos i\dd i=n'\cos i'\dd i'$。两式相乘：
+\[
+n^2\sin i\cos i\dd i=n'^2\sin i'\cos i'\dd i'.
+\]
+代回上式，$\boxed{\dfrac{L}{L'}=\dfrac{n^2}{n'^2}}$，即 $L/n^2$ 不变（忽略界面反射）。
+\end{exam}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{光学扩展量（Etendue）}\label{sec:etendue}
+\textbf{【题型】}“什么是光学扩展量？为什么 AR/VR 不能同时做到大眼盒和大视场？”（[光 p51--57]）
+
+\begin{idea}[一句话]
+上一节的几何因子 $\dd S\cos\theta\,\dd\Omega$ 在传播中不变，给它起个名字就是光学扩展量。它是光束占据的“面积 $\times$ 角度”。普通光学系统只能拿面积换角度，或者拿角度换面积，乘积不能变小。信号类比是时宽带宽积：把一头压窄，另一头必然变宽。
+\end{idea}
+
+\begin{formula}{光学扩展量及其守恒}\ix{光学扩展量}\ix{Etendue}\ix{眼盒}
+\[
+\dd G=n^2\,\dd S\cos\theta\,\dd\Omega,\qquad \dd\Phi=\frac{L}{n^2}\dd G
+\]
+面积 $S$、半角 $U$ 的朗伯光束（课件把半角写作 $\Omega_0$），积分同 §\ref{sec:lambert}：
+\[
+G=n^2S\int_0^{2\pi}\!\dd\varphi\int_0^U\cos\theta\sin\theta\dd\theta=\pi S\,n^2\sin^2U=\pi S\cdot\mathrm{NA}^2
+\]
+\textbf{守恒}：发光面积和发光角互斥。\textbf{前提}：不发生散射、吸收，也没有分波前、分振幅这类非序列传播。
+
+AR/VR 目镜：$A_\text{display}\,\mathrm{NA}_\text{display}^2\ \ge\ A_\text{eyebox}\,(\mathrm{FOV}/2)^2$（FOV 用弧度）。只靠传统镜头设计，不能同时得到大眼盒和大视场。
+\end{formula}
+
+\begin{idea}[和阿贝正弦条件是同一件事]
+像方、物方的扩展量相等：$\dd S\,n^2\sin^2U=\dd S'\,n'^2\sin^2U'$。代入 $\dd S'/\dd S=M^2$，开方就得到 $\dfrac{n\sin U}{n'\sin U'}=M$，也就是下一节用缩放定理证明的正弦条件。再用 $\dd\Phi=\frac{L}{n^2}\dd G$ 和光通量守恒，得到 $\frac{L}{n^2}$ 不变。
+\end{idea}
+
+\begin{exam}{数值例：微显示屏要多大}
+眼盒 $10\times10$ mm，FOV $=40^\circ$（半角 $0.349$ rad），显示屏 $\mathrm{NA}=0.3$：
+\[
+A_\text{display}\ge\frac{100\text{ mm}^2\times0.349^2}{0.3^2}\approx136\text{ mm}^2,
+\]
+约 $11.7\times11.7$ mm。要把眼盒面积翻倍，屏幕面积也要翻倍；屏幕和 NA 不变时，只能减小 FOV。
+\end{exam}
+
+\begin{recipe}{等效突破扩展量守恒的三种办法 [光 p55--57]}
+守恒来自元光管的光通量守恒，只对序列传播的几何光束成立，打破它的前提就可以突破：
+\begin{enumerate}
+\item \textbf{出瞳复制}：波导显示的出瞳扩展器（EPE），多次反射加光栅耦合，把出瞳复制成很多份，换来大眼盒。
+\item \textbf{散射}：把光打散，角度范围变大。
+\item \textbf{吸收再发射}：荧光天线吸收后重新发光，可见光通信接收机由此同时得到大视场和大收光面积。
+\end{enumerate}
+\end{recipe}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{阿贝正弦条件（傅里叶证法）}\label{sec:abbesine}
+\textbf{【题型】}“证明小视场、大孔径的无像差系统满足 $\dfrac{n\sin U}{n'\sin U'}=M$。可按：2.1 写出孔径角对应的空间频率；2.2 由缩放性质求频率域放大率；2.3 证明。”
+
+\begin{idea}[一句话]
+孔径角 $U$ 的光就是空间频率 $\frac{n\sin U}{\lambda_0}$ 的平面波；成像把物放大 $M$ 倍，频谱就缩小 $M$ 倍；孔径边缘（最高频率）也必须照这个比例对应，于是 $n'\sin U'=\frac{n\sin U}{M}$。
+\end{idea}
+
+\begin{formula}{阿贝正弦条件：傅里叶证法}\ix{阿贝正弦条件}\ix{亮度守恒}
+\textbf{2.1} 介质折射率 $n$ 中波长 $\lambda_0/n$，孔径角 $U$ 的平面波在横向的空间频率：
+$f_x=\dfrac{n\sin U}{\lambda_0}$；像方 $f_x'=\dfrac{n'\sin U'}{\lambda_0}$。
+
+\textbf{2.2} 缩放定理：$\F\{g(x/M)\}=|M|G(Mu)$，空域放大 $M$ 倍 $\Rightarrow$ 频域缩小 $M$ 倍，$f_x'=f_x/M$。
+
+\textbf{2.3} 孔径边缘是系统能传递的最高频率，物方的它必须对应像方的它（大孔径、小视场、无像差都要求每个频率一一对应），所以
+\[
+\frac{n'\sin U'}{\lambda_0}=\frac{1}{M}\cdot\frac{n\sin U}{\lambda_0}\quad\Longrightarrow\quad\boxed{\frac{n\sin U}{n'\sin U'}=M}
+\]
+\textbf{3（亮度守恒）}：无损 $\Phi=\Phi'$，面积比 $\dd S'/\dd S=M^2$：
+\[
+L\dd S\sin^2U=L'\dd S'\sin^2U'\ \Rightarrow\ L'=L\cdot\frac{\sin^2U}{M^2\sin^2U'}=L\cdot\frac{n'^2}{n^2}
+\]
+即 $\dfrac{L}{n^2}=\dfrac{L'}{n'^2}$，与放大率无关；$n=n'$ 时像亮度等于物亮度。（所以放大镜不能让物体“更亮”。）
+\end{formula}
+
+\begin{recipe}{2.1 为什么 $f_x=\frac{n\sin U}{\lambda_0}$（不会时这样推）}
+\begin{enumerate}
+\item 介质中波长 $\lambda=\lambda_0/n$，波矢大小 $|\bm k|=\frac{2\pi}{\lambda}=\frac{2\pi n}{\lambda_0}$。
+\item 与光轴夹角 $U$ 的平面波 $\exp[i|\bm k|(x\sin U+z\cos U)]$，在 $z=$ 常数的面上是 $\exp[i2\pi\frac{n\sin U}{\lambda_0}x]$。
+\item 对照 $\exp[i2\pi f_xx]$（第 \ref{ch:wave} 章空间频率定义），得 $f_x=\frac{n\sin U}{\lambda_0}$。同理像方 $f_x'=\frac{n'\sin U'}{\lambda_0}$。
+\end{enumerate}
+\end{recipe}
+
+\begin{warn}[变式与易错]
+\begin{itemize}
+\item \textbf{傍轴形式}：$\sin U\approx u$，得 $nuy=n'u'y'$（拉格朗日-亥姆霍兹不变量），正弦条件是它在大孔径下的推广。
+\item \textbf{显微物镜数例}：$M=-40$，物方 $\mathrm{NA}=n\sin U=0.65$，像方空气：$|\sin U'|=\frac{0.65}{40}=0.0163$，像方孔径角约 $0.93^\circ$——像方几乎是傍轴的。
+\item \textbf{只问 2.2 的“频率域放大率”}：答 $\frac1M$（空间放大 $M$，频率缩小 $M$）。
+\item \textbf{为什么“小视场”}：证明用到成像是平移不变的缩放（同一个 $M$ 对所有频率），只在视场中心附近成立。
+\item 正负号：$M<0$（倒像）时把 $U'$ 也取带号的角，比值仍为 $M$；只求大小就写 $|M|$。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{亮度守恒与像面照度}\label{sec:luminance}
+\textbf{【题型】}“证明物面与像面亮度相等，或仅差折射率决定的系数，与横向放大率无关。”；延伸：“像面照度多大 / 光圈数变化后曝光怎么变。”
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}P{0.2\textwidth}P{0.46\textwidth}P{0.26\textwidth}@{}}
+\toprule
+证法 & 用到什么 & 哪里\\ \midrule
+折射定律 & 元光管 $+$ 斯涅尔定律，逐面传递 & §\ref{sec:lumprop}\\
+光学扩展量 & $\dd G$ 守恒，$\dd\Phi=\frac{L}{n^2}\dd G$ & §\ref{sec:etendue}\\
+正弦条件 & 朗伯积分 $+$ 正弦条件 $+$ 能量守恒（傅里叶光学里常用的这条） & 下面的答卷\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{exam}{答卷：亮度守恒（照抄）}
+由朗伯体光通量（§\ref{sec:lambert}）：物方进入入瞳 $\Phi=\pi L\dd S\sin^2U$，像方从出瞳接收 $\Phi'=\pi L'\dd S'\sin^2U'$。\\
+光能无损：$\Phi=\Phi'$。横向放大率 $M$，面积比 $\frac{\dd S'}{\dd S}=M^2$（面积比为长度比的平方）。\\
+由阿贝正弦条件 $\frac{\sin U}{\sin U'}=\frac{Mn'}{n}$。代入：
+\[
+L'=L\cdot\frac{\dd S}{\dd S'}\cdot\frac{\sin^2U}{\sin^2U'}=L\cdot\frac{1}{M^2}\cdot\frac{M^2n'^2}{n^2}=\frac{n'^2}{n^2}L .
+\]
+即 $\frac{L}{n^2}=\frac{L'}{n'^2}$，与 $M$ 无关；$n=n'$ 时 $L'=L$。证毕。
+\end{exam}
+
+\begin{formula}{像面照度与光圈数}\ix{像面照度}\ix{光圈数}
+像面照度 $E'=\dfrac{\dd\Phi'}{\dd S'}=\pi L'\sin^2U'=\pi L\Big(\dfrac{n'}{n}\Big)^2\sin^2U'$。\\
+像方在空气中、物在无穷远附近：$\sin U'\approx\dfrac{D}{2f}=\dfrac{1}{2F/\#}$，
+\[
+E'\approx\frac{\pi L}{4(F/\#)^2}.
+\]
+光圈数每增大 $\sqrt2$ 倍（一档：$F/2\to F/2.8$），像面照度减半。
+\end{formula}
+
+\begin{warn}[变式与常见问法]
+\begin{itemize}
+\item \textbf{放大镜 / 望远镜能让物体“更亮”吗？}不能，像的亮度 $\le$ 物的亮度（有损耗时更小）。它们增大的是视角（像更大），不是亮度。
+\item \textbf{会聚太阳光能点燃纸}：增大的是\textbf{照度}（光通量集中到小面积），不是亮度；焦点处照度 $E'=\pi L_\odot\sin^2U'$，其中像的亮度最多等于太阳表面亮度 $L_\odot$。
+\item \textbf{油浸物镜}：物方 $n=1.5$，像方空气 $n'=1$：$L'=L/2.25$（物方亮度按 $n^2$ 计）。
+\item \textbf{数值}：$L=10^4$ nit，$F/2.8$：$E'=\frac{\pi\times10^4}{4\times7.84}\approx1.0\times10^3$ lx。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{色度学速查}\label{sec:color}
+\begin{formula}{色度学要点}\ix{色度坐标}\ix{色品坐标}\ix{XYZ}\ix{相关色温}\ix{色彩空间}
+\begin{itemize}
+\item CIE XYZ 三刺激值；色度坐标（也叫色品坐标）$x=\frac{X}{X+Y+Z}$，$y=\frac{Y}{X+Y+Z}$，$z=1-x-y$；$Y$ 即亮度。
+\item 色度坐标相同 $\Rightarrow$ 颜色（色调、饱和度）相同，相关色温相同；亮度、光谱可以不同（同色异谱）。
+\item 设备相关色彩空间：RGB、HSV、CMYK；设备无关：XYZ、$L^*a^*b^*$、$L^*u^*v^*$。
+\item $L^*=116(Y/Y_n)^{1/3}-16$（感知均匀的明度）。
+\end{itemize}
+\end{formula}
+
+\begin{recipe}{色度计算的几种问法}
+\begin{enumerate}
+\item \textbf{给 $X,Y,Z$ 求色度坐标}：$x=\frac{X}{X+Y+Z}$，$y=\frac{Y}{X+Y+Z}$。例：$X=Y=Z$ $\Rightarrow$ $x=y=\frac13$（等能白点 E）；$(X,Y,Z)=(41,21,2)$ $\Rightarrow$ $x=\frac{41}{64}=0.64$，$y=\frac{21}{64}=0.33$（接近 sRGB 红基色）。
+\item \textbf{给 $(x,y,Y)$ 反求}：$X=\frac{x}{y}Y$，$Z=\frac{1-x-y}{y}Y$。
+\item \textbf{两色光混合}：三刺激值相加 $X=X_1+X_2$，\dots；色度坐标不能直接相加。混合色落在两点连线上，按 $X+Y+Z$ 加权（杠杆原理）。
+\item \textbf{明度}：$Y/Y_n=0.18$ $\Rightarrow$ $L^*=116\times0.565-16\approx50$（18\% 灰是感知上的中灰）。
+\item \textbf{gamma / 灰阶换算}见\pageref{sec:gamma}（例：灰阶 128 $\to$ 21.6\%）。
+\item \textbf{从光谱算颜色}：光源 SPD $\times$ 物体反射谱或透射谱 $=$ 进入人眼的光谱 $\to$ 与 $\bar x,\bar y,\bar z$ 积分得 $XYZ$ $\to$ 除以和得 $(x,y)$ $\to$ 在色品图上打点 [色 p48]。
+\end{enumerate}
+\end{recipe}
+
+\begin{exam}{数值例：红光加蓝光}
+红 $(x,y,Y)=(0.64,0.33,21.26)$，蓝 $(0.15,0.06,7.22)$。\\
+先反求：红 $X=\frac{0.64}{0.33}\times21.26=41.23$，$Z=\frac{0.03}{0.33}\times21.26=1.93$；蓝 $X=\frac{0.15}{0.06}\times7.22=18.05$，$Z=\frac{0.79}{0.06}\times7.22=95.06$。\\
+再相加：$X=59.28$，$Y=28.48$，$Z=96.99$，和为 $184.75$。\\
+所以 $x=0.321$，$y=0.154$。直接平均坐标会得到 $(0.395,0.195)$，这是错的。
+\end{exam}
+
+\begin{warn}[易混概念]
+\begin{itemize}
+\item \textbf{同色异谱}：光谱不同但 $X,Y,Z$ 相同，看起来颜色一样。色度坐标相同只说明 $X:Y:Z$ 相同，亮度可以不同。
+\item \textbf{设备相关}：同一组 RGB/HSV 数值在不同显示器上颜色不同；XYZ、Lab、Luv 由 CIE 标准观察者定义，与设备无关。
+\item \textbf{相关色温}：与某温度黑体辐射颜色最接近时的温度（K），由色度坐标决定。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{颜色从哪来：视锥和视杆}\label{sec:colorbio}
+色度学的链条是：光谱分布（物理量）$\to$ 人眼视觉系统 $\to$ 色彩（心理量）。研究两端关系的学问叫心理物理学 [色 p5]。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}P{0.14\textwidth}P{0.38\textwidth}P{0.38\textwidth}@{}}
+\toprule
+ & \textbf{视锥细胞}\ix{视锥细胞} & \textbf{视杆细胞}\ix{视杆细胞}\\ \midrule
+数量 & 600–700 万 & 约 1.25 亿\\
+分布 & 绝大多数在中央几度的\textbf{中央凹} & 中央凹周围\\
+工作环境 & 亮环境（明视觉，Photopic） & 暗环境（暗视觉，Scotopic）\\
+能感受 & 颜色：S、M、L 三种，大致对应蓝、绿、红 & 只有亮度\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \textbf{三种视锥决定颜色是三维的}：任何光谱到了眼睛都只剩三个响应值。这是后面三刺激值的生理基础。
+\item \textbf{盲点}：视神经挡在感光细胞前面，再穿出视网膜，穿出处没有感光细胞 [色 p6--7]。
+\item \textbf{注视点显示}（Foveated Display）：只在中央凹约 $5^\circ\sim10^\circ$ 内给高分辨率，需配合注视追踪，可降低计算负担和光学加工难度 [色 p16]。
+\item \textbf{红绿色盲}：M、L 视锥的基因相邻且高度同源（96\%），峰值只差约 30 nm，在 X 染色体上隐性遗传，所以男性远多于女性 [色 p18]。
+\end{itemize}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{配色实验：颜色是三维向量}\label{sec:colormatch}
+\begin{formula}{格拉斯曼定律（1853，现代表述）[色 p25]}\ix{格拉斯曼定律}\ix{同色异谱}
+$A\equiv B$ 表示人分辨不出两个光谱刺激的区别。
+\begin{itemize}
+\item 对称性：$A\equiv B\Rightarrow B\equiv A$；传递性：$A\equiv B,\ B\equiv C\Rightarrow A\equiv C$。
+\item 比例性：$A\equiv B\Rightarrow kA\equiv kB$。
+\item 可加性：$A\equiv B,\ C\equiv D\Rightarrow A+C\equiv B+D$。
+\end{itemize}
+后两条就是\textbf{线性}。所以颜色可以用向量表示，配色可以用线性代数算。原始表述还指出：人眼能分辨色调（主波长）、亮度、饱和度三种变化；光谱不同的光可以外观相同，即同色异谱。
+\end{formula}
+
+\begin{formula}{配色方程与色彩匹配函数 [色 p26--36]}\ix{色彩匹配函数}\ix{三刺激值}\ix{三原色}
+配色实验：左边待匹配色 $C$，右边调三个单色原色的强度，直到受试者看不出差别：
+\[
+C[C]\equiv R[R]+G[G]+B[B],\qquad \text{常简写为 } C=R+G+B
+\]
+CIE 1931-RGB 的原色是 $700$ nm、$546.1$ nm、$435.8$ nm。$R,G,B$ 是\textbf{三刺激值}，方括号是\textbf{色度单位}。任意光谱 $\varphi(\lambda)$ 的三刺激值：
+\[
+R=\int\bar r(\lambda)\varphi(\lambda)\dd\lambda,\quad
+G=\int\bar g(\lambda)\varphi(\lambda)\dd\lambda,\quad
+B=\int\bar b(\lambda)\varphi(\lambda)\dd\lambda
+\]
+$\bar r,\bar g,\bar b$ 是单位强度单色光的三刺激值，叫\textbf{色彩匹配函数}（CMF），是视觉系统的固有属性。
+\end{formula}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}P{0.28\textwidth}P{0.28\textwidth}P{0.34\textwidth}@{}}
+\toprule
+ & 信号与系统 & 色彩感知\\ \midrule
+输入分解 & $x(t)$ = 冲激的叠加 & $\varphi(\lambda)$ = 单色光的叠加\\
+单位响应 & 冲激响应 $h(t)$ & $[\bar r,\bar g,\bar b](\lambda)$\\
+输出 & 响应的加权叠加（积分） & $[R,G,B]=\int[\bar r,\bar g,\bar b]\varphi\dd\lambda$\\
+响应的维数 & 连续函数，无穷维 & 三维向量（配色实验保证）\\
+前提 & 线性，卷积还要时不变 & 只要线性，无需时不变\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{idea}[同色异谱就是投影丢信息]
+光谱是无穷维的，三个积分把它投影成三维向量。投影必然多对一，所以不同光谱可以落到同一点，这就是同色异谱。显示器只用三种原色就能骗过眼睛，靠的也是这一点。
+\end{idea}
+
+\begin{warn}[配色的三个细节]
+\begin{itemize}
+\item \textbf{负值}：有的单色光无论怎样混合三原色都配不出来。把一种原色加到待配色一侧才能配上，等效于这个原色取负。例：$480$ nm 的 $C=-0.05R+0.03G+0.15B$，实际做的是 $C+0.05R=0.03G+0.15B$ [色 p34--35]。
+\item \textbf{色度单位}：混合出白光时三原色的实际亮度比约 $1:4.6:0.06$，但各规定为 1 个色度单位，所以白光是 $R=G=B$，色品坐标 $(\frac13,\frac13)$。$R$、$G$、$B$ 的数值大小不等于亮度大小。
+\item \textbf{为什么 $2^\circ$}：这个视角内主要落在只有视锥的中央凹上。CIE 1964 又给了 $10^\circ$ 观察者。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{从 CIE RGB 到 CIE XYZ}\label{sec:rgb2xyz}
+CIE 1931-RGB 有两个不便：CMF 和色品图有负值；从 $R,G,B$ 看不出亮度。所以另选三个假想原色 $X,Y,Z$，要求是 [色 p41--42]：
+\begin{enumerate}
+\item 所有单色光的三刺激值都为正，CMF 全正；
+\item 色品图里不存在的颜色占比尽量小；
+\item 其中一个刺激值（$Y$）直接表示亮度。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+\begin{axis}[name=a,width=0.5\textwidth,height=5cm,xmin=380,xmax=740,ymin=-0.12,ymax=0.42,xlabel={$\lambda$ / nm},title={CIE RGB：$\bar r$ 有负瓣},xtick={400,500,600,700},axis lines=left,clip=false]
+\addplot[black,line width=0.9pt,smooth] coordinates {(380,-0.001) (390,-0.001) (400,-0.000) (410,0.003) (420,0.004) (430,-0.002) (440,0.003) (450,-0.009) (460,-0.030) (470,-0.041) (480,-0.047) (490,-0.059) (500,-0.073) (510,-0.085) (520,-0.090) (530,-0.075) (540,-0.035) (550,0.023) (560,0.095) (570,0.173) (580,0.247) (590,0.306) (600,0.341) (610,0.339) (620,0.298) (630,0.233) (640,0.163) (650,0.102) (660,0.057) (670,0.028) (680,0.013) (690,0.005) (700,0.002) (710,0.000) (720,0.000) (730,0.000) (740,-0.000)};
+\addplot[black,dashed,line width=0.9pt,smooth] coordinates {(380,0.000) (390,0.000) (400,0.000) (410,-0.001) (420,-0.001) (430,-0.001) (440,-0.001) (450,0.005) (460,0.015) (470,0.025) (480,0.039) (490,0.058) (500,0.087) (510,0.127) (520,0.173) (530,0.205) (540,0.215) (550,0.212) (560,0.195) (570,0.169) (580,0.136) (590,0.099) (600,0.064) (610,0.035) (620,0.017) (630,0.007) (640,0.003) (650,0.002) (660,0.002) (670,0.002) (680,0.001) (690,0.001) (700,0.001) (710,0.000) (720,0.000) (730,0.000) (740,0.000)};
+\addplot[black,dotted,line width=1.3pt,smooth] coordinates {(380,0.001) (390,0.004) (400,0.011) (410,0.036) (420,0.117) (430,0.248) (440,0.310) (450,0.318) (460,0.299) (470,0.231) (480,0.144) (490,0.083) (500,0.048) (510,0.027) (520,0.014) (530,0.006) (540,0.001) (550,-0.001) (560,-0.001) (570,-0.001) (580,-0.001) (590,-0.001) (600,-0.001) (610,-0.000) (620,-0.000) (630,-0.000) (640,-0.000) (650,-0.000) (660,-0.000) (670,-0.000) (680,-0.000) (690,-0.000) (700,-0.000) (710,-0.000) (720,-0.000) (730,-0.000) (740,-0.000)};
+\addplot[gray,thin] coordinates {(380,0) (740,0)};
+\node at (axis cs:625,0.36) {$\bar r$（实线）};
+\node at (axis cs:515,0.275) {$\bar g$（虚线）};
+\node at (axis cs:450,0.37) {$\bar b$（点线）};
+\end{axis}
+\begin{axis}[at={(a.east)},anchor=west,xshift=0.6cm,width=0.5\textwidth,height=5cm,xmin=380,xmax=740,ymin=-0.1,ymax=1.95,xlabel={$\lambda$ / nm},title={CIE XYZ：全部为正},xtick={400,500,600,700},axis lines=left,clip=false]
+\addplot[black,line width=0.9pt,smooth] coordinates {(380,0.000) (390,0.002) (400,0.012) (410,0.049) (420,0.141) (430,0.273) (440,0.359) (450,0.344) (460,0.281) (470,0.192) (480,0.101) (490,0.032) (500,0.002) (510,0.017) (520,0.070) (530,0.160) (540,0.283) (550,0.434) (560,0.603) (570,0.773) (580,0.921) (590,1.021) (600,1.056) (610,1.000) (620,0.854) (630,0.657) (640,0.456) (650,0.285) (660,0.160) (670,0.081) (680,0.037) (690,0.015) (700,0.006) (710,0.002) (720,0.001) (730,0.000) (740,0.000)};
+\addplot[black,dashed,line width=0.9pt,smooth] coordinates {(380,0.000) (390,0.001) (400,0.001) (410,0.003) (420,0.005) (430,0.010) (440,0.019) (450,0.033) (460,0.056) (470,0.090) (480,0.139) (490,0.212) (500,0.327) (510,0.500) (520,0.706) (530,0.869) (540,0.954) (550,0.994) (560,0.991) (570,0.950) (580,0.872) (590,0.763) (600,0.634) (610,0.501) (620,0.374) (630,0.264) (640,0.176) (650,0.110) (660,0.065) (670,0.036) (680,0.019) (690,0.009) (700,0.004) (710,0.002) (720,0.001) (730,0.000) (740,0.000)};
+\addplot[black,dotted,line width=1.3pt,smooth] coordinates {(380,0.007) (390,0.021) (400,0.061) (410,0.204) (420,0.652) (430,1.386) (440,1.734) (450,1.782) (460,1.672) (470,1.295) (480,0.810) (490,0.466) (500,0.271) (510,0.156) (520,0.085) (530,0.043) (540,0.020) (550,0.009) (560,0.004) (570,0.001) (580,0.000) (590,0.000) (600,0.000) (610,0.000) (620,0.000) (630,0.000) (640,0.000) (650,0.000) (660,0.000) (670,0.000) (680,0.000) (690,0.000) (700,0.000) (710,0.000) (720,0.000) (730,0.000) (740,0.000)};
+\node at (axis cs:672,0.95) {$\bar x$（实线）};
+\node at (axis cs:565,1.32) {$\bar y=V(\lambda)$（虚线）};
+\node at (axis cs:515,1.65) {$\bar z$（点线）};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{formula}{CIE RGB 与 XYZ 的转换、$Y$ 的含义 [色 p43--46]}\ix{CIE XYZ}\ix{CIE RGB}
+\[
+\begin{bmatrix}X\\Y\\Z\end{bmatrix}=
+\begin{bmatrix}2.7688&1.7517&1.1301\\1.0000&4.5906&0.0601\\0&0.0565&5.5942\end{bmatrix}
+\begin{bmatrix}R\\G\\B\end{bmatrix},\quad
+\begin{bmatrix}R\\G\\B\end{bmatrix}=
+\begin{bmatrix}0.4185&-0.1587&-0.0828\\-0.0912&0.2524&0.0157\\0.0009&-0.0025&0.1786\end{bmatrix}
+\begin{bmatrix}X\\Y\\Z\end{bmatrix}
+\]
+\[
+X=k\!\int\!\bar x\varphi\dd\lambda,\quad Y=k\!\int\!\bar y\varphi\dd\lambda,\quad Z=k\!\int\!\bar z\varphi\dd\lambda
+\]
+$\bar y(\lambda)$ 就是明视觉相对视见函数 $V(\lambda)$，所以 $Y$ 就是亮度。
+
+$k$ 有两种取法：归一化时 $k=\dfrac{100}{\int\bar y\varphi\dd\lambda}$，此时 $Y=100$；要绝对物理量时 $k=683$ lm/W，$Y$ 的单位随 $\varphi$ 而定（luminance 或 illuminance）。
+\end{formula}
+
+\begin{idea}[这个矩阵能读出什么]
+第二行 $Y=1.0000R+4.5906G+0.0601B$，正是三原色的亮度比 $1:4.6:0.06$。每一行的和都约为 $5.6507$，所以 $R=G=B$ 的白变成 $X=Y=Z$，白点还是 $(\frac13,\frac13)$。
+\end{idea}
+
+\begin{exam}{数值例：$480$ nm 单色光的色品坐标}
+由 $(R,G,B)=(-0.05,\,0.03,\,0.15)$ 代入矩阵：
+\begin{align*}
+X&=2.7688(-0.05)+1.7517(0.03)+1.1301(0.15)=0.0836\\
+Y&=1.0000(-0.05)+4.5906(0.03)+0.0601(0.15)=0.0967\\
+Z&=0.0565(0.03)+5.5942(0.15)=0.8408
+\end{align*}
+和为 $1.0212$，得 $x\approx0.082$，$y\approx0.095$，$R$ 的负值在 $XYZ$ 里消失了。课件这组 $R,G,B$ 只保留两位，精确值是 $(0.091,0.133)$。
+\end{exam}
+
+\begin{warn}[课件上的两处笔误]
+\begin{itemize}
+\item 课件 [色 p42] 的 XZ 线写作 $r+4.5907g+0.00601b=0$，与转换矩阵第二行对照，$b$ 的系数应为 $0.0601$。
+\item 课件 [色 p54] 的 $v'=\frac{9X}{X+15Y+3Z}$，分子应为 $9Y$，这样才等于同页的 $\frac{9y}{-2x+12y+3}$。
+\end{itemize}
+\end{warn}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{色品图}\label{sec:chromadiagram}
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize,>={Stealth}]
+\begin{axis}[width=0.8\textwidth,axis equal image,xmin=0,xmax=0.8,ymin=0,ymax=0.9,xlabel={$x$},ylabel={$y$},grid=major,grid style={gray!25},xtick={0,0.1,...,0.8},ytick={0,0.1,...,0.9},clip=false]
+\addplot[black,line width=1pt] coordinates {(0.1741,0.005) (0.1733,0.0048) (0.1714,0.0051) (0.1644,0.0109) (0.1566,0.0177) (0.144,0.0297) (0.1241,0.0578) (0.1096,0.0868) (0.0913,0.1327) (0.0687,0.2007) (0.0454,0.295) (0.0235,0.4127) (0.0082,0.5384) (0.0039,0.6548) (0.0139,0.7502) (0.0389,0.812) (0.0743,0.8338) (0.1142,0.8262) (0.1547,0.8059) (0.1929,0.7816) (0.2296,0.7543) (0.3016,0.6923) (0.3731,0.6245) (0.4441,0.5547) (0.5125,0.4866) (0.5752,0.4242) (0.627,0.3725) (0.6658,0.334) (0.6915,0.3083) (0.719,0.2809) (0.73,0.27) (0.7334,0.2666) (0.7347,0.2653)};
+\addplot[black,dashed,line width=0.8pt] coordinates {(0.1733,0.0048) (0.7347,0.2653)};
+\addplot[black,dash dot,line width=0.7pt] coordinates {(0.64,0.33) (0.30,0.60) (0.15,0.06) (0.64,0.33)};
+\addplot[black,line width=1.6pt,smooth] coordinates {(0.581,0.398) (0.524,0.416) (0.475,0.415) (0.436,0.405) (0.380,0.377) (0.345,0.352) (0.313,0.324) (0.281,0.288) (0.257,0.258)};
+\node[fill=white,inner sep=0.5pt,left] at (axis cs:0.0743,0.8338) {520};
+\node[fill=white,inner sep=0.5pt,above right] at (axis cs:0.2296,0.7543) {540};
+\node[fill=white,inner sep=0.5pt,right] at (axis cs:0.3731,0.6245) {560};
+\node[fill=white,inner sep=0.5pt,right] at (axis cs:0.5125,0.4866) {580};
+\node[fill=white,inner sep=0.5pt,right] at (axis cs:0.6270,0.3725) {600};
+\node[fill=white,inner sep=0.5pt,right] at (axis cs:0.7347,0.2653) {700};
+\node[fill=white,inner sep=0.5pt,left] at (axis cs:0.0082,0.5384) {500};
+\node[fill=white,inner sep=0.5pt,left] at (axis cs:0.0454,0.2950) {490};
+\node[fill=white,inner sep=0.5pt,left] at (axis cs:0.0913,0.1327) {480};
+\node[fill=white,inner sep=0.5pt,left] at (axis cs:0.135,0.043) {460};
+\node[inner sep=0.5pt,left] at (axis cs:0.165,0.006) {400};
+\fill (axis cs:0.3333,0.3333) circle (1.4pt);
+\draw[<-] (axis cs:0.3333,0.3333) -- (axis cs:0.17,0.42) node[left,fill=white,inner sep=1pt] {等能白 E};
+\fill (axis cs:0.524,0.416) circle (1.2pt);\node[fill=white,inner sep=0.5pt,below] at (axis cs:0.53,0.40) {2000 K};
+\fill (axis cs:0.436,0.405) circle (1.2pt);\node[fill=white,inner sep=0.5pt,below] at (axis cs:0.43,0.385) {3000 K};
+\fill (axis cs:0.313,0.324) circle (1.2pt);\draw[<-] (axis cs:0.313,0.324) -- (axis cs:0.40,0.31) node[right,fill=white,inner sep=1pt] {6500 K};
+\draw[<-] (axis cs:0.281,0.288) -- (axis cs:0.20,0.23) node[left,fill=white,inner sep=1pt] {$10000$ K};
+\fill (axis cs:0.64,0.33) circle (1.3pt);\node[above right,inner sep=1pt,fill=white] at (axis cs:0.645,0.335) {R};
+\fill (axis cs:0.30,0.60) circle (1.3pt);\node[above left,inner sep=1pt,fill=white] at (axis cs:0.29,0.605) {G};
+\fill (axis cs:0.15,0.06) circle (1.3pt);\node[below right,inner sep=1pt,fill=white] at (axis cs:0.155,0.055) {B};
+\fill (axis cs:0.321,0.154) circle (1.5pt);
+\draw[<-] (axis cs:0.321,0.154) -- (axis cs:0.37,0.25) node[right,fill=white,inner sep=1pt] {R、B 混合};
+\draw[<-] (axis cs:0.50,0.1564) -- (axis cs:0.57,0.07) node[right,fill=white,inner sep=1pt] {紫线};
+\end{axis}
+\end{tikzpicture}
+
+\small 细实线：光谱轨迹；虚线：紫线；点划线：sRGB 三原色围成的色域；粗实线：黑体轨迹。
+\end{center}
+
+\begin{recipe}{色品图上的术语怎么认 [色 p47--50]}\ix{色品图}\ix{光谱轨迹}\ix{紫线}\ix{色域}\ix{普朗克轨迹}
+\begin{enumerate}
+\item \textbf{马蹄形内部}：人眼色域，人能看见的全部色品。$x,y$ 只有两个数，亮度由 $Y$ 单独给，合起来就是 CIE $xyY$ 色彩空间。
+\item \textbf{马蹄形曲线}：光谱轨迹，每点是一个单色光。
+\item \textbf{底部直线}：紫线，不对应单色光，由约 400 nm 和 700 nm 的光混合得到。
+\item \textbf{普朗克轨迹}：不同温度黑体的色品，用来读色温。
+\item \textbf{连线混合}：两点连线上的颜色都能由这两点混合得到，三点、多点同理。所以\textbf{色域必为凸}。
+\item \textbf{设备色域}：设备三原色围成的三角形，三角形外的颜色这台设备显示不出。人眼色域是弯的，任何三个实际原色都盖不全。
+\end{enumerate}
+\end{recipe}
+
+% =====================================================================
+\needspace{8\baselineskip}\section{感知均匀：CIELUV、CIELAB 与色差}\label{sec:lab}
+XYZ 有两个问题：$Y$ 和人感受到的明度（Lightness）不成线性；色品图上距离相等，看起来差别并不相等（MacAdam 椭圆大小不一）。所以再做一次非线性变换，让坐标距离接近感知差别 [色 p53]。
+
+\begin{formula}{CIELAB（1976）与 CIE76 色差 [色 p58--60]}\ix{CIELAB}\ix{色差}\ix{JND}\ix{对立色}
+\[
+L^*=116f\Big(\frac{Y}{Y_n}\Big)-16,\quad
+a^*=500\Big[f\Big(\frac{X}{X_n}\Big)-f\Big(\frac{Y}{Y_n}\Big)\Big],\quad
+b^*=200\Big[f\Big(\frac{Y}{Y_n}\Big)-f\Big(\frac{Z}{Z_n}\Big)\Big]
+\]
+\[
+f(t)=\begin{cases}t^{1/3},&t>\delta^3\\[2pt]\dfrac{t}{3\delta^2}+\dfrac{4}{29},&t\le\delta^3\end{cases}\qquad\delta=\frac{6}{29},\ \ \delta^3\approx0.008856
+\]
+$X_n,Y_n,Z_n$ 是参考白：D65 为 $(95.0489,\,100,\,108.8840)$；印刷常用 D50 为 $(96.4212,\,100,\,82.5188)$。
+\[
+C^*_{ab}=\sqrt{a^{*2}+b^{*2}},\quad h_{ab}=\arctan\frac{b^*}{a^*},\qquad
+\Delta E^*_{ab}=\sqrt{(\Delta L^*)^2+(\Delta a^*)^2+(\Delta b^*)^2}
+\]
+$\Delta E^*_{ab}$ 的恰可察觉差（JND）约为 $2.3$。
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,>={Stealth},scale=0.95]
+\draw[->] (-2.2,0) -- (2.2,0) node[right]{$+a^*$ 红};
+\node[left] at (-2.2,0) {绿 $-a^*$};
+\draw[->] (0,-1.7) -- (0,1.8) node[above]{$+b^*$ 黄};
+\node[below] at (0,-1.7) {蓝 $-b^*$};
+\draw[line width=0.9pt] (0,0) -- (1.5,1.1) node[midway,above left,inner sep=1pt]{$C^*$};
+\fill (1.5,1.1) circle (1.6pt) node[right]{颜色点};
+\draw (0.65,0) arc (0:36:0.65);\node at (0.95,0.26) {$h$};
+\draw[line width=0.9pt,->] (6.1,-1.6) -- (6.1,1.8);
+\node[right] at (6.2,1.6) {$L^*=100$，白};
+\node[right] at (6.2,-1.4) {$L^*=0$，黑};
+\node[right] at (6.2,0.1) {明度轴};
+\end{tikzpicture}
+\end{center}
+
+\begin{idea}[为什么坐标长这样]
+视觉信号不是直接传 L、M、S，而是传一个亮度信号和两个\textbf{对立}信号：红对绿、黄对蓝。$a^*$ 是 $X$ 减 $Y$ 的差，$b^*$ 是 $Y$ 减 $Z$ 的差，对应这两个对立通道。立方根和 gamma 同理，都是把物理亮度压缩成接近感知的量。$a^*,b^*$ 换成极坐标就是 CIELCh：$C^*$ 是彩度，$h$ 是色调。
+\end{idea}
+
+\begin{formula}{CIELUV（1976）[色 p54]}\ix{CIELUV}
+\[
+u'=\frac{4X}{X+15Y+3Z}=\frac{4x}{-2x+12y+3},\qquad
+v'=\frac{9Y}{X+15Y+3Z}=\frac{9y}{-2x+12y+3}
+\]
+\[
+L^*=\begin{cases}\big(\frac{29}{3}\big)^3Y/Y_n,&Y/Y_n\le\big(\frac{6}{29}\big)^3\\[2pt]116(Y/Y_n)^{1/3}-16,&Y/Y_n>\big(\frac{6}{29}\big)^3\end{cases},\quad
+u^*=13L^*(u'-u_n'),\quad v^*=13L^*(v'-v_n')
+\]
+它是 XYZ 的简单变换，$u'v'$ 色品图上 MacAdam 椭圆更接近等大。
+\end{formula}
+
+\begin{exam}{数值例：求 $L^*a^*b^*$ 和色差}
+D65 下 $(X,Y,Z)=(41.24,\,21.26,\,1.93)$。\\
+比值 $0.4339,\ 0.2126,\ 0.0177$，都大于 $0.008856$，取立方根：$f=0.7571,\ 0.5968,\ 0.2609$。
+\begin{align*}
+L^*&=116\times0.5968-16=53.2\\
+a^*&=500\times(0.7571-0.5968)=80.1\\
+b^*&=200\times(0.5968-0.2609)=67.2
+\end{align*}
+彩度 $C^*=\sqrt{80.1^2+67.2^2}=104.6$，色调 $h=\arctan\frac{67.2}{80.1}=40.0^\circ$。\\
+另一色若 $\Delta L^*=1,\ \Delta a^*=2,\ \Delta b^*=2$：$\Delta E^*_{ab}=\sqrt{1+4+4}=3>2.3$，看得出差别。
+\end{exam}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}P{0.46\textwidth}P{0.46\textwidth}@{}}
+\toprule
+CIE 里程碑 [色 p66] & 色差公式的发展 [色 p63--64]\\ \midrule
+1924 明视觉 $V(\lambda)$；1951 暗视觉 $V'(\lambda)$ & 1964：CIE 1964 $U^*V^*W^*$\\
+1931 CIE 1931 色彩空间、$2^\circ$ 标准观察者 & 1976：CIELUV、CIELAB（CIE76）\\
+1964 $10^\circ$ 标准观察者；1967 标准日光 D65 & 1995：CIE94\\
+1976 CIELAB、CIELUV & 2000：CIEDE2000，加入权重函数 $S_L,S_C,S_H$、旋转项 $R_T$ 和参数因子 $k_L,k_C,k_H$，修正 CIELAB 的不均匀\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+设备相关的色彩空间（RGB、CMYK）表达的颜色依赖设备性能，不便跨硬件沟通；设备无关的 CIE-XYZ、CIE-Lab、CIE-Luv 用来做中转 [色 p67]。
+
+% =====================================================================
+\needspace{8\baselineskip}\section{色温与显色指数}\label{sec:cctcri}
+\begin{formula}{色温、相关色温、显色指数 [色 p68--77]}\ix{色温}\ix{显色指数}\ix{CRI}\ix{D65}
+\begin{itemize}
+\item \textbf{色温}：黑体在该温度下辐射的颜色。温度越低越偏红，越高越偏蓝。D65 是约 6500 K 的标准日光，同类还有 D50、D55、D75。
+\item \textbf{相关色温（CCT）}：光源不在黑体轨迹上时，取色品图上最接近的黑体轨迹点对应的温度。
+\item \textbf{显色指数（CRI）}：光源还原物体颜色的能力，以标准物体在理想光源下的颜色为基准，范围 0--100。
+\[
+R_i=100-4.6\,\Delta E_i
+\]
+$\Delta E_i$ 是第 $i$ 个标准色样在被测光源和基准光源下的色差，在 CIE 1964 $U^*V^*W^*$ 空间计算。一般显色指数 $R_a$ 取色样 1--8 的平均，色样 9--15 用于特殊用途。
+\item \textbf{基准光源}：被测光源 CCT $<5000$ K 时用黑体（课件写 illuminant A），$>5000$ K 时用标准日光（课件写 D65）。
+\end{itemize}
+\end{formula}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+光源 & CCT / K & CRI\\ \midrule
+白炽灯 / 卤素灯 & 3200 & 100\\
+冷白 LED & 6000 & $\sim70$\\
+冷白荧光灯 & 4200 & $\sim62$\\
+透明汞灯 & 6410 & $\sim17$\\
+低压钠灯 & 1800 & 接近 0\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warn}[CCT 和 CRI 别混]
+\begin{itemize}
+\item \textbf{CCT 由色品决定，CRI 由光谱决定}。两个光源 CCT 都是 6184 K，光谱不同，照出来的物体可以不一样 [色 p74]。这也是同色异谱：光源本身看着一样，物体颜色不一定一样。
+\item \textbf{CRI 和光效常互相制约}：减少黄荧光粉的冷白 LED 光效高，但 CRI 低。博物馆、零售、室内重视还原，选高 CRI；路灯、车灯、车间更重视亮度，可用低 CRI [色 p78]。
+\item \textbf{粗略分级}：0--60 差，60--85 好，85--100 很好 [色 p75]。
+\end{itemize}
+\end{warn}

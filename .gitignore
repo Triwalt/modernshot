@@ -1,0 +1,12 @@
+build/
+__pycache__/
+*.aux
+*.log
+*.idx
+*.ind
+*.ilg
+*.toc
+*.out
+*.loc
+*.lo*
+*.pdf

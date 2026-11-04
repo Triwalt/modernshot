@@ -1,0 +1,117 @@
+\PassOptionsToPackage{gray}{xcolor}
+\documentclass[11pt,a4paper,openright,oneside]{ctexbook}
+\usepackage[margin=1.8cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm,mathrsfs}
+\usepackage{booktabs,array,longtable,multirow,tabularx}
+\usepackage{enumitem}
+\usepackage{tikz}
+\graphicspath{{./}{../}}% build.py 在 build/ 里编译，图片在上一级
+\usetikzlibrary{arrows.meta,calc,decorations.pathreplacing,patterns,positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr,needspace,newunicodechar}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{imakeidx}
+\makeindex[title=关键词索引,columns=3,intoc]
+\usepackage{pifont}
+\usepackage[hidelinks,bookmarksnumbered]{hyperref}
+
+\setCJKmainfont{Noto Serif SC}[BoldFont=Noto Sans SC]
+\setCJKsansfont{Noto Sans SC}[AutoFakeBold=2.5]
+\xeCJKsetcharclass{"2460}{"24FF}{1}
+\setlist{nosep,leftmargin=2em}
+\linespread{1.15}
+\ctexset{chapter={format=\huge\bfseries\sffamily,beforeskip=0pt,afterskip=12pt},
+  section={format=\Large\bfseries\sffamily},subsection={format=\large\bfseries\sffamily}}
+
+\setlength{\headheight}{15pt}
+\pagestyle{fancy}\fancyhf{}
+\newcommand{\hbversion}{v1.6（2026-11-05）}
+\fancyhead[L]{\small\sffamily 现代光学 · 开卷手册\quad\textbar\quad Hemios\,\textperiodcentered\,\hbversion}
+\fancyhead[R]{\small\sffamily\nouppercase{\leftmark}}
+\fancyfoot[C]{\sffamily\bfseries\thepage}
+
+% ---------- 记号 ----------
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\IF}{\mathcal{F}^{-1}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\rect}{\operatorname{rect}}
+\newcommand{\sinc}{\operatorname{sinc}}
+\newcommand{\circf}{\operatorname{circ}}
+\newcommand{\jinc}{\operatorname{jinc}}
+\newcommand{\comb}{\operatorname{comb}}
+\newcommand{\tri}{\Lambda}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\dint}{\iint_{-\infty}^{\infty}}
+\newcommand{\conv}{\ast}
+\newcommand{\corr}{\star}
+\newcommand{\ix}[1]{\index{#1}}
+
+% ---------- 盒子（黑白打印：图标 + 文字标签 + 边框样式三重区分） ----------
+% 图标
+\newcommand{\icoF}{{\large\ding{110}}}% 实心方块：公式
+\newcommand{\icoR}{{\large\ding{228}}}% 箭头：套路
+\newcommand{\icoW}{\tikz[baseline=-0.12em,x=1em,y=1em]{\draw[line width=0.9pt,line join=round] (0,-0.08)--(1.0,-0.08)--(0.5,0.8)--cycle;\node[inner sep=0,font=\sffamily\bfseries\footnotesize] at (0.5,0.24){!};}}% 感叹号三角：易错
+\newcommand{\icoI}{\tikz[baseline=-0.12em,x=1em,y=1em,line width=0.6pt]{\draw (0.5,0.5) circle (0.27);\draw (0.36,0.27)--(0.36,0.06)--(0.64,0.06)--(0.64,0.27);\draw (0.4,-0.06)--(0.6,-0.06);\foreach \a in {20,90,160}\draw (0.5,0.5)++(\a:0.36)--++(\a:0.16);}}% 灯泡：直觉
+\newcommand{\icoE}{{\large\ding{46}}}% 铅笔：例题
+\tcbset{
+  bxbase/.style={enhanced,breakable,fonttitle=\bfseries\sffamily,left=4pt,right=4pt,top=3pt,bottom=3pt},
+  % 公式：黑底白字标题 + 粗实线框
+  fmlstyle/.style={bxbase,colback=white,colframe=black,colbacktitle=black,coltitle=white,boxrule=1pt,arc=1.5pt,before skip=6pt,after skip=6pt},
+  % 套路：粗左边条 + 细框，白底标题、标题下细线
+  rcpstyle/.style={bxbase,sharp corners,colback=white,colframe=black,colbacktitle=white,coltitle=black,boxrule=0.4pt,leftrule=4.5pt,titlerule=0.4pt,left=6pt},
+  % 易错：双线框，极浅灰底
+  warnstyle/.style={bxbase,colback=gray!7,colframe=black,colbacktitle=gray!7,coltitle=black,boxrule=1.3pt,arc=0pt,sharp corners,titlerule=0pt,
+    borderline={0.45pt}{2.4pt}{black},left=7pt,right=7pt,top=4pt,bottom=4pt,toptitle=2pt,lefttitle=7pt},
+  % 直觉：虚线框，无标题底色
+  ideastyle/.style={bxbase,colback=white,colbacktitle=white,coltitle=black,frame hidden,titlerule=0pt,arc=3pt,
+    borderline={0.8pt}{0pt}{black,dash pattern=on 4pt off 2.5pt}},
+  % 例题：灰底标题 + 细框
+  examstyle/.style={bxbase,colback=white,colframe=black!75,colbacktitle=gray!28,coltitle=black,boxrule=0.45pt,arc=1pt},
+}
+\newcounter{fml}
+\newtcolorbox[use counter=fml,number format=\arabic,list inside=fml,list type=subsection]{formula}[2][]{%
+  fmlstyle,title={\icoF\ 【公式 F\thetcbcounter】#2},list entry={【公式 F\thetcbcounter】#2},#1}
+\newtcolorbox[auto counter,number within=chapter,list inside=rcp,list type=subsection]{recipe}[2][]{%
+  rcpstyle,title={\icoR\ 【套路 \thetcbcounter】#2},list entry={【套路 \thetcbcounter】#2},#1}
+\newtcolorbox{warn}[1][注意]{warnstyle,title={\icoW\ 【易错】#1}}
+\newtcolorbox{idea}[1][直觉]{ideastyle,title={\icoI\ 【直觉】#1}}
+\newtcolorbox{exam}[1]{examstyle,title={\icoE\ 【例】#1}}
+
+% 各章开头的“在全景图上的位置”：#1 是要涂灰的格子编号（1–6）
+\providecommand{\whereami}[1]{\begin{center}\begin{tikzpicture}[font=\scriptsize]
+\foreach \i in {#1} \fill[gray!30] ({2.2*\i-1.0},-0.27) rectangle ({2.2*\i+1.0},0.27);
+\foreach \i/\t in {1/① 照明,2/② 物 $t$,3/③ 传播,4/④ 透镜 $P$,5/⑤ 传播,6/⑥ 观察面} \node[draw,minimum width=2.0cm,minimum height=0.54cm,inner sep=1pt] (w\i) at (2.2*\i,0) {\t};
+\foreach \i in {1,...,5} {\pgfmathtruncatemacro{\j}{\i+1}\draw[-{Stealth}] (w\i)--(w\j);}
+\end{tikzpicture}\end{center}}
+\makeatother
+% 每章首页落在 PDF 的奇数页（按实际输出的张数算，与页脚印的页码无关），方便双面打印后分章装订；需要时补一张空白页
+\newcounter{hbabspage}
+\AddToHook{shipout/after}{\stepcounter{hbabspage}}
+\renewcommand{\cleardoublepage}{\clearpage\ifodd\value{hbabspage}\hbox{}\thispagestyle{empty}\newpage\fi}
+% 本书页码引用统一写成 p.页码（与页脚印的页码相同）
+\AtBeginDocument{\NewCommandCopy\hbpageref\pageref\DeclareRobustCommand*{\pageref}[1]{p.\,\hbpageref{#1}}}
+\begin{document}
+\frontmatter
+\include{ch00-front}
+\mainmatter
+\setcounter{chapter}{-1}
+\include{ch00b-primer}
+\include{ch01-math}
+\include{ch02-wave}
+\include{ch03-diffraction}
+\include{ch04-lens}
+\include{ch05-imaging}
+\include{ch06-aberration}
+\include{ch07-visual}
+\include{ch08-photometry}
+\include{ch09-examples}
+\backmatter
+\include{ch98-glossary}
+\include{ch99-lists}
+\cleardoublepage
+\printindex
+\end{document}

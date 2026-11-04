@@ -1,0 +1,1807 @@
+% =====================================================================
+% 第零章：零基础入门（写给学过信号与系统、没学过光学的读者）
+% 只讲“是什么、为什么”；推导和答题模板见后面各章（用 \pageref 指过去）。
+% =====================================================================
+\providecommand{\phead}[1]{\par\smallskip\noindent{\sffamily\bfseries\color{blue!55!black}#1}\quad}
+\providecommand{\pkao}{\phead{它在题目里怎么出现}}
+\providecommand{\psee}{\phead{详细内容见}}
+\providecommand{\proot}[1]{\par\noindent{\sffamily\footnotesize\colorbox{gray!14}{属于：#1}}\par\smallskip}
+\providecommand{\pans}[1]{\par{\footnotesize\color{black!65}\textbf{答案}\enspace #1\par}}
+\providecommand{\scn}[1]{\begin{tikzpicture}[>=Stealth,baseline=(current bounding box.north),font=\scriptsize]#1\end{tikzpicture}}
+\providecommand{\pnaxis}[2]{\draw[gray,thin] (#1,0)--(#2,0);}
+\providecommand{\pnobj}[1]{\draw[line width=1.5pt,dash pattern=on 2.5pt off 1.5pt] (#1,-0.5)--(#1,0.5);}
+\providecommand{\pnlens}[1]{\draw[thick,fill=gray!15] (#1,0) ellipse (0.07 and 0.6);}
+\providecommand{\pnscr}[1]{\draw[thick] (#1,-0.55)--(#1,0.55);}
+\providecommand{\pnplane}[2]{\foreach \y in {-0.3,0,0.3} \draw[->] (#1,\y)--(#2,\y);}
+\providecommand{\pnsrc}[1]{\fill (#1,0) circle (1.6pt);}
+\providecommand{\pndim}[3]{\draw[<->,thin] (#1,-0.72)--(#2,-0.72) node[midway,below,inner sep=1pt]{#3};}
+
+\chapter{零基础入门：用信号与系统的语言读懂光学}\label{ch:primer}
+
+\begin{idea}[这一章写给谁、怎么读]
+写给\textbf{学过信号与系统、没学过光学}的读者。读完它，后面各章和例题题目里的词都能认出来。
+如果也没学过信号与系统，先抓住三个问题：光到每个位置时有多强、相位如何？一个点经过系统后变成什么？许多点的贡献怎样相加？下面会从这些问题出发，逐步连接卷积、频谱和传递函数。
+\begin{itemize}
+\item 顺着读一遍约 1 小时。每节同一个顺序：\textbf{一句话} $\to$ \textbf{图} $\to$ \textbf{类比} $\to$ \textbf{最少的公式} $\to$ \textbf{它在题目里怎么出现} $\to$ \textbf{详细内容见第几页}。
+\item 累了就只看每节的【直觉】框（虚线框，标题前有灯泡 \icoI）和图，也能抓住大意。
+\item 分不清 $t$ 和 $P$、平面波和球面波、相干和非相干、各种相位时：看\pageref{sec:p-whole}的全景图。
+\item 考场上碰到不认识的词：先查\pageref{sec:p-table}的对照总表，再按页码跳到详解。
+\end{itemize}
+本章只讲“是什么、为什么”，不做推导。推导和答题模板都在后面各章。
+\end{idea}
+
+% =====================================================================
+\section{这门课在讲什么：一张总图}\label{sec:p-overview}
+\proot{总图（四个根概念都在这里）}
+
+\begin{idea}[一句话]
+傅里叶光学 = \textbf{把信号与系统搬到二维平面上}。信号是一个平面上的光 $E(x,y)$，系统是“光从这个平面走到下一个平面”。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize,x=1.05cm,y=1cm]
+% 照明
+\foreach \y in {-0.9,-0.45,0,0.45,0.9} \draw[->,red!70!black] (-0.3,\y)--(1.2,\y);
+% 物：光栅
+\fill[gray!20] (1.45,-1.1) rectangle (1.55,1.1);
+\foreach \y in {-1.0,-0.5,0,0.5} \fill[black] (1.45,\y) rectangle (1.55,\y+0.25);
+% 0 级
+\draw[black,very thick] (1.5,0.5)--(5,0.5)--(7,0)--(9.667,-0.667);
+\draw[black,very thick] (1.5,-0.5)--(5,-0.5)--(7,0)--(9.667,0.667);
+% +1 级
+\draw[black!75,thick,dash pattern=on 4pt off 2pt] (1.5,0.5)--(5,1.375)--(7,0.5)--(9.667,-0.667);
+\draw[black!75,thick,dash pattern=on 4pt off 2pt] (1.5,-0.5)--(5,0.375)--(7,0.5)--(9.667,0.667);
+% -1 级
+\draw[black!75,thick,dash pattern=on 4pt off 2pt] (1.5,0.5)--(5,-0.375)--(7,-0.5)--(9.667,-0.667);
+\draw[black!75,thick,dash pattern=on 4pt off 2pt] (1.5,-0.5)--(5,-1.375)--(7,-0.5)--(9.667,0.667);
+% +2 级：被光阑挡住
+\draw[black!60,very thick,densely dotted] (1.5,0.5)--(5,2.25)--(7,1.0);
+\draw[black!60,very thick,densely dotted] (1.5,-0.5)--(5,1.25)--(7,1.0);
+% 透镜
+\draw[thick,fill=blue!10] (5,0) ellipse (0.13 and 2.4);
+% 光瞳（频谱面上的光阑）
+\draw[line width=2.2pt] (7,0.72)--(7,2.0); \draw[line width=2.2pt] (7,-0.72)--(7,-2.0);
+% 像面
+\draw[thick] (9.667,-1.6)--(9.667,1.6);
+\draw[->,very thick,blue] (9.95,0.667)--(9.95,-0.667);
+% 标注
+\node[align=center] at (0.3,-2.0) {① 照明\\平面波};
+\node[align=center] at (1.6,-2.0) {② 物\\光栅};
+\node[align=center] at (3.25,-2.0) {③ 传播\\分成几个方向};
+\node[align=center] at (5,-2.9) {④ 透镜};
+\node[align=center] at (7,-2.45) {⑤ 后焦面 = 频谱面\\光阑只放过低频};
+\node[align=center] at (9.667,-2.0) {⑥ 像面};
+\node[gray,font=\scriptsize,anchor=west] at (7.1,1.55) {$+2$ 级（高频，点线）被挡};
+% 图内线型说明
+\draw[black,very thick] (-0.3,2.3)--(0.3,2.3) node[right,font=\scriptsize]{0 级（直流）};
+\draw[black!75,thick,dash pattern=on 4pt off 2pt] (-0.3,1.9)--(0.3,1.9) node[right,font=\scriptsize]{$\pm1$ 级};
+\draw[black!60,very thick,densely dotted] (-0.3,1.5)--(0.3,1.5) node[right,font=\scriptsize]{$+2$ 级}; 
+\end{tikzpicture}
+
+{\small 粗实线：0 级（直流）；虚线：$\pm1$ 级；点线：$+2$ 级（被挡）。一块光栅被平面波照亮，光分成几个方向（衍射级）；透镜把每个方向会聚到后焦面上一个点（频谱）；光阑挡掉太斜的 $+2$ 级（高频）；剩下的光在像面重新汇合成像。}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize,
+  bx/.style={draw,rounded corners=2pt,align=center,minimum width=2.3cm,minimum height=1.1cm,inner sep=2pt},
+  sx/.style={align=center,font=\scriptsize,text=blue!50!black}]
+\foreach \i/\t/\c/\s in {0/{照明\\平面波 $=1$}/red!6/{载波},1/{物\\乘 $t(x,y)$}/gray!10/{乘法（加窗、调制）},2/{传播 $z$\\衍射}/blue!6/{LTI 系统：卷积 $h$},3/{透镜\\焦面 = 频谱}/green!8/{频谱分析仪},4/{光瞳\\挡掉高频}/orange!10/{低通滤波器 $H$},5/{像面\\只测 $|E|^2$}/yellow!15/{平方律检波}}{
+  \node[bx,fill=\c] (b\i) at (2.8*\i,0) {\t};
+  \node[sx] at (2.8*\i,-1.0) {\s};
+}
+\foreach \i in {0,...,4} {\pgfmathtruncatemacro{\j}{\i+1}\draw[->,thick] (b\i)--(b\j);}
+\end{tikzpicture}
+
+{\small 上排（方框里）：光学；下排（框下小字）：信号与系统里对应的东西。}
+\end{center}
+
+\phead{概念树：先学四个根，叶子就好懂}
+题干里一大堆看不懂的词，其实都挂在下面四个“根”上。每个根是一句信号与系统的话；叶子只是这句话在某个具体场合的名字。
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize,
+  root/.style={draw,rounded corners=3pt,align=center,minimum width=3.75cm,minimum height=1.2cm,inner sep=3pt,font=\footnotesize},
+  leaf/.style={anchor=west,inner sep=1.5pt}]
+\node[draw,rounded corners=3pt,fill=gray!10,font=\footnotesize\bfseries,inner sep=4pt] (top) at (6.45,1.5) {傅里叶光学 = 二维的信号与系统};
+\foreach \i/\c/\t in {0/red!8/{\textbf{根① 元件 = 乘法}\\$E_{\text{出}}=t(x,y)\,E_{\text{入}}$},
+                      1/blue!8/{\textbf{根② 传播 = 卷积}\\远场 = 傅里叶变换},
+                      2/green!10/{\textbf{根③ 成像 = LTI 系统}\\光瞳 = 滤波器},
+                      3/orange!12/{\textbf{根④ 像差}\\= 光瞳上的相位误差 $\ee^{ikW}$}}{
+  \node[root,fill=\c] (r\i) at (4.3*\i,0) {\t};
+  \draw[->,thick,gray] (top.south)--(r\i.north);
+}
+\foreach \i/\lst in {
+  0/{{复透过率函数 $t(x,y)$},振幅型：孔、光栅,相位调制函数（SLM）,面形 $\Delta\to$ 相位 $k(n-1)\Delta$,线性倾斜相位 $\to$ 偏折,透镜 = 二次相位,Alvarez 透镜（错开变焦）},
+  1/{惠更斯次波 = 冲激响应,傍轴近似（振幅当常数）,远场近似（相位当常数）,菲涅耳衍射（近场）,夫琅禾费衍射 = 傅里叶变换,透镜焦面 = 搬来的远场,4f 系统 = 两次傅里叶变换},
+  2/{{出射光瞳 $P(x,y)$},衍射受限（只受光瞳限制）,相干与非相干,点扩展函数 PSF,CTF、OTF（传递函数）,调制传递函数 MTF,截止频率、数值孔径 NA},
+  3/{像差,{波像差 $W(x,y)$（长度）},广义光瞳 $P\,\ee^{ikW}$,RMS 波前误差 $\sigma_W$,Strehl 比（峰值之比）,倾斜：只平移、不算像差}}{
+  \foreach \lf [count=\j] in \lst {
+    \draw[gray] ({4.3*\i-1.75},{-0.48-0.5*\j})--++(0.18,0);
+    \node[leaf] at ({4.3*\i-1.57},{-0.48-0.5*\j}) {\lf};
+    \xdef\last{\j}
+  }
+  \draw[gray] ({4.3*\i-1.75},-0.6)--({4.3*\i-1.75},{-0.48-0.5*\last});
+}
+\node[font=\scriptsize\color{blue!55!black}] at (0,-4.5) {§\ref{sec:p-screen}、§\ref{sec:p-lensft}};
+\node[font=\scriptsize\color{blue!55!black}] at (4.3,-4.5) {§\ref{sec:p-diff}、§\ref{sec:p-lensft}};
+\node[font=\scriptsize\color{blue!55!black}] at (8.6,-4.5) {§\ref{sec:p-imaging}、§\ref{sec:p-eye}};
+\node[font=\scriptsize\color{blue!55!black}] at (12.9,-4.5) {§\ref{sec:p-aberr}};
+\node[draw,dashed,rounded corners=3pt,inner sep=4pt,font=\scriptsize] at (6.45,-5.1) {共同语言（先读）：几何光学 §\ref{sec:p-geom}\quad 复振幅 §\ref{sec:p-wave}\quad 空间频率 §\ref{sec:p-spfreq}};
+\end{tikzpicture}
+\end{center}
+后面每一节开头的灰色小标签写着它属于哪一根。题干里碰到一个生词，先在这棵树上找到它挂在哪个根下，再回想那个根的一句话，就知道它在题里起什么作用。
+
+
+\phead{逐块说明}
+\begin{enumerate}
+\item \textbf{照明}：一束光打到物体上。最常见的是垂直射来的平面波，在物面上处处一样，记成常数 1。
+\item \textbf{物}：透明胶片、小孔、光栅。它让每一点的光乘上一个数 $t(x,y)$（透射系数）。光过物体 = \textbf{乘法}（§\ref{sec:p-screen}）。
+\item \textbf{传播}：光离开物体后会散开，这叫\textbf{衍射}。走一段距离 = 和一个冲激响应\textbf{卷积}（§\ref{sec:p-diff}）。
+\item \textbf{透镜}：把光会聚。它在后焦面上把光排成物的\textbf{频谱}，是一台“模拟的傅里叶变换器”（§\ref{sec:p-lensft}）。
+\item \textbf{光瞳}：镜头的通光口有限大，太斜的光（高空间频率）进不来。它是一个\textbf{低通滤波器}（§\ref{sec:p-imaging}）。
+\item \textbf{像面}：相机、眼睛只测得到光的\textbf{强度} $|E|^2$，测不到相位，像一个平方律检波器（§\ref{sec:p-wave}）。
+\end{enumerate}
+
+\begin{idea}[类比：时间信号 $\leftrightarrow$ 平面上的光]
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}P{5.6cm}P{10cm}@{}}
+信号与系统 & 傅里叶光学\\ \hline
+自变量：时间 $t$（s） & 自变量：平面上的位置 $(x,y)$（mm），\textbf{二维}\\
+频率 $f$（Hz = 周/秒） & 空间频率 $(u,v)$（周/mm，写作 lp/mm 或 mm$^{-1}$）\\
+信号 $x(t)$，可以用复数（相量）表示 & 复振幅 $E(x,y)$，一律是复数\\
+LTI 系统：$y=x\conv h$，$Y=XH$ & 衍射、成像：像 $=$ 物 $\conv$ PSF，频谱乘传递函数\\
+滤波器 & 光瞳、频谱面上的挡板\\
+\end{tabular}
+
+\smallskip
+和信号与系统不同的只有三点：\textbf{(1)} 二维；\textbf{(2)} 信号是复数，但探测器只看 $|E|^2$；\textbf{(3)} 要分\textbf{相干}（激光，振幅相加）和\textbf{非相干}（普通光，强度相加）两种系统（§\ref{sec:p-imaging}）。
+\end{idea}
+
+\pkao 题目里常见的“衍射屏 $\to$ 透镜 $\to$ 频谱面 $\to$ 透镜 $\to\cdots\to$ 观察屏”就是上面这条链：“衍射屏”是物，“频谱面”是透镜的后焦面，“相干传递函数”就是整个系统的 $H(u,v)$。
+求“衍射受限非相干成像系统”的 PSF、MTF 一类题，讲的是“物 $\to$ 镜头（光瞳）$\to$ 像”这一段。
+
+\psee 傅里叶数学工具\pageref{ch:math}；光波与空间频率\pageref{ch:wave}；衍射\pageref{ch:diff}；透镜与 4f \pageref{ch:lens}；成像\pageref{ch:imaging}；像差\pageref{ch:aberr}；视光学\pageref{ch:visual}；光度色度\pageref{ch:photo}；综合例题\pageref{ch:examples}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 光穿过一张透明胶片，在信号与系统里对应哪种运算？
+\item 镜头的光瞳在信号与系统里相当于什么？
+\item “MTF”“波像差”“夫琅禾费近似”“复透过率函数”分别挂在哪一根上？
+\end{enumerate}
+\pans{1. 乘法（乘 $t(x,y)$）。\enspace 2. 低通滤波器。\enspace 3. 根③、根④、根②、根①。}
+
+% =====================================================================
+\section{全景图：所有题都走同一条链路}\label{sec:p-whole}\ix{全景图}
+\proot{总图的公式版（四个根在这里连成一条式子）}
+
+\begin{idea}[一句话]
+不管题目写的是衍射屏、透镜、4f 还是成像系统，光只做两件事：\textbf{穿过薄元件，逐点乘一个函数；走过一段距离，做一次卷积}。题目之间的差别只有三处：链路上放了什么、放在哪、最后看哪个面。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize,
+  bx/.style={draw,rounded corners=2pt,align=center,minimum width=2.45cm,minimum height=1.15cm,inner sep=2pt},
+  sx/.style={align=center,font=\scriptsize,text width=2.5cm}]
+\draw[gray,thin] (-1.1,2.5)--(14.7,2.5);
+\foreach \y in {1.9,2.5,3.1} \draw[->] (-1.1,\y)--(0.7,\y);
+\draw[line width=1.6pt,dash pattern=on 3pt off 2pt] (2.85,1.6)--(2.85,3.4);
+\node[above] at (2.85,3.4) {物、衍射屏};
+\draw[thick,fill=gray!15] (8.55,2.5) ellipse (0.13 and 0.85);
+\draw[line width=2.2pt] (8.55,3.35)--(8.55,3.7); \draw[line width=2.2pt] (8.55,1.3)--(8.55,1.65);
+\node[above] at (8.55,3.7) {透镜和它的通光口};
+\draw[thick] (14.25,1.5)--(14.25,3.5);
+\node[above] at (14.25,3.5) {观察面};
+\draw[<->] (2.85,1.05)--(8.55,1.05) node[midway,fill=white,inner sep=2pt]{距离 $d_0$};
+\draw[<->] (8.55,1.05)--(14.25,1.05) node[midway,fill=white,inner sep=2pt]{距离 $z$};
+\foreach \i/\t in {0/{① 照明\\$U_{\text{入}}(x_1,y_1)$},1/{② 物：乘\\$t(x_1,y_1)$},2/{③ 传播：卷积\\$\conv h_{d_0}$},3/{④ 透镜：乘\\$P\,\ee^{-ik\frac{x^2+y^2}{2f}}$},4/{⑤ 传播：卷积\\$\conv h_{z}$},5/{⑥ 观察面\\$E$，$I=|E|^2$}}{
+  \node[bx] (b\i) at (2.85*\i,0) {\t};
+}
+\foreach \i in {0,...,4} {\pgfmathtruncatemacro{\j}{\i+1}\draw[->,thick] (b\i)--(b\j);}
+\foreach \i/\t in {0/{载波},1/{被处理的信号},2/{全通滤波器\\（色散信道）},3/{加窗 + 空域乘 chirp},4/{全通滤波器\\（色散信道）},5/{平方律检波}}{
+  \node[sx] at (2.85*\i,-1.05) {\t};
+}
+\end{tikzpicture}
+
+{\small 上：光路。中：每一格对光做什么。下：信号与系统里对应的东西。chirp 指相位随坐标二次变化的信号。}
+\end{center}
+
+把这六格连起来，就是相干光下所有题的总式：
+\[
+\boxed{E(x,y)=\Big\{\big[(U_{\text{入}}\,t)\conv h_{d_0}\big]\cdot P\,\ee^{-ik\frac{x^2+y^2}{2f}}\Big\}\conv h_z,\qquad I=|E|^2}
+\]
+每道题都是这条式子的特例：没有透镜就去掉 ④⑤；4f 就是 ②–⑤ 走两遍；成像题把 ③④⑤ 合起来当成一个 LTI 系统。
+
+\begin{recipe}{拿到题先填这六格}
+\begin{enumerate}
+\item \textbf{照明}：平面波正入射、斜入射，还是点光源的球面波？（\pageref{sec:p-illum}）
+\item \textbf{物}：$t$ 是什么函数？题目给的是复透射系数，还是强度透过率？（\pageref{sec:p-tvsP}）
+\item \textbf{距离}：物到透镜多远？观察面离透镜多远？是不是焦面或像面？（\pageref{sec:p-scenes}的场景表）
+\item \textbf{透镜}：口径要不要管？题目说“不考虑有限口径”就令 $P\equiv1$。
+\item \textbf{相干性}：相干算复振幅，非相干算强度。（\pageref{sec:p-cohtable}）
+\item \textbf{交什么}：复振幅要保留相位因子；只问强度才能取模消掉相位。（\pageref{sec:p-ledger}）
+\end{enumerate}
+\end{recipe}
+
+\needspace{10\baselineskip}
+\subsection*{$t$、$P$、$T$：都是乘法，角色不同}\phantomsection\label{sec:p-tvsP}\ix{复透射系数!与光瞳的区别}\ix{光瞳函数!与复透射系数的区别}
+数学上三者都是“逐点乘一个函数”。区别在于它在信号与系统里扮演谁：$t$ 是\textbf{信号}，$P$ 和 $T$ 是\textbf{系统}。
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{2.2cm}P{4.7cm}P{4.9cm}P{4.5cm}@{}}
+\toprule
+ & $t(x,y)$ 复透射系数 & $P(x,y)$ 光瞳函数 & $T(\xi,\eta)$ 频谱面滤波器\\ \midrule
+它是谁 & 要研究的物、衍射屏 & 透镜或镜头的通光口 & 人为放在频谱面的挡板、相位片\\
+放在哪 & 物面 & 透镜面、出瞳面 & 4f 中间的频谱面\\
+取值 & 任意复数 & 孔内 1、孔外 0；有像差时乘 $\ee^{ikW}$ & 任意复数\\
+决定什么 & 输入信号 & 冲激响应 $h$ 和截止频率 & 传递函数 $H$\\
+怎么用 & $\F\{t\}$ 是物的频谱 & $\F\{P\}$ 缩放得 $h$；$P$ 缩放得 CTF；$P$ 自相关得 OTF & $H(u,v)=T(\lambda f_1u,\lambda f_1v)$\\
+题干的说法 & 衍射屏、光栅、胶片、物、复透射系数 & 出射光瞳、有限孔径、通光口径、衍射受限 & 频谱面设置滤波器、SLM、光阑\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\phead{同一个方孔，看它在题里干什么}
+\begin{itemize}
+\item 平面波照方孔，问远处或焦面的图样：方孔是\textbf{物}，$t=\rect\frac xa\rect\frac ya$，答案是 $\F\{t\}$。
+\item 方孔贴在镜头上，用镜头拍别的东西：方孔是\textbf{光瞳}，物另有自己的 $t$。方孔决定每个物点变成什么样的光斑。
+\item 两件事的公式相同：一个物点的像，就是光瞳的夫琅禾费图样。所以 $h=\F\{P\}$ 和“孔的远场 $=\F\{t\}$”是同一条结论。
+\end{itemize}
+
+\phead{$t$ 和 $P$ 同时出现：看它们在不在同一个面}
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{4.3cm}P{5.3cm}P{6.8cm}@{}}
+\toprule
+位置关系 & 算法 & 结果\\ \midrule
+物贴着透镜，在焦面看频谱 & 空域相乘 $tP$，频谱卷积 $\F\{t\}\conv\F\{P\}$ & 每个谱点被展宽成 $\F\{P\}$ 的形状（亮点变胖）\\
+物成像到像面，$P$ 在瞳面 & 频域相乘 $\hat E_g\cdot H_c$，空域卷积 $E_g\conv h$ & 每个像点被展宽成 $h$ 的形状（像变模糊）\\
+\bottomrule
+\end{tabular}
+\end{center}
+两行互为对偶：在哪个面相乘，就在它的傅里叶面上卷积。
+
+\begin{warn}[符号撞车]
+\begin{itemize}
+\item 有的笔记把光瞳写成小写 $p(x,y)$，和本书、课件的 $P(x,y)$ 是同一个东西。
+\item 字母 $T$ 在不同地方意思不同：4f 滤波题里的 $T$ 常是频谱面滤波器；SIM、三缝光瞳一类题里的 $T(x)$ 常是物的\textbf{强度透过率}；Alvarez 题里的 $T(x,y)$ 是元件厚度；第 \ref{ch:lens} 章焦面单元的 $T(u,v)$ 是 $\F\{t\}$。每次先看题目怎么定义。
+\item 强度透过率和复透射系数的关系是 $T=|t|^2$。相干题要的是 $t$，非相干题要的是 $T$。
+\end{itemize}
+\end{warn}
+
+\needspace{10\baselineskip}
+\subsection*{照明：乘在 $t$ 前面的那个因子}\phantomsection\label{sec:p-illum}\ix{照明!平面波与球面波}\ix{球面波!照明}\ix{平面波!照明}
+\begin{center}\small\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}P{3.1cm}P{4.6cm}P{8.7cm}@{}}
+\toprule
+照明 & 在物面上写成 & 结果怎么变\\ \midrule
+平面波正入射 & $1$（或常数 $A$） & 基准情形：频谱中心在焦面原点，频谱面就是后焦面\\
+平面波斜入射，倾角 $\theta$ & $\ee^{i2\pi u_0x_1}$，$u_0=\dfrac{\sin\theta}{\lambda}$ & 一次相位：频谱平移 $u_0$，焦面图样整体移动 $\lambda fu_0=f\sin\theta$，形状不变\\
+两束对称平面波 & $2\cos(2\pi u_0x_1)$ & 物面上出现干涉条纹，强度 $\propto1+\cos(2\pi\cdot2u_0x_1)$（SIM，\pageref{ex:v-sim}）\\
+发散球面波，点源在物前 $l_0$ & $\exp\!\Big(+ik\dfrac{x_1^2+y_1^2}{2l_0}\Big)$ & 二次相位：频谱面从后焦面移到\textbf{点源的像面}\\
+会聚球面波，会聚到物后 $R$ & $\exp\!\Big(-ik\dfrac{x_1^2+y_1^2}{2R}\Big)$ & 不用再加透镜，在会聚点所在的面上直接得到频谱，尺度 $\lambda R$\\
+轴外点源 $(x_0,y_0)$ & $\exp\!\Big[ik\dfrac{(x_1-x_0)^2+(y_1-y_0)^2}{2l_0}\Big]$ & 展开后是二次项（球面）加一次项（倾斜）\\
+\bottomrule
+\end{tabular}
+\end{center}
+三者的联系：平面波是点源移到无穷远（$l_0\to\infty$，二次项消失）；平面波穿过透镜就是会聚球面波。所以\textbf{球面波照明相当于平面波照明再多一片薄透镜}，二次项系数直接相加。这也解释了为什么频谱面总在点源的像面：频谱是“每个方向会聚成一个点”，零频那个方向就是照明光本身，它会聚到哪，频谱面就在哪。
+
+\needspace{10\baselineskip}
+\subsection*{自由传播：同一件事的三种写法，以及“相位延迟”}\phantomsection\label{sec:p-prop}\ix{相位延迟}\ix{传递函数!自由空间}
+\begin{center}\small\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}P{2.5cm}P{7.4cm}P{6.5cm}@{}}
+\toprule
+写法 & 公式（略常数） & 什么时候用\\ \midrule
+空域卷积 & $E=E_1\conv h$，$h=\dfrac{\ee^{ikz}}{i\lambda z}\exp\!\Big(ik\dfrac{x^2+y^2}{2z}\Big)$ & 说明系统是 LTI；只有一个点物时\\
+频域相乘 & $\hat E=\hat E_1H$，$H=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)]$ & 物是周期结构（频率离散）；物离开前焦面（\pageref{ex:v-4fshift}）\\
+展开平方 & $E\propto\ee^{ik\frac{x^2+y^2}{2z}}\F\Big\{E_1\ee^{ik\frac{x_1^2+y_1^2}{2z}}\Big\}\Big|_{u=\frac{x}{\lambda z}}$ & 后面接透镜或前面有会聚波，要和它们抵消二次相位时；远场\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\phead{“相位延迟”有三种，不要混}
+\begin{enumerate}
+\item \textbf{整体延迟} $\ee^{ikz}$：光走 $z$ 累积的相位，所有频率相同。它只是个常数，单路光可略。
+\item \textbf{随频率变的延迟} $\exp[-i\pi\lambda z(u^2+v^2)]$：这才是图样会变的原因。空间频率 $u$ 对应一束斜着走的平面波，在同一个 $(x,y)$ 点上每走 $z$ 只累积 $k_zz=kz\cos\gamma$，比正着走的少。傍轴下少的量正是 $\pi\lambda z(u^2+v^2)$。例如 $\lambda=0.5\,\mu$m、$z=100$ mm：$u=1$ mm$^{-1}$ 只差 $0.05\pi$，$u=10$ mm$^{-1}$ 差 $5\pi$。低频几乎不动，高频转很多圈，各频率对不齐了，图样就变了。$|H|=1$，能量一点没丢。这就是信号里的\textbf{色散信道}。
+\item \textbf{元件带来的延迟} $\ee^{ik(n-1)\Delta(x,y)}$：玻璃厚度造成的，随\textbf{位置}变，属于“乘 $t$”，不属于传播。
+\end{enumerate}
+
+\phead{透镜和传播是一对对偶，所以才能抵消}
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{4.6cm}P{5.6cm}P{6.2cm}@{}}
+\toprule
+ & 透镜 & 传播 $z$\\ \midrule
+在\textbf{空域} & 乘 $\exp\!\big(-ik\frac{x^2+y^2}{2f}\big)$ & 卷积 $\exp\!\big(+ik\frac{x^2+y^2}{2z}\big)$\\
+在\textbf{频域} & 卷积（一般不这样算） & 乘 $\exp[-i\pi\lambda z(u^2+v^2)]$\\
+\bottomrule
+\end{tabular}
+\end{center}
+注意同一个传播在空域是正二次、在频域是负二次（chirp 的傅里叶变换符号相反），往回走时符号再翻转。空域“乘 chirp”后接“卷 chirp”，只要系数相同，中间的二次项就消掉，剩下傅里叶核。这就是“透镜 + 走 $f$ = 傅里叶变换”的数学原因。
+
+\needspace{10\baselineskip}
+\subsection*{相位记账：哪一次项、加在哪、产生什么效果}\phantomsection\label{sec:p-ledger}\ix{相位记账}
+同一个次数的相位，加在屏面和加在频谱面效果不同。最典型的是一次项：加在屏面平移频谱，加在频谱面平移像。
+\begin{center}\small\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}P{1.5cm}P{7.3cm}P{7.6cm}@{}}
+\toprule
+相位 & 加在\textbf{物面或屏面}（空域） & 加在\textbf{频谱面或光瞳面}（频域）\\ \midrule
+常数 & $\ee^{ikz}$、均匀玻璃。强度不变 & 活塞像差。强度、MTF 都不变\\
+一次 & 斜入射、棱镜、轴外点源。\textbf{频谱平移}，焦点横移 $\lambda fu_0$ & 频谱面棱镜、SLM 的 $kQ\xi$、倾斜像差。\textbf{像平移} $Qf_2$，形状和 MTF 都不变\\
+二次 & 球面波、透镜。改变\textbf{频谱面和像面的位置}（等效焦距），系数相加即光焦度相加 & 多走一段距离、物离开前焦面、离焦 $W\propto x^2+y^2$。\textbf{像散焦}，焦面强度不变，MTF 下降；移动观察面可以补偿（$x_2=M^2x_1$）\\
+三次及以上 & Alvarez 单片的面形：两片相向错开时三次项相消，差出二次项，等效成透镜 & 彗差、球差等像差。PSF 变形，MTF 下降，靠平移和调焦都消不掉\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\needspace{8\baselineskip}
+\phead{哪些相位可以省略}
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{5.2cm}P{11.2cm}@{}}
+\toprule
+相位因子 & 能不能省\\ \midrule
+常数 $\ee^{ikz}$、$1/i$ & 单路光可略。几路光相加时，各路共同的可略，不同的要留\\
+\textbf{变换号外}的二次相位 $\ee^{ik\frac{x^2+y^2}{2z}}$ & 这个面是最后一面、只问强度时可略。问复振幅要写。后面还有传播、透镜或滤波时\textbf{不能略}\\
+\textbf{变换号内}的二次相位 $\ee^{ik\frac{x_1^2+y_1^2}{2z}}$ & 不能因为只问强度就略。只有满足 $z\gg a^2/\lambda$，或被透镜、会聚波抵消时才消失\\
+频谱面上 $d_0\ne f$ 带来的二次相位 & 单透镜只看焦面强度时可略。4f 还要再变换一次，\textbf{不能略}，否则输出面的散焦就算丢了\\
+频谱面上的一次相位 & 模为 1，但反变换后是平移。问输出位置时\textbf{不能略}\\
+\bottomrule
+\end{tabular}
+\end{center}
+一条规则记全部：\textbf{模为 1 的因子，只有乘在最后一个面上才能被取模消掉；乘在中间的面上，下一次传播或变换会把它变成别的效果。}
+
+\needspace{10\baselineskip}
+\subsection*{典型场景：一个原理，九种摆法}\phantomsection\label{sec:p-scenes}\ix{场景表}\ix{透镜!场景汇总}
+\begin{idea}[统一原理：谁替“很远”抵消了二次相位]
+屏后的场如果是\textbf{函数 $g$ 乘一个会聚到距离 $R$ 的球面波}，在距离 $R$ 处看：
+\[
+g\,\ee^{-ik\frac{x_1^2+y_1^2}{2R}}\ \xrightarrow{\ \text{传播 }R\ }\ \frac{\ee^{ikR}}{i\lambda R}\,\ee^{ik\frac{x^2+y^2}{2R}}\,\F\{g\}\Big|_{u=\frac{x}{\lambda R},\,v=\frac{y}{\lambda R}}
+\]
+传播带来的 $+$ 二次项和会聚波的 $-$ 二次项抵消，只剩傅里叶核。透镜焦面（$R=f$）、屏在透镜后（$R=d$）、球面波照明（$R=l'$）、成像的点扩展函数（$g=P$，$R=l'$）全是这一条。远场则是 $z$ 大到内部二次项本来就约等于 1。
+\end{idea}
+
+\begingroup\small\renewcommand{\arraystretch}{1.3}
+\begin{longtable}{@{}P{3.3cm}P{9.9cm}P{3.0cm}@{}}
+\toprule
+摆法 & 观察面上的结果（略常数相位，$\hat t=\F\{t\}$） & 例题、详解\\ \midrule
+\endhead
+\scn{\pnaxis{0}{3.1}\pnplane{0}{0.5}\pnobj{0.7}\pnscr{2.9}\pndim{0.7}{2.9}{$z$}}
+& \textbf{① 无透镜，近场。}$E=t\conv h_z$，或 $\hat E=\hat t\,H$。\newline 没有抵消，只能老实卷积或用传递函数。
+& \pageref{ex:approxcmp}；Talbot \pageref{ex:talbot}\\ \addlinespace
+\scn{\pnaxis{0}{3.1}\pnplane{0}{0.5}\pnobj{0.7}\pnscr{2.9}\pndim{0.7}{2.9}{$z\gg a^2/\lambda$}}
+& \textbf{② 无透镜，远场。}$E=\dfrac{1}{i\lambda z}\,\ee^{ik\frac{x^2+y^2}{2z}}\,\hat t\Big(\dfrac{x}{\lambda z},\dfrac{y}{\lambda z}\Big)$。\newline 孔上的二次项 $\approx1$；观察面的二次项还在，不影响强度。
+& \pageref{ex:v-approx}；\pageref{box:approx}\\ \addlinespace
+\scn{\pnaxis{0}{3.1}\pnplane{0}{0.8}\pnobj{1.0}\pnlens{1.15}\pnscr{2.9}\pndim{1.15}{2.9}{$f$}}
+& \textbf{③ 物贴透镜，平面波。}$E=\dfrac{1}{i\lambda f}\,\ee^{ik\frac{x^2+y^2}{2f}}\,\hat t\Big(\dfrac{x}{\lambda f},\dfrac{y}{\lambda f}\Big)$。\newline $R=f$。强度是 $\hat t$ 的模方，相位多一个二次项。
+& \pageref{sec:lensFTderiv}\\ \addlinespace
+\scn{\pnaxis{0}{3.1}\pnplane{0}{0.5}\pnobj{0.7}\pnlens{1.7}\pnscr{2.9}\pndim{0.7}{1.7}{$d_0$}\pndim{1.7}{2.9}{$f$}}
+& \textbf{④ 物在透镜前 $d_0$，平面波。}$E=\dfrac{1}{i\lambda f}\exp\!\Big[\dfrac{ik}{2f}\Big(1-\dfrac{d_0}{f}\Big)(x^2+y^2)\Big]\hat t\Big(\dfrac{x}{\lambda f},\dfrac{y}{\lambda f}\Big)$。\newline $d_0=f$ 时是\textbf{精确}傅里叶变换。强度和 $d_0$ 无关。
+& \pageref{sec:lensFT}；\pageref{ex:screenpos}\\ \addlinespace
+\scn{\pnaxis{0}{3.1}\pnplane{0}{0.5}\pnlens{0.7}\draw[thin] (0.7,0.5)--(2.9,0) (0.7,-0.5)--(2.9,0);\pnobj{1.6}\pnscr{2.9}\pndim{0.7}{1.6}{$f-d$}\pndim{1.6}{2.9}{$d$}}
+& \textbf{⑤ 物在透镜后，距后焦面 $d$。}$E=\dfrac{f}{d}\cdot\dfrac{1}{i\lambda d}\,\ee^{ik\frac{x^2+y^2}{2d}}\,\hat t\Big(\dfrac{x}{\lambda d},\dfrac{y}{\lambda d}\Big)$。\newline $R=d$。频谱尺度从 $\lambda f$ 变成 $\lambda d$，移动屏就能连续缩放频谱。
+& \pageref{ex:screenpos}\\ \addlinespace
+\scn{\pnaxis{0}{3.1}\pnsrc{0}\draw[thin] (0,0)--(1.15,0.5) (0,0)--(1.15,-0.5) (1.15,0.5)--(3.0,0) (1.15,-0.5)--(3.0,0);\pnobj{1.0}\pnlens{1.15}\pnscr{3.0}\pndim{0}{1.15}{$l$}\pndim{1.15}{3.0}{$l'$}}
+& \textbf{⑥ 物贴透镜，点源球面波。}$E=\dfrac{1}{i\lambda l'}\,\ee^{ik\frac{x^2+y^2}{2l'}}\,\hat t\Big(\dfrac{x}{\lambda l'},\dfrac{y}{\lambda l'}\Big)$，$\dfrac1l+\dfrac1{l'}=\dfrac1f$。\newline 发散 $+$ 透镜 $=$ 会聚到 $l'$，所以 $R=l'$，观察面是点源的像面。
+& \pageref{sec:sphericalillum}\\ \addlinespace
+\scn{\pnaxis{0}{3.2}\pnsrc{0}\pnobj{0.9}\pnlens{1.7}\pnscr{3.1}\pndim{0}{1.7}{$l$}\pndim{1.7}{3.1}{$l'$}}
+& \textbf{⑦ 物在前焦面，点源球面波。}$E\propto\hat t\Big(\dfrac{x}{\lambda f},\dfrac{y}{\lambda f}\Big)$，在点源的像面 $l'$ 上看。\newline 牛顿公式 $(l-f)(l'-f)=f^2$ 消掉二次相位，尺度仍是 $\lambda f$。
+& \pageref{sec:lensFT} [F2-p16]\\ \addlinespace
+\scn{\pnaxis{0}{3.2}\pnobj{0.1}\pnlens{0.85}\pnscr{1.6}\pnlens{2.35}\pnscr{3.1}\pndim{0.1}{0.85}{$f_1$}\pndim{0.85}{1.6}{$f_1$}\pndim{1.6}{2.35}{$f_2$}\pndim{2.35}{3.1}{$f_2$}}
+& \textbf{⑧ 4f。}$E_{\text{出}}=-\dfrac1{|M|}\,t\Big(\dfrac xM,\dfrac yM\Big)$，$M=-\dfrac{f_2}{f_1}$。频谱面放滤波器：$H(u,v)=T(\lambda f_1u,\lambda f_1v)$。\newline 物偏离前焦面 $x_1$：频谱多 $\exp[-i\pi\lambda x_1(u^2+v^2)]$，在输出面前 $x_2=M^2x_1$ 处接收可抵消。
+& \pageref{ex:v-4f2}、\pageref{ex:v-4fshift}、\pageref{ex:v-alvarez}；\pageref{sec:4f}、\pageref{sec:4foffset}\\ \addlinespace
+\scn{\pnaxis{0}{3.2}\draw[->,thick] (0.2,0)--(0.2,0.4);\pnlens{1.4}\draw[->,thick] (3.0,0)--(3.0,-0.4);\pndim{0.2}{1.4}{$l$}\pndim{1.4}{3.0}{$l'$}}
+& \textbf{⑨ 单透镜成像，有限光瞳。}$\dfrac1l+\dfrac1{l'}=\dfrac1f$。先对一个物点走链路：$g=P$，$R=l'$，得 $h=\dfrac{1}{\lambda l'}\F\{P\}\Big|_{u=\frac{x}{\lambda l'},v=\frac{y}{\lambda l'}}$。\newline 相干：$E_i=E_g\conv h$。非相干：$I_i=I_g\conv|h|^2$。前面的二次相位只看强度时略去。
+& \pageref{ex:v-mtf}、\pageref{ex:v-3slit}；\pageref{sec:waveimg}\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\needspace{10\baselineskip}
+\subsection*{相干与非相干：链路不变，叠加方式变}\phantomsection\label{sec:p-cohtable}\ix{相干与非相干!对照}
+一个点的光走过链路，永远按复振幅算，得到 $h$。相干与否只决定\textbf{不同物点的贡献怎么加}：相位关系固定就加复振幅，相位关系随机（时间平均后交叉项为 0）就加强度。
+\begin{center}\small\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}P{3.1cm}P{6.4cm}P{6.9cm}@{}}
+\toprule
+ & 相干 & 非相干\\ \midrule
+题干的说法 & 激光、单色相干光、相干照明 & 自然光、荧光、发光物体、衍射受限非相干系统\\
+谁是线性的 & 复振幅 $E$ & 强度 $I$\\
+物写成 & 复透射系数 $t$ & 强度分布 $I_o$，或强度透过率 $T=|t|^2$\\
+点响应 & 振幅 PSF：$h$ & 强度 PSF：$|h|^2$\\
+输入输出 & $E_i=E_g\conv h$ & $I_i=I_g\conv|h|^2$\\
+传递函数 & CTF：$H_c=P(-\lambda z_iu,-\lambda z_iv)$ & OTF：$P$ 的归一化自相关；MTF $=|\mathrm{OTF}|$\\
+截止频率（口径 $D$） & $\dfrac{D}{2\lambda z_i}$ & $\dfrac{D}{\lambda z_i}$（相干的 2 倍）\\
+频谱面 & 看得到物的频谱，能直接挡频率 & 看不到物的频谱，光瞳的作用要用 OTF 算\\
+最后一步 & 算完 $E_i$ 再取模方 & 一路都是强度，不再取模方\\
+\bottomrule
+\end{tabular}
+\end{center}
+结构光照明（SIM）是两者的组合：两束\textbf{相干}光干涉形成照明条纹，物按强度透过率调制后，再按\textbf{非相干}系统的 OTF 成像。
+
+\needspace{12\baselineskip}
+\begin{exam}{用六格走一道题}
+\textbf{题目}：边长 $a$ 的方孔放在焦距 $f$ 的透镜前 $d_0$ 处，平面波在 $xz$ 平面内以倾角 $\theta$ 相干照明。求后焦面复振幅和强度。
+
+\textbf{① 照明}：$\ee^{i2\pi u_0x_1}$，$u_0=\sin\theta/\lambda$。\quad \textbf{② 物}：$t=\rect\frac{x_1}{a}\rect\frac{y_1}{a}$。
+
+物后的频谱（调制定理）：$\F\{U_{\text{入}}t\}=a^2\sinc[a(u-u_0)]\sinc(av)$。
+
+\textbf{③④⑤ 传播、透镜、传播}：这是场景表第 ④ 种，令 $P\equiv1$，代入 $u=x/(\lambda f)$：
+\[
+E(x,y)=\frac{a^2}{i\lambda f}\exp\!\Big[\frac{ik}{2f}\Big(1-\frac{d_0}{f}\Big)(x^2+y^2)\Big]\sinc\!\Big[\frac{a(x-f\sin\theta)}{\lambda f}\Big]\sinc\frac{ay}{\lambda f}.
+\]
+\textbf{⑥ 观察面}：$I=\dfrac{a^4}{\lambda^2f^2}\sinc^2\!\Big[\dfrac{a(x-f\sin\theta)}{\lambda f}\Big]\sinc^2\dfrac{ay}{\lambda f}$。二次相位在这里被取模消掉，因为后面没有别的元件了。
+
+\textbf{数值}：$a=1$ mm，$\lambda=0.5\,\mu$m，$f=200$ mm，$\sin\theta=0.01$：光斑中心 $x=f\sin\theta=2$ mm，中心到第一零点 $\lambda f/a=0.1$ mm。
+
+\textbf{改条件时改哪一格}：
+\begin{itemize}
+\item 正入射（第 ① 格）：$\theta=0$，光斑回到原点，形状不变。
+\item 后面再接第二片透镜（第 ⑥ 格之后还有路）：二次相位不能略，物要放在 $d_0=f$。
+\item 点源球面波照明（第 ① 格）：观察面改到点源的像面，用场景 ⑥ 或 ⑦。
+\item 方孔改贴在镜头上拍别的物（第 ④ 格）：它变成 $P$，$h\propto\sinc\frac{ax}{\lambda l'}\sinc\frac{ay}{\lambda l'}$；$x$ 方向相干截止 $\frac{a}{2\lambda l'}$，非相干截止 $\frac{a}{\lambda l'}$。
+\end{itemize}
+\end{exam}
+
+\needspace{16\baselineskip}
+\pkao 把几类典型题填进六格：
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{2.2cm}P{4.4cm}P{4.5cm}P{5.3cm}@{}}
+\toprule
+题型 & 物 & 系统 & 要交什么\\ \midrule
+两个 4f 级联 & $t=E(x,y)$，平面波，相干 & 两个 4f，$P\equiv1$，频谱面 1 放 $T$ & 输出场、$M$、CTF\\
+4f 输入离焦 & 输入场，离开前焦面 $x_1$ & 4f，频谱多一个二次相位 & $x_2=M^2x_1$，二次相位不能略\\
+近似比较 & 孔径 $a$ & 只有传播 & 比较两个近似\\
+三缝光瞳 & 物的强度，非相干 & 单透镜成像，$P$ = 三条缝 & PSF、MTF、对比度\\
+Alvarez 透镜 & $t$ 由厚度决定 & 相位记账：三次项错开得二次项；4f 中频谱面一次相位 & 等效焦距、像的平移\\
+MTF、Strehl & 不关心物 & $P$ 上再乘 $\ee^{ikW}$ & MTF、Strehl 的不等式与近似\\
+SIM & 强度透过率 $T(x)$，条纹照明 & 非相干，OTF & 频谱搬家、超分辨\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\psee 复透射系数\pageref{sec:screens}；相位因子\pageref{sec:phasefactors}；传播的写法\pageref{sec:propforms}；角谱\pageref{sec:angspec}；场景推导\pageref{sec:lensFT}、\pageref{sec:sphericalillum}；$t$ 与 $P$ 同时出现\pageref{sec:tandP}；相干与非相干对比\pageref{sec:cohcompare}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 4f 滤波题里的“复透射系数 $E(x,y)$”和“滤波器 $T$”分别是信号还是系统？成像题里的“出射光瞳”呢？
+\item 屏上的照明是 $\exp\!\big(ik\frac{x^2+y^2}{2\times100\text{ mm}}\big)$，点源在哪？
+\item $\exp[-i\pi\lambda z(u^2+v^2)]$ 和 $\exp\!\big(-ik\frac{x^2+y^2}{2f}\big)$ 都是负二次相位，区别是什么？
+\item 物不在前焦面。单透镜只问焦面强度时，二次相位能略吗？放进 4f 问输出面呢？
+\item 同一个光瞳，物是频率在相干截止和非相干截止之间的条纹。相干照明和非相干照明的像分别怎样？
+\end{enumerate}
+\pans{1. $E$ 是信号；$T$ 和出射光瞳都是系统。\enspace 2. 正号是发散，点源在屏前 100 mm。\enspace 3. 前者在频域，是传播的传递函数；后者在空域，是透镜。\enspace 4. 焦面强度可略；4f 不能略，它在输出面造成散焦。\enspace 5. 相干：条纹消失，只剩均匀亮度。非相干：条纹还在，对比度按 OTF 下降。}
+
+% =====================================================================
+\section{几何光学最小必备}\label{sec:p-geom}
+\proot{共同语言（为根③准备：光瞳、NA）}
+
+\begin{idea}[一句话]
+几何光学把光当成一根根直线（光线）。透镜把从一点发出的光线重新会聚到另一点，这就是\textbf{成像}。只需记住“三条特殊光线”和一个公式 $\frac1l+\frac1{l'}=\frac1f$。
+\end{idea}
+
+\subsection*{光线、光轴、两种透镜}
+\begin{itemize}
+\item \textbf{光线}：光走的路线，画成带箭头的直线。在同一种材料里走直线，碰到透镜表面拐弯（折射）。
+\item \textbf{光轴}：穿过透镜中心、垂直于透镜的对称线。图上一律画成水平线，光从左往右走。
+\item \textbf{凸透镜}（中间厚、边缘薄）：把平行光\textbf{会聚}到一点。又叫会聚透镜、正透镜，焦距 $f>0$。
+\item \textbf{凹透镜}（中间薄、边缘厚）：把平行光\textbf{发散}开，看起来像从前面某一点发出。又叫发散透镜、负透镜，$f<0$。
+\item \textbf{焦点、焦距}：平行于光轴的光过凸透镜后会聚的点叫\textbf{像方焦点} F$'$（在右边），透镜到 F$'$ 的距离叫\textbf{焦距} $f$。左边对称位置还有\textbf{物方焦点} F：从 F 发出的光过透镜后变成平行光。
+\item \textbf{焦面}：过焦点、垂直于光轴的平面。斜着来的一束平行光会聚到焦面上\textbf{轴外}的某一点。这一点是 §\ref{sec:p-lensft}“透镜做傅里叶变换”的关键。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\begin{scope}
+\draw[->] (-2.8,0)--(2.9,0) node[right]{光轴};
+\foreach \h in {-0.9,-0.45,0.45,0.9} {\draw[red,->] (-2.6,\h)--(-1.2,\h); \draw[red] (-1.2,\h)--(0,\h)--(2,0); \draw[red,->] (2,0)--++({0.5},{-\h/4});}
+\draw[thick,fill=blue!10] (0,0) ellipse (0.16 and 1.2);
+\fill (2,0) circle (1.5pt) node[below right]{F$'$}; \fill (-2,0) circle (1.5pt) node[below]{F};
+\draw[<->] (0,-1.45)--(2,-1.45) node[midway,below]{$f>0$};
+\node at (0,1.55){凸透镜：会聚};
+\end{scope}
+\begin{scope}[xshift=7.4cm]
+\draw[->] (-2.8,0)--(2.9,0) node[right]{光轴};
+\draw[thick,fill=blue!10] (-0.28,1.2)--(0.28,1.2) .. controls (0.05,0) .. (0.28,-1.2)--(-0.28,-1.2) .. controls (-0.05,0) .. (-0.28,1.2);
+\foreach \h in {-0.8,-0.4,0.4,0.8} {\draw[red,->] (-2.6,\h)--(-1.2,\h); \draw[red] (-1.2,\h)--(0,\h); \draw[red,->] (0,\h)--(2.4,{\h*2.2}); \draw[red,dashed,thin] (0,\h)--(-2,0);}
+\fill (-2,0) circle (1.5pt) node[below]{F$'$}; \fill (2,0) circle (1.5pt) node[below]{F};
+\draw[<->] (0,-1.45)--(-2,-1.45) node[midway,below]{$|f|$，$f<0$};
+\node at (0,1.55){凹透镜：发散（虚线：反向延长交于 F$'$）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\subsection*{三条特殊光线：作图找像}
+物上一点发出无数条光线，只要画出其中两条，交点就是像点：
+\begin{enumerate}
+\item[①] 平行于光轴射入 $\to$ 出来后经过 F$'$；
+\item[②] 经过透镜中心（光心）$\to$ 方向不变，直穿过去；
+\item[③] 经过 F 射入 $\to$ 出来后平行于光轴。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize,x=1.1cm,y=1.1cm]
+\draw[->] (-4.6,0)--(3.4,0) node[right]{光轴};
+\draw[thick,fill=blue!10] (0,0) ellipse (0.12 and 1.6);
+\fill (-1.5,0) circle (1.5pt) node[below]{F}; \fill (1.5,0) circle (1.5pt) node[above right]{F$'$};
+\fill (-3,0) circle (1.2pt) node[below]{2F}; \fill (3,0) circle (1.2pt) node[below]{2F$'$};
+\draw[->,very thick,blue] (-4,0)--(-4,1.2) node[above]{物 $y$};
+\draw[black,thick] (-4,1.2)--(0,1.2)--(2.4,-0.72); \node[black] at (-2.2,1.38){①};
+\draw[black,thick,dashed] (-4,1.2)--(2.4,-0.72); \node[black] at (-1.2,0.55){②};
+\draw[black,thick,dash dot] (-4,1.2)--(0,-0.72)--(2.4,-0.72); \node[black] at (-2.9,0.35){③};
+\draw[->,very thick,blue] (2.4,0)--(2.4,-0.72) node[below]{像 $y'$};
+\draw[<->] (-4,-1.0)--(0,-1.0) node[midway,below]{物距 $l$};
+\draw[<->] (0,-1.25)--(2.4,-1.25) node[midway,below]{像距 $l'$};
+\end{tikzpicture}
+
+{\small 例：$f=1.5$，$l=4$：三条线交于 $l'=2.4$ 处，像倒立缩小，$\beta=-2.4/4=-0.6$。}
+\end{center}
+
+\subsection*{成像公式（课件约定）}
+\[
+\frac1l+\frac1{l'}=\frac1f,\qquad \beta=\frac{y'}{y}=-\frac{l'}{l}
+\]
+\begin{itemize}
+\item $l$：\textbf{物距}，物到透镜的距离，物在左边（实物）取正。$l'$：\textbf{像距}，像到透镜的距离，像在右边（实像）取正、在左边（虚像）取负。$f$：焦距，凸正凹负。三者单位一致即可。
+\item $\beta$：\textbf{横向放大率} = 像高 / 物高。负号表示\textbf{倒立}；$|\beta|>1$ 表示放大。
+\item \textbf{实像}：光线真的会聚到那里，放一张纸能接到（相机底片、投影幕、视网膜）。
+\textbf{虚像}：光线只是“看起来”从那里发出，纸上接不到，但眼睛顺着光看得见（放大镜里、镜子里的像）。
+\item 有的教材用另一套符号（实物距离取负），公式写成 $\frac1{l'}-\frac1l=\frac1f$，结论相同。考试照课件写（\pageref{sec:lensimg}）。
+\end{itemize}
+
+\begin{center}\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}llll@{}}
+\toprule
+物的位置（凸透镜） & 像的位置 & 像的样子 & 用在哪\\ \midrule
+很远，$l\to\infty$ & $l'=f$，在焦面上 & 缩成一点 / 很小 & 望远镜、相机拍远景\\
+$l>2f$ & $f<l'<2f$ & 倒立、缩小、实像 & 相机、眼睛\\
+$l=2f$ & $l'=2f$ & 倒立、\textbf{等大}、实像（$\beta=-1$）& \textbf{三缝光瞳例题}\\
+$f<l<2f$ & $l'>2f$ & 倒立、放大、实像 & 投影仪、显微镜物镜\\
+$l=f$ & $l'=\infty$ & 出射平行光 & 准直、2f 系统的输入面\\
+$l<f$ & $l'<0$（在左边） & 正立、放大、虚像 & 放大镜（下图）\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize,x=1.1cm,y=1.1cm]
+\draw[->] (-3,0)--(3.3,0) node[right]{光轴};
+\draw[thick,fill=blue!10] (0,0) ellipse (0.12 and 1.5);
+\fill (-2,0) circle (1.5pt) node[below]{F}; \fill (2,0) circle (1.5pt) node[below]{F$'$};
+\draw[->,very thick,blue] (-1,0)--(-1,0.6) node[below left]{物};
+\draw[red,thick] (-1,0.6)--(0,0.6)--(2.6,-0.18); \draw[red,dashed] (0,0.6)--(-2,1.2);
+\draw[green!50!black,thick] (-1,0.6)--(2.6,-1.56); \draw[green!50!black,dashed] (-1,0.6)--(-2,1.2);
+\draw[->,very thick,blue,dashed] (-2,0)--(-2,1.2) node[above]{虚像（正立放大）};
+\node[align=left,anchor=west] at (2.7,-0.9) {眼睛在这边看：\\光好像从虚像发出};
+\end{tikzpicture}
+
+{\small 放大镜：$f=2$，$l=1$，$\frac1{l'}=\frac12-1$，$l'=-2$（在左边 2 处），$\beta=-\frac{-2}{1}=+2$。}
+\end{center}
+
+\subsection*{光阑、孔径、入瞳、出瞳}\phantomsection\label{sec:p-pupil}
+\begin{itemize}
+\item \textbf{光阑}：光路里任何一个挡光的孔（镜框、光圈、镜筒）。\textbf{孔径}：孔的大小（直径 $D$）。
+\item \textbf{孔径光阑}：这些孔里\textbf{真正限制进光多少}的那一个，相机里就是光圈。
+\item \textbf{入瞳（入射光瞳）}：从镜头\textbf{前面}看进去看到的孔径光阑（隔着前面的镜片看到的像）。决定能收进多少光。
+\item \textbf{出瞳（出射光瞳）}：从镜头\textbf{后面}看进去看到的孔径光阑。它就是\textbf{镜头的出光口}：射向像的所有光，都像是从这个口里出来的。
+\item 只有一片薄透镜、光阑紧贴着它时：入瞳 = 出瞳 = 透镜的通光口。常见题目都按这种简单情况出。
+\item 傅里叶光学里的\textbf{光瞳函数} $P(x,y)$ 就是\textbf{出瞳的形状}：透光处为 1，挡光处为 0。三缝光瞳例题（\pageref{ex:v-3slit}）画的三条缝就是 $P(x,y)$。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[->] (-4.3,0)--(5.3,0) node[right]{光轴};
+\fill (-4,0) circle (1.6pt) node[below]{物点};
+\fill (4.6,0) circle (1.6pt) node[below]{像点};
+\draw[rounded corners=3pt,fill=gray!8] (-1.0,-1.3) rectangle (1.4,1.3);
+\node[align=center] at (0.2,-1.65) {镜头（几片透镜 + 光圈）};
+\draw[thick,fill=blue!10] (-0.6,0) ellipse (0.08 and 0.95);
+\draw[thick,fill=blue!10] (1.0,0) ellipse (0.08 and 0.95);
+\draw[line width=2pt] (0.2,0.45)--(0.2,1.2); \draw[line width=2pt] (0.2,-0.45)--(0.2,-1.2);
+\draw[dashed,thick,green!50!black] (-1.6,0) ellipse (0.12 and 0.8);
+\node[green!50!black,align=center] at (-1.65,1.25) {入瞳};
+\draw[dashed,thick,orange!80!black] (2.1,0) ellipse (0.12 and 0.6);
+\node[orange!80!black,anchor=west] at (2.3,0.95) {出瞳（出光口）};
+\draw[red] (-4,0)--(-1.6,0.8); \draw[red] (-4,0)--(-1.6,-0.8);
+\draw[red] (2.1,0.6)--(4.6,0); \draw[red] (2.1,-0.6)--(4.6,0);
+\draw[red] (-3.2,0) arc (0:18.4:0.8); \node[red] at (-2.95,0.15){$\theta$};
+\draw[<->] (2.1,-1.15)--(4.6,-1.15) node[midway,below]{$z_i$（出瞳到像面）};
+\draw[<->] (2.45,-0.6)--(2.45,0.6); \node at (2.75,-0.25){$D$};
+\end{tikzpicture}
+
+{\small 镜头可以当成黑盒：物空间只看入瞳，像空间只看出瞳。光锥半角 $\theta$ 决定 NA；出瞳直径 $D$ 和距离 $z_i$ 决定截止频率。}
+\end{center}
+
+\begin{itemize}
+\item \textbf{数值孔径} $\mathrm{NA}=n\sin\theta$：$\theta$ 是轴上物点射向入瞳边缘的光线与光轴的夹角（光锥半角），$n$ 是物所在介质的折射率（空气 1，显微镜油约 1.5）。NA 越大，收进的光越斜、细节越多。像方也有像方数值孔径 $\mathrm{NA}'\approx\frac{D}{2z_i}$。
+\item \textbf{F 数} $F/\#=f/D$（焦距 / 入瞳直径），就是相机上的 f/2、f/8。F 数小 = 孔大 = 亮、分辨率高。物在远处时 $\mathrm{NA}'\approx\frac{1}{2F/\#}$。
+\item \textbf{屈光度} $\Phi=\dfrac1f$，\textbf{$f$ 用米}，单位 D（m$^{-1}$）。$f=0.5$ m 是 $+2$ D；凹透镜为负。眼镜“度数” = D $\times100$：$-3$ D 就是近视 300 度。紧贴在一起的透镜，屈光度直接相加。
+\end{itemize}
+
+\begin{idea}[类比]
+几何光学 = 不考虑带宽限制的\textbf{理想系统}：一个点成像成一个点，冲激响应是 $\delta$，系统只做缩放和翻转（$y\to\beta y$）。
+后面把衍射加进来，$\delta$ 才变成有宽度的光斑（PSF，§\ref{sec:p-imaging}）。孔径（NA、$D$）就是决定“带宽”的那个量。
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item 题目给出焦距 $f$ 的镜头、它的\textbf{出射光瞳}形状，物距为 $2f$：用 2f–2f：像距 $2f$，$\beta=-1$，像面频率 = 物面频率；出瞳到像面 $z_i=2f$，代入截止频率。
+\item 题目给出物镜的\textbf{数值孔径} NA：NA 直接决定截止频率（§\ref{sec:p-imaging}）。
+\item 题目说波像差在\textbf{出射光瞳}上给出：像差写在出瞳上（§\ref{sec:p-aberr}）。
+\item 光度题给出\textbf{入瞳}、\textbf{出瞳}的最大孔径角 $U$、$U'$：$U$ 就是上图的 $\theta$。
+\end{itemize}
+
+\psee 单透镜成像\pageref{sec:lensimg}；透镜组\pageref{sec:lenscombo}；光阑与光瞳\pageref{sec:stops}；截止频率\pageref{sec:typeA}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item $f=10$ cm 的凸透镜，物距 30 cm，像在哪？正立还是倒立？$\beta=$？
+\item 物距 $2f$ 时，像距和横向放大率各是多少？
+\item 焦距 $-25$ cm 的眼镜是多少屈光度、多少度？
+\end{enumerate}
+\pans{1. $\frac1{l'}=\frac1{10}-\frac1{30}=\frac1{15}$，$l'=15$ cm，透镜右边的实像，倒立，$\beta=-0.5$。\enspace 2. $l'=2f$，$\beta=-1$。\enspace 3. $\Phi=1/(-0.25\text{ m})=-4$ D，近视 400 度。}
+
+% =====================================================================
+\section{光是波：复振幅就是相量}\label{sec:p-wave}
+\proot{共同语言（信号本身：复振幅）}
+
+\begin{idea}[一句话]
+光是频率极高的正弦波。每一点的光用一个复数 $E=A\ee^{i\varphi}$ 记下“振幅多大、相位多少”，这就是电路里的\textbf{相量}。眼睛和相机只看得到 $|E|^2$。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\begin{scope}
+\draw[->] (0,0)--(6.6,0) node[right]{$z$（传播方向）};
+\draw[->] (0,-1.1)--(0,1.2) node[above]{电场};
+\draw[thick,red,domain=0:6.3,samples=120] plot (\x,{0.8*cos(deg(2*pi*\x/2.1 - 0.6))});
+\draw[<->] (0.2003,1.0)--(2.3003,1.0) node[midway,above]{波长 $\lambda$};
+\draw[dashed,gray] (0.2003,0.8)--(0.2003,1.0); \draw[dashed,gray] (2.3003,0.8)--(2.3003,1.0);
+\draw[<->] (3.3,0)--(3.3,-0.8); \node[anchor=west] at (3.35,-0.45){振幅 $A$};
+\node[align=center] at (3.2,-1.55) {某一时刻的“快照”：空间上每 $\lambda$ 重复一次};
+\end{scope}
+\begin{scope}[xshift=10.2cm,yshift=0.1cm]
+\draw[->] (-1.4,0)--(1.6,0) node[right]{实部};
+\draw[->] (0,-1.2)--(0,1.4) node[above]{虚部};
+\draw[gray!60] (0,0) circle (1);
+\draw[->,very thick,blue] (0,0)--(50:1) node[above right]{$E=A\ee^{i\varphi}$};
+\draw (0.35,0) arc (0:50:0.35); \node at (0.5,0.2){$\varphi$};
+\node[blue] at (0.2,0.6){$A$};
+\node[align=center] at (0.1,-1.65) {相量图：长度 = 振幅，角度 = 相位};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item \textbf{波长} $\lambda$：相邻两个波峰的距离。可见光 400–700 nm。常用 $\lambda=0.5\,\mu$m $=5\times10^{-4}$ mm（绿光）、632.8 nm（红色 He-Ne 激光）。
+\item \textbf{频率} $\nu=c/\lambda\approx6\times10^{14}$ Hz。没有任何探测器跟得上，只能测时间平均的功率，也就是\textbf{强度}。
+\item \textbf{波数} $k=2\pi/\lambda$：每走 1 mm 相位转多少弧度。$\lambda=0.5\,\mu$m 时 $k\approx1.26\times10^4$ rad/mm，即\textbf{走 1 mm 相位转两千圈}。“$k$ 很大”是后面许多近似的根源（§\ref{sec:p-diff}）。
+\item \textbf{相位} $\varphi$：波走到了一个周期里的哪一步。多走一段路 $\Delta L$，相位多 $k\Delta L$。
+\end{itemize}
+
+\phead{复振幅：和电路的相量一模一样}
+某一点的电场 $E(t)=A\cos(\varphi-\omega t)$。所有点都以同一个 $\omega$ 振荡，于是像电路分析那样扔掉公共的时间因子，只留
+\[
+E=A\,\ee^{i\varphi}\qquad(\text{复振幅；}A\text{：振幅，}\varphi\text{：相位})
+\]
+平面上每一点一个复数，就是 $E(x,y)$。电路里扔的是 $\ee^{j\omega t}$，光学课件扔的是 $\ee^{-i\omega t}$，所以光学里\textbf{多走一段路，相位是 $+k\Delta L$}（课件约定，\pageref{ch:wave}）。
+
+\phead{强度：探测器只看 $|E|^2$}
+\[
+I=|E|^2=E\,E^*=A^2\qquad(\text{省略比例常数，只比较相对大小})
+\]
+\begin{itemize}
+\item 整体乘一个常数相位 $\ee^{i\varphi_0}$，强度不变，所以答题时可以“略去常数相位因子”。
+\item \textbf{相位物体}（透明的细胞、玻璃上的纹路）只改相位、不改振幅，直接拍几乎看不见。\textbf{相衬显微镜}在频谱面上加一小块相位板，把相位差变成明暗差（\pageref{sec:phasecontrast}）。
+\item 两束光叠加：\textbf{相干}（来自同一束激光，相位关系固定）时\textbf{复振幅相加}再取模平方，
+$|E_1+E_2|^2=I_1+I_2+2\sqrt{I_1I_2}\cos\Delta\varphi$，多出的最后一项就是\textbf{干涉}；
+\textbf{非相干}（两盏普通灯，相位乱跳）时干涉项平均为零，\textbf{强度直接相加}：$I_1+I_2$。
+\end{itemize}
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 复振幅 $\leftrightarrow$ 交流电路的相量 $\dot U=U\ee^{j\varphi}$：只记幅度和相位，频率默认都一样。
+\item 强度 $\leftrightarrow$ 功率 $|\dot U|^2$；探测器 $\leftrightarrow$ 平方律检波器（相位信息丢了）。
+\item 相干叠加 $\leftrightarrow$ 两个同频正弦相加，可能加强也可能抵消；非相干叠加 $\leftrightarrow$ 两路独立噪声相加，功率直接相加。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item 照明是\textbf{两束相干}平面波（振幅相等、相位相同）：先把两束的复振幅相加，再取 $|\cdot|^2$，得到条纹（§\ref{sec:p-spfreq}）。
+\item 物只给\textbf{强度透过率} $T(x)$ 时：只对强度说话，照明强度乘 $T(x)$ 就是透过去的强度。
+\item 题目写光瞳内有\textbf{相位失真} $\exp[ikW(x,y)]$：多走了 $W$ 的路，相位多 $kW$（§\ref{sec:p-aberr}）。
+\end{itemize}
+
+\psee 复振幅、强度、干涉的公式\pageref{ch:wave}起；两束光干涉\pageref{sec:twobeam}；相衬\pageref{sec:phasecontrast}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 两束相干光振幅都是 1、相位差 $\pi$，叠加后强度是多少？若是非相干呢？
+\item 复振幅 $E$ 整体乘上 $\ee^{i\pi/3}$，强度变不变？
+\item $\lambda=0.5\,\mu$m，光多走 $0.25\,\mu$m，相位多多少？
+\end{enumerate}
+\pans{1. 相干 $|1+\ee^{i\pi}|^2=0$；非相干 $1+1=2$。\enspace 2. 不变（$|\ee^{i\pi/3}|=1$）。\enspace 3. $k\Delta L=\frac{2\pi}{0.5}\times0.25=\pi$。}
+
+% =====================================================================
+\section{平面波与空间频率}\label{sec:p-spfreq}
+\proot{共同语言（为根②③准备：方向 = 频率）}
+
+\begin{idea}[一句话]
+一束斜着走的平面波，在屏上留下一排\textbf{周期性的相位条纹} $\ee^{i2\pi ux}$。每毫米有几个周期，就是\textbf{空间频率} $u=\sin\theta/\lambda$。越斜，条纹越密，频率越高。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\foreach \th/\xs/\lab in {0/0/{$\theta=0$：$u=0$（直流）},20/5.6/{$\theta=20^\circ$：$u=0.34/\lambda$},45/11.2/{$\theta=45^\circ$：$u=0.71/\lambda$}}{
+\begin{scope}[xshift=\xs cm]
+  \begin{scope}
+  \clip (0,-1.4) rectangle (3,1.4);
+  \foreach \s in {-12,...,12} {
+    \draw[blue!60] ({1.5+\s*0.4*cos(\th)-4*sin(\th)},{\s*0.4*sin(\th)+4*cos(\th)})--({1.5+\s*0.4*cos(\th)+4*sin(\th)},{\s*0.4*sin(\th)-4*cos(\th)});
+  }
+  \end{scope}
+  \draw[line width=1.6pt] (3,-1.4)--(3,1.4);
+  \draw[->,very thick,red] (0.3,-0.9)--++(\th:1.1) node[above]{$\bm k$};
+  \node[align=center] at (1.6,-1.85) {\lab};
+\end{scope}}
+\draw[<->,green!50!black,thick] (14.35,0.197)--(14.35,0.763) node[midway,right]{$d$};
+\end{tikzpicture}
+
+{\small 细斜线是波面（相位相同的面），间距 $\lambda$。粗黑线是屏。屏上相邻两次“碰到波峰”相隔 $d=\lambda/\sin\theta$，$u=1/d$。}
+\end{center}
+
+\begin{itemize}
+\item \textbf{平面波}：波面是一组平行平面，传播方向垂直于波面。激光束、远处的星光都近似是平面波。
+\item 正对着屏走（$\theta=0$）：屏上每一点同时到波峰，相位处处相同，$E=$ 常数，$u=0$。
+\item 斜着走（与光轴夹角 $\theta$）：屏上的相位随 $x$ 线性增加，
+\[
+E(x,y)=A\,\ee^{i2\pi ux},\qquad u=\frac{\sin\theta}{\lambda}\quad(\text{单位：周/mm，即 mm}^{-1}\text{ 或 lp/mm})
+\]
+lp/mm 读作“线对每毫米”，一黑一白算一对。二维时 $E=A\ee^{i2\pi(ux+vy)}$，$u,v$ 分别由光在 $x$、$y$ 方向的倾斜决定。
+\item 数例：$\lambda=0.5\,\mu$m，$\theta=30^\circ$：$u=\frac{0.5}{5\times10^{-4}\text{ mm}}=1000$ mm$^{-1}$，条纹周期 1 $\mu$m。
+\item 上限：这里的 $\lambda$ 是介质中的波长，传播平面波满足 $u^2+v^2\le1/\lambda^2$；超出的是随距离衰减的倏逝成分。若改用真空波长 $\lambda_0$，则 $\lambda=\lambda_0/n$。实际镜头只收集其中一部分方向；成像截止还要区分复振幅与强度，见 §\ref{sec:p-imaging}。
+\end{itemize}
+
+\begin{idea}[为什么是 $\sin\theta$：横着移动，沿传播方向前进多少]
+$\theta$ 从光轴 $z$ 量起，观察面上的位移沿横向 $x$。两点相隔 $\Delta x$，这段位移在传播方向上的投影为
+\[
+\Delta s=\Delta x\cos(90^\circ-\theta)=\Delta x\sin\theta.
+\]
+波面垂直于传播方向；只有这个投影会让我们跨过波面。沿传播方向相隔一个波长，相位相差 $2\pi$，所以
+\[
+\Delta\varphi=\frac{2\pi}{\lambda}\Delta x\sin\theta
+=2\pi u\Delta x
+\quad\Rightarrow\quad u=\frac{\sin\theta}{\lambda}.
+\]
+这是比较同一时刻两个位置的相位，\textbf{不是光从一个观察点横着走到另一个点}。$\theta=0$ 时横着移动不跨波面，$u=0$；$\theta=30^\circ$ 时横移 $2\lambda$ 才投影出一个波长，横向相位周期就是 $2\lambda$。
+
+还要分清\textbf{相位条纹与明暗条纹}：单束斜平面波 $E=A\ee^{i2\pi ux}$ 的相位不断变化，强度 $|E|^2=|A|^2$ 却处处相同。不同方向的相干波叠加后，才可能出现明暗条纹。这里的空间频率表示沿位置变化多快，单位是周期/mm；光的时间频率表示每秒振动多少次，单位是 Hz。
+\end{idea}
+
+\phead{任意光场 = 平面波的叠加 = 傅里叶变换}
+先把「频谱」理解成成分清单：位置表示告诉我们各处的值；频谱表示告诉我们每种周期变化占多少、相位如何。例如 $1+0.6\cos(2\pi\cdot2x)+0.2\cos(2\pi\cdot8x)$（$x$ 用 mm）由背景 1、每毫米 2 个周期和 8 个周期的起伏组成。傅里叶变换就是把合成的分布拆回这些成分；对复振幅作分解时，基本成分换成下面的复指数平面波。
+傅里叶逆变换 $E(x,y)=\dint\hat E(u,v)\,\ee^{i2\pi(ux+vy)}\dd u\dd v$ 在这里有了物理意义：
+平面上任意一个光场，都可以拆成许多\textbf{往不同方向走的平面波}；方向 $(u,v)$ 那一束的振幅和相位，就是频谱 $\hat E(u,v)=\F\{E\}$。
+\textbf{细节越细（变化越快）$\Rightarrow$ 需要的 $u$ 越大 $\Rightarrow$ 那部分光走得越斜}。这是整个傅里叶光学的基石。
+
+\needspace{12\baselineskip}
+\phead{两束光干涉出条纹（SIM 的照明）}
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\begin{scope}
+\draw[thick] (-2,0)--(2,0) node[right]{物面};
+\foreach \d in {-1.2,-0.6,0,0.6} {\draw[->,red] ({\d-0.9},-2)--({\d-0.05},-0.05);}
+\foreach \d in {-0.6,0,0.6,1.2} {\draw[->,blue,dashed] ({\d+0.9},-2)--({\d+0.05},-0.05);}
+\draw[dashed] (0,-2.1)--(0,0); \node at (0,-2.35){光轴 $z$};
+\node[red] at (-1.9,-1.4){束 1}; \node[blue] at (1.9,-1.4){束 2（虚线）};
+\node at (0,-1.1){$\theta$};
+\end{scope}
+\begin{scope}[xshift=4.2cm,yshift=-1.9cm]
+\draw[->] (0,0)--(7.2,0) node[right]{$x$};
+\draw[->] (0,0)--(0,2.2) node[above]{强度 $I$};
+\draw[thick,red!70!black,domain=0:6.8,samples=150] plot (\x,{0.45*(1+cos(deg(2*pi*\x/1.4)))*2});
+\draw[<->] (2.8,1.95)--(4.2,1.95) node[midway,above]{周期 $\frac{1}{2u_0}$};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+两束相干、等振幅的平面波，与光轴分别成 $\pm\theta/2$（两束夹角 $\theta$），在物面上各是 $\ee^{\pm i2\pi u_0x}$，$u_0=\frac{\sin(\theta/2)}{\lambda}$：
+\[
+E=\ee^{i2\pi u_0x}+\ee^{-i2\pi u_0x}=2\cos(2\pi u_0x),\qquad I=|E|^2=2\big[1+\cos(2\pi\cdot2u_0\,x)\big]
+\]
+强度是一排余弦条纹，频率 $2u_0=\frac{2\sin(\theta/2)}{\lambda}$（是复振幅频率的 2 倍），频谱是三根冲激：在 $0$ 和 $\pm2u_0$。
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 时间频率（周/秒）$\leftrightarrow$ 空间频率（周/毫米）。一段音乐 = 许多纯音的叠加；一幅图 = 许多正弦条纹的叠加。
+\item 复指数 $\ee^{i2\pi ft}$ $\leftrightarrow$ 斜平面波 $\ee^{i2\pi ux}$：\textbf{频谱上的一个点 = 空间里的一个传播方向}。
+\item 两束光干涉 $\leftrightarrow$ 频率 $\pm u_0$ 的两个信号相加后做平方律检波：输出里出现差频 $2u_0$（和混频、拍频一样）。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item 结构光照明（SIM）题：求照到物上的强度分布，就是上面的余弦条纹；求透过物体后强度的频谱：强度相乘 $\Rightarrow$ 频谱卷积三根冲激 $\Rightarrow$ 物的频谱被复制成三份、平移 $\pm2u_0$；问为什么能超分辨：平移让原来进不了镜头的高频挪进来。
+\item 光度题要物方、像方孔径角 $U$、$U'$ 对应的空间频率 $f_x$：就是 $u=\frac{\sin\theta}{\lambda}$，在折射率 $n$ 的介质里写成 $\frac{n\sin U}{\lambda_0}$。
+\item 4f 滤波题把滤波器写成 $T\big(\frac{\xi}{\lambda f_1},\frac{\eta}{\lambda f_1}\big)$：频谱面上位置 $\xi$ 对应空间频率 $\frac{\xi}{\lambda f_1}$（§\ref{sec:p-lensft}）。
+\end{itemize}
+
+\psee 空间频率的定义与题型\pageref{sec:spfreq}；两束光干涉\pageref{sec:twobeam}；SIM \pageref{sec:sim}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item $\lambda=0.5\,\mu$m 的平面波，$\sin\theta=0.05$，空间频率是多少？
+\item 垂直入射的平面波，空间频率是多少？
+\item 两束等强相干光关于光轴对称，$\sin(\theta/2)=0.1$，$\lambda=0.5\,\mu$m，强度条纹的频率是多少？
+\end{enumerate}
+\pans{1. $u=\frac{0.05}{5\times10^{-4}\text{ mm}}=100$ mm$^{-1}$。\enspace 2. 0（直流）。\enspace 3. $\frac{2\times0.1}{5\times10^{-4}}=400$ mm$^{-1}$。}
+
+% =====================================================================
+\section{物体和透镜都是“乘法”}\label{sec:p-screen}
+\proot{根① 元件 = 乘一个复数函数 $t(x,y)$}
+
+\begin{idea}[一句话]
+光穿过一个很薄的东西（胶片、小孔、玻璃片、透镜），出来的光 = 进去的光 $\times\,t(x,y)$。$t$ 叫\textbf{复透射系数}：它的模改变振幅（挡光），它的相位改变相位（延迟）。
+\end{idea}
+
+\[
+E_{\text{出}}(x,y)=t(x,y)\,E_{\text{入}}(x,y),\qquad t=|t|\,\ee^{i\phi(x,y)}
+\]
+\begin{itemize}
+\item \textbf{振幅型}：只挡光、不改相位。小孔 $\rect$、圆孔 $\circf$、黑白光栅、印着图案的胶片。$|t|$ 在 0（不透）到 1（全透）之间。
+\item \textbf{相位型}：完全透明（$|t|=1$），只延迟。玻璃片、透镜、棱镜、相位板、SLM（空间光调制器，可以用电脑编程的相位屏）。
+\item \textbf{强度透过率} $T=|t|^2$：只关心强度时用它。
+\end{itemize}
+
+\phead{厚度 $\to$ 相位}
+光在玻璃里走得慢（速度 $c/n$，$n\approx1.5$ 是折射率）。玻璃厚 $\Delta$ 的地方，比旁边空气多出“光程” $(n-1)\Delta$，相位就多
+\[
+\phi(x,y)=k(n-1)\Delta(x,y),\qquad k=\frac{2\pi}\lambda
+\]
+所以\textbf{玻璃的形状 = 相位的形状}。三个最重要的例子：
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\foreach \xs/\lab in {0/{(a) 平板：常数相位，没作用},5.7/{(b) 楔（棱镜）：线性相位 $\to$ 偏转},11.4/{(c) 凸透镜：二次相位 $\to$ 会聚}}{
+  \begin{scope}[xshift=\xs cm]
+  \foreach \x in {-1.6,-1.2,-0.8} \draw[blue!70,thick] (\x,-1.1)--(\x,1.1);
+  \draw[->,red] (-2,0)--(-1.75,0);
+  \node[align=center] at (0.3,-1.6) {\lab};
+  \end{scope}}
+% (a)
+\fill[blue!12,draw=black] (-0.15,-1.1) rectangle (0.15,1.1);
+\foreach \x in {0.9,1.3} \draw[blue!70,thick] (\x,-1.1)--(\x,1.1);
+\draw[->,red] (1.5,0)--(2.0,0);
+% (b)
+\begin{scope}[xshift=5.7cm]
+\fill[blue!12,draw=black] (-0.15,-1.1)--(0.05,-1.1)--(0.45,1.1)--(-0.15,1.1)--cycle;
+\foreach \x in {1.0,1.4} \draw[blue!70,thick] (\x,-1.1)--({\x-0.4},1.1);
+\draw[->,red] (1.4,0)--++(10.3:0.7);
+\node[font=\scriptsize] at (0.2,1.3){厚};\node[font=\scriptsize] at (-0.05,-1.3){薄};
+\end{scope}
+% (c)
+\begin{scope}[xshift=11.4cm]
+\draw[thick,fill=blue!12] (0,0) ellipse (0.25 and 1.1);
+\draw[blue!70,thick] ($(2.6,0)+(148:2.0)$) arc[start angle=148,end angle=212,radius=2.0];
+\draw[blue!70,thick] ($(2.6,0)+(140:1.55)$) arc[start angle=140,end angle=220,radius=1.55];
+\draw[red,dashed] (0.9,1.06)--(2.6,0)--(0.9,-1.06);
+\fill[red] (2.6,0) circle (1.5pt) node[right]{焦点};
+\end{scope}
+\end{tikzpicture}
+
+{\small 竖线是波面。(b) 上面厚、延迟多，波面上半部落后，光往厚的一边拐。(c) 中间厚、延迟多，波面向内弯成球面，会聚到焦点。}
+\end{center}
+
+\begin{itemize}
+\item 楔形（棱镜）：厚度随 $x$ 线性变化 $\to$ 线性相位 $\ee^{i2\pi u_0x}$ $\to$ 光束偏转一个角度。
+\item 凸透镜：中间厚、边缘薄，厚度近似抛物面 $\to$ 二次相位
+\[
+t_{\text{透镜}}(x,y)=\exp\!\left(-ik\frac{x^2+y^2}{2f}\right)
+\]
+负号表示中心相位最多（最延迟），波面向内弯，会聚到距离 $f$ 处。$f<0$ 就是凹透镜。
+\end{itemize}
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 乘 $t(x,y)$ $\leftrightarrow$ 时域相乘：加窗（孔 = 矩形窗）、调制（光栅 = 乘一个周期信号）。
+\item 线性相位 $\ee^{i2\pi u_0x}$ $\leftrightarrow$ 乘 $\ee^{i2\pi f_0t}$ = \textbf{频移}（调制定理）：棱镜把整个频谱平移 $u_0$，也就是把光的方向整体转一个角度。
+\item 二次相位 $\ee^{-i\pi(x^2+y^2)/(\lambda f)}$ $\leftrightarrow$ \textbf{线性调频（chirp）}：局部空间频率 $-x/(\lambda f)$ 随位置线性变化。离中心越远的光拐得越厉害，而且都正好指向焦点。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item Alvarez 透镜：薄元件的\textbf{复透过率}由\textbf{厚度}决定，厚度 $T(x,y)$ 的薄片 $\to$ 相位 $k(n-1)T(x,y)$。两片三次曲面沿 $x$ 相向错开 $d$，厚度之和 $\approx\pm2d\,\partial T/\partial x=\pm2Ad(x^2+y^2)$ 是二次的，所以等效于一片透镜；焦距与 $d$ 成反比，错开方向反过来焦距就变号（\pageref{sec:alvarezi}）。
+\item 同一题 ii：频谱面放 SLM，相位 $kQ\xi$ 是\textbf{线性相位} $\to$ 输出平移（§\ref{sec:p-lensft}）。
+\item 复透射系数为 $E(x,y)$ 的屏，用单色相干平面波垂直照明：照明 $=1$，屏后的光就是 $E(x,y)$。
+\end{itemize}
+
+\psee 常见光屏的透射系数表\pageref{sec:screens}；看懂相位因子\pageref{sec:phasefactors}；透镜相位\pageref{sec:lensphase}；等效透镜\pageref{sec:equivlens}；Alvarez \pageref{sec:alvarez}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 圆孔是振幅型还是相位型？薄透镜呢？
+\item $n=1.5$ 的玻璃上有一个高 $0.5\,\mu$m 的台阶，$\lambda=0.5\,\mu$m，台阶两边的相位差是多少？
+\item $t=\exp\!\big(-ik\frac{x^2+y^2}{2\times200\text{ mm}}\big)$ 是什么元件？
+\end{enumerate}
+\pans{1. 圆孔振幅型；薄透镜相位型。\enspace 2. $k(n-1)\Delta=\frac{2\pi}{0.5}\times0.5\times0.5=\pi$。\enspace 3. 焦距 200 mm 的凸透镜（负号 = 会聚）。}
+
+% =====================================================================
+\section{传播就是衍射：卷积与远场傅里叶变换}\label{sec:p-diff}
+\proot{根② 传播 = 卷积，远场 = 傅里叶变换}
+
+\begin{idea}[一句话]
+光从一个平面走到另一个平面：每一点都像一个小喇叭向四周发出球面波（惠更斯原理），到了下一个平面全部叠加——这是一次\textbf{卷积}。走得足够远时，结果变成输入的\textbf{傅里叶变换}。
+\end{idea}
+
+\begin{idea}[思路：这一节要解决什么，每一步为什么这样做]
+\textbf{问题}：已知孔后紧贴处的光 $E_{\text{入}}(x_1,y_1)$，求距离 $z$ 的屏上的光 $E_{\text{出}}(x,y)$。
+\begin{enumerate}
+\item \textbf{规律有了，但算不动。}惠更斯原理给出答案：孔上每一点发一个球面波，屏上把它们全加起来，
+$E_{\text{出}}(x,y)\propto\iint E_{\text{入}}(x_1,y_1)\,\dfrac{\ee^{ikr}}{r}\dd x_1\dd y_1$ [F2-p2]，
+$r=\sqrt{z^2+(x-x_1)^2+(y-y_1)^2}$ 是孔上一点到屏上一点的距离。根号在指数里，一般不易直接求出，但传播核已经只依赖坐标差。
+\item \textbf{所以要近似 $r$，目标是简化传播核。}在均匀介质中的平行平面之间，标量传播核只依赖坐标差，传播本来就可写成\textbf{卷积}。傍轴近似把核简化为二次相位，得到菲涅耳衍射；再用远场近似，得到与输入光场的\textbf{傅里叶变换}相联系的夫琅禾费衍射。
+\item \textbf{$r$ 出现在两个地方，要分开对待。}分母的 $1/r$ 管振幅，指数的 $kr$ 管相位。同样把 $r$ 弄错一点点，振幅几乎不受影响，相位却可能错掉好几圈。所以要分别问：振幅里的 $r$ 能不能当常数？相位里的 $r$ 能不能当常数？这就是下面的两个近似。
+\end{enumerate}
+\end{idea}
+
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[line width=2pt] (0,0.9)--(0,1.6); \draw[line width=2pt] (0,-0.9)--(0,-1.6);
+\foreach \y in {-1.2,-0.6,0,0.6,1.2} \draw[->,red!70!black] (-1.4,\y)--(-0.2,\y);
+\foreach \y in {-0.6,-0.2,0.2,0.6} {
+  \fill (0,\y) circle (1.3pt);
+  \foreach \r in {0.4,0.8,1.2} \draw[blue!50] ($(0,\y)+(-70:\r)$) arc[start angle=-70,end angle=70,radius=\r];
+}
+\draw[thick] (4.2,-1.6)--(4.2,1.6) node[above]{观察面};
+\draw[gray] (0,0.6)--(4.2,1.1); \draw[gray] (0,-0.2)--(4.2,1.1); \draw[gray] (0,0.2)--(4.2,1.1); \draw[gray] (0,-0.6)--(4.2,1.1);
+\fill (4.2,1.1) circle (1.3pt);
+\node[align=left,anchor=west] at (4.4,0.6) {这一点收到的光 =\\孔里每一点的次波之和};
+\node at (0,1.9){孔（输入面）};
+\draw[<->] (0,-1.9)--(4.2,-1.9) node[midway,below]{距离 $z$};
+\end{tikzpicture}
+\end{center}
+
+\phead{惠更斯原理 = 卷积}
+输入面上每一点 $(x_1,y_1)$ 发出一个“次波”，在输出面上留下同样形状的图样 $h$，只是跟着平移。所有点的贡献加起来：
+\[
+E_{\text{出}}(x,y)=\iint E_{\text{入}}(x_1,y_1)\,h(x-x_1,y-y_1)\dd x_1\dd y_1=E_{\text{入}}\conv h
+\]
+$h$ 是输入平面上一个单位点对输出平面的复振幅响应，即自由空间的冲激响应。卷积就是把这份响应按输入值加权、按输入位置平移，再把贡献相加。换到频域，同一过程变成每个频率乘自己的系数：$\widehat E_{\text{出}}=\widehat E_{\text{入}}H$，其中 $H=\F\{h\}$。
+
+\needspace{16\baselineskip}
+\begin{idea}[全通为什么还会出现衍射图样]
+在均匀、无损介质中，不额外加入孔径截断时，\textbf{菲涅耳近似}下的复振幅传递函数为
+\[
+H(u,v)=\ee^{ikz}\exp[-i\pi\lambda z(u^2+v^2)],\qquad |H|=1.
+\]
+在该模型适用的傍轴频率范围内，每个光场频率成分只改变相位，幅度不变，这就是此处\textbf{全通}的含义。不同成分转过不同的相位，重新叠加时，相长和相消的位置会变化，所以\textbf{频谱幅度不变，空间中的强度分布仍能改变}。
+
+更一般的角谱传递函数是 $H_{\mathrm{AS}}=\exp[ikz\sqrt{1-\lambda^2(u^2+v^2)}]$。传播波部分的模为 1；超过 $u^2+v^2=1/\lambda^2$ 的倏逝成分随正向传播距离衰减。有限镜头还会限制收光方向，因此本节的自由传播全通，与 §\ref{sec:p-imaging} 的成像截止频率并不矛盾。
+\end{idea}
+
+\phead{两个近似：傍轴与远场}
+先用最简单的情形把两个近似看清楚：一个点光源，正前方 $z$ 处立着一块半径 $\rho$ 的接收面。
+
+\phead{球面波公式和“多走的距离”是什么关系}
+球面波 $\dfrac{A}{r}\ee^{ikr}$ 只说了两件事：离光源越远越弱（振幅 $\frac Ar$）；相位等于 $k\times$ 走过的路程（$kr$，§\ref{sec:p-wave}：多走 $\Delta L$，相位多 $k\Delta L$）。所以要知道接收面上各点的光和中心差多少，只需要知道\textbf{各点比中心多走了多少路}：
+\[
+\Delta=r-z=\sqrt{z^2+\rho^2}-z\approx\frac{\rho^2}{2z}\qquad\Big(\sqrt{1+t}\approx1+\frac t2,\ t=\frac{\rho^2}{z^2}\Big)
+\]
+把这一个 $\Delta$ 分别代进振幅和相位，就得到两个近似各自的误差：
+\begin{itemize}
+\item 振幅：$\frac{A}{z}\to\frac{A}{z+\Delta}$，相对变化 $\approx\frac{\Delta}{z}=\frac{\rho^2}{2z^2}$；
+\item 相位：$kz\to k(z+\Delta)$，多出 $k\Delta=\frac{\pi\rho^2}{\lambda z}$。
+\end{itemize}
+算 $\Delta$ 的意图就在这里：球面波公式告诉你“只有路程要紧”，$\Delta$ 量出“路程在接收面上变了多少”，两者合起来就是“光在接收面上变了多少”。
+
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\fill (0,0) circle (2pt) node[left]{点光源};
+\foreach \r in {1.2,2.4,3.6} \draw[blue!40] (-20:\r) arc[start angle=-20,end angle=20,radius=\r];
+\draw[blue!70,thick] (-17:5) arc[start angle=-17,end angle=17,radius=5];
+\draw[thick] (5,-1.6)--(5,1.6) node[above]{接收面};
+\draw[->] (0,0)--(5,0) node[midway,below]{$z$};
+\draw[->] (0,0)--(5,1.5) node[midway,above left]{$r$};
+\draw[<->] (5.25,0)--(5.25,1.5) node[midway,right]{$\rho$};
+\draw[red,very thick] (4.78,1.435)--(5,1.5);
+\draw[red,->] (6.4,2.0)--(4.95,1.52); \node[red,align=left,anchor=west] at (6.4,2.0) {边缘多走 $\Delta\approx\rho^2/(2z)$};
+\node[blue!70,anchor=west,align=left] at (5.4,-0.9) {半径 $z$ 的球面波面：\\中心先到，边缘晚到 $\Delta$};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item \textbf{傍轴近似}（振幅当常数）：振幅 $\frac Ar$ 里把 $r$ 换成 $z$。边缘和中心的振幅相对只差 $\frac{\Delta}{z}\approx\frac{\rho^2}{2z^2}$。只要接收面比距离小得多（$\rho\ll z$，光都“贴着光轴”走）就成立，\textbf{和波长无关}。
+\item \textbf{远场近似}（相位当常数）：相位 $kr$ 里也把 $r$ 换成 $z$。要求边缘多走的那点路造成的相位差 $k\Delta=\frac{\pi\rho^2}{\lambda z}$ 远小于 $\pi$，即 $z\gg\frac{\rho^2}{\lambda}$。
+\item \textbf{为什么远场更难满足}：同一个 $\Delta$，在振幅里是\textbf{除以} $z$（米量级），在相位里是\textbf{乘以} $k$（每毫米上万弧度）。数例：$\lambda=0.5\,\mu$m，$\rho=1$ mm，$z=1$ m，振幅只差 $5\times10^{-7}$，相位却差 $2\pi$。傍轴早就满足了，远场完全不成立；要远场得 $z\gg2$ m。
+\end{itemize}
+
+\phead{两个近似各自换来了什么：从积分里认出运算}
+回到孔和屏。现在 $r$ 里有两组坐标，孔上一点 $(x_1,y_1)$ 和屏上一点 $(x,y)$，多走的距离跟着这两组坐标一起变。两个近似就是对这个 $r$ 一步一步下手。
+\begin{enumerate}
+\item \textbf{傍轴 $\Rightarrow$ 简化卷积核（菲涅耳衍射）。}振幅里取 $\frac1r\approx\frac1z$，倾斜因子取 $K\approx1$，相位里把 $r$ 展开到二次：
+\[
+r\approx z+\frac{(x-x_1)^2+(y-y_1)^2}{2z}.
+\]
+近似后的传播核 $h$ 仍只依赖 $(x-x_1,\,y-y_1)$。孔上的点挪一下，它在屏上留下的图样只跟着平移、形状不变，这就是 LTI 系统，积分就是卷积 $E_{\text{入}}\conv h$，其中 $h=\frac{\ee^{ikz}}{i\lambda z}\exp\!\big(ik\frac{x^2+y^2}{2z}\big)$ [F2-p2]。\\
+\textbf{傍轴近似的用处}：把含根号的传播核简化为二次相位，便于计算及与傅里叶变换联系。平移不变性来自均匀介质和平行平面的几何条件，并非由傍轴近似才产生。
+\item \textbf{远场 $\Rightarrow$ 傅里叶变换（夫琅禾费衍射）。}把平方展开，相位里的路程差分成三项，三项的处理各不相同：
+\end{enumerate}
+
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{2.3cm}P{3.3cm}P{5.6cm}P{3.6cm}@{}}
+\toprule
+展开出的项 & 和谁有关 & 物理意思与处理 & 结果\\ \midrule
+$\dfrac{x^2+y^2}{2z}$ & 只和\textbf{屏上}的点有关 & 屏上各点离光源远近不同；对积分是常数，提到积分外面 & 留着，成为观察屏上的二次相位，强度里消失\\
+$-\dfrac{xx_1+yy_1}{z}$ & 两组坐标的\textbf{乘积} & 相位因子 $\exp\!\big[-i2\pi\big(\frac{x}{\lambda z}x_1+\frac{y}{\lambda z}y_1\big)\big]$ 正是傅里叶核，$u=\frac{x}{\lambda z}$ & 留着，它\textbf{就是}傅里叶变换\\
+$\dfrac{x_1^2+y_1^2}{2z}$ & 只和\textbf{孔上}的点有关 & 孔内最大相位 $\frac{ka^2}{2z}=\frac{\pi a^2}{\lambda z}$，要它 $\ll\pi$ 才能扔，即 $z\gg\frac{a^2}{\lambda}$ & 扔掉：这一步就是\textbf{衍射屏的远场近似}\\
+\bottomrule
+\end{tabular}
+\end{center}
+扔掉第三项以后，积分只剩 $\iint E_{\text{入}}\exp[-i2\pi(ux_1+vy_1)]\dd x_1\dd y_1=\F\{E_{\text{入}}\}$ [F1-p36]。所以“菲涅耳、夫琅禾费各要哪个近似”的答案就在这张表里：远场近似只用在\textbf{衍射屏}的坐标上（第三项），观察屏的坐标 $x$ 可以很大，第一项并不小，但它是公共因子，所以观察屏只需傍轴。
+
+{\small 严格地说，相位展开到二次还要求丢掉的四次项 $\frac{k\rho^4}{8z^3}$ 远小于 $\pi$，比振幅条件严。课件把这一步也算在“傍轴”里，答题照课件写即可。}
+
+\begin{idea}[远场的直观：从孔上各点看，屏上那一点在同一个方向]
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[line width=2pt] (0,1.45)--(0,1.9); \draw[line width=2pt] (0,-0.45)--(0,-0.9);
+\fill (0,0) circle (1.4pt) node[left]{$O$};
+\fill (0,1) circle (1.4pt) node[left]{$x_1$};
+\draw[->,thick] (0,0)--++(20:5.4) node[right]{朝方向 $\theta$ 的远处一点};
+\draw[->,thick] (0,1)--++(20:5.4);
+\draw[dashed] (0,1)--(0.321,0.117);
+\draw[line width=2.2pt] (0,0)--(0.321,0.117);
+\draw[->] (1.3,-0.6)--(0.25,0.05);
+\node[anchor=west,align=left] at (1.3,-0.6) {粗线：$O$ 处的光比 $x_1$ 处多走 $x_1\sin\theta\approx x_1\frac{x}{z}$};
+\draw (0.9,0)--(1.2,0); \draw (1.1,0) arc[start angle=0,end angle=20,radius=1.1]; \node at (1.35,0.22){$\theta$};
+\end{tikzpicture}
+\end{center}
+离得足够远时，从孔上各点到屏上同一点的连线几乎平行。孔上 $x_1$ 处的光比 $O$ 处少走 $x_1\sin\theta$，相位少 $k x_1\frac{x}{z}=2\pi\frac{x}{\lambda z}x_1$，随 $x_1$ \textbf{线性}变化。这等于拿一个空间频率 $u=\frac{\sin\theta}{\lambda}=\frac{x}{\lambda z}$ 的平面波去和孔里的光做内积，加起来就是 $\F\{E_{\text{入}}\}$ 在 $u$ 处的值。
+\begin{itemize}
+\item 这就是 §\ref{sec:p-spfreq}“方向 = 空间频率”落到屏上的样子：\textbf{屏上位置 $x$ $\leftrightarrow$ 方向 $\theta$ $\leftrightarrow$ 频率 $u$}。
+\item 表里扔掉的第三项描述“连线并不完全平行”，也就是球面波的弯曲。走得足够远，这点弯曲在整个孔上不到半个波长，就可以不管。
+\end{itemize}
+\end{idea}
+
+\phead{小结：菲涅耳衍射（近场）与夫琅禾费衍射（远场）}
+\begin{itemize}
+\item \textbf{菲涅耳衍射}：只用傍轴近似，相位保留到二次项 $\frac{k\rho^2}{2z}$。图样还像孔的影子，但边缘起皱。
+\item \textbf{夫琅禾费衍射}：再对\textbf{衍射屏}（孔的半宽 $a$）用远场近似，$z\gg a^2/\lambda$。此时输出\textbf{正比于孔的傅里叶变换}：
+\[
+E(x,y)\propto\F\{E_{\text{入}}\}\Big|_{u=\frac{x}{\lambda z},\,v=\frac{y}{\lambda z}}
+\]
+观察屏上位置 $x$ 对应空间频率 $u=x/(\lambda z)$，也就是方向 $\sin\theta\approx x/z$：远处看到的就是“各个方向平面波的权重”。观察屏只满足傍轴，它上面的二次相位还在，只是不影响强度。
+\item \textbf{菲涅耳数} $N_F=\frac{a^2}{\lambda z}$：$N_F\gtrsim1$ 是菲涅耳区，$N_F\ll1$ 是夫琅禾费区。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+\begin{scope}
+\draw[->] (-1.9,0)--(1.9,0) node[right]{$x/a$};
+\draw[thick,red!70!black] (-1.7,0)--(-0.8,0)--(-0.8,1)--(0.8,1)--(0.8,0)--(1.7,0);
+\node[align=center] at (0,-1.05) {紧贴孔后：影子\\$\rect$};
+\end{scope}
+\begin{scope}[xshift=5.4cm,x=0.8cm,y=0.85cm]
+\draw[->] (-2.2,0)--(2.3,0) node[right]{$x/a$};
+\draw[thick,red!70!black] plot coordinates {(-2.000,0.003) (-1.975,0.006) (-1.950,0.011) (-1.925,0.012) (-1.900,0.007) (-1.875,0.004) (-1.850,0.008) (-1.825,0.014) (-1.800,0.015) (-1.775,0.010) (-1.750,0.006) (-1.725,0.010) (-1.700,0.018) (-1.675,0.020) (-1.650,0.014) (-1.625,0.009) (-1.600,0.015) (-1.575,0.025) (-1.550,0.028) (-1.525,0.021) (-1.500,0.015) (-1.475,0.022) (-1.450,0.037) (-1.425,0.042) (-1.400,0.033) (-1.375,0.026) (-1.350,0.036) (-1.325,0.057) (-1.300,0.068) (-1.275,0.059) (-1.250,0.050) (-1.225,0.064) (-1.200,0.097) (-1.175,0.119) (-1.150,0.114) (-1.125,0.103) (-1.100,0.123) (-1.075,0.176) (-1.050,0.224) (-1.025,0.233) (-1.000,0.223) (-0.975,0.250) (-0.950,0.334) (-0.925,0.430) (-0.900,0.478) (-0.875,0.480) (-0.850,0.507) (-0.825,0.615) (-0.800,0.776) (-0.775,0.898) (-0.750,0.931) (-0.725,0.932) (-0.700,1.002) (-0.675,1.168) (-0.650,1.342) (-0.625,1.412) (-0.600,1.358) (-0.575,1.273) (-0.550,1.257) (-0.525,1.318) (-0.500,1.361) (-0.475,1.299) (-0.450,1.129) (-0.425,0.930) (-0.400,0.790) (-0.375,0.745) (-0.350,0.780) (-0.325,0.857) (-0.300,0.940) (-0.275,0.995) (-0.250,1.011) (-0.225,1.008) (-0.200,1.028) (-0.175,1.093) (-0.150,1.176) (-0.125,1.216) (-0.100,1.171) (-0.075,1.055) (-0.050,0.923) (-0.025,0.826) (-0.000,0.792) (0.025,0.826) (0.050,0.923) (0.075,1.055) (0.100,1.171) (0.125,1.216) (0.150,1.176) (0.175,1.093) (0.200,1.028) (0.225,1.008) (0.250,1.011) (0.275,0.995) (0.300,0.940) (0.325,0.857) (0.350,0.780) (0.375,0.745) (0.400,0.790) (0.425,0.930) (0.450,1.129) (0.475,1.299) (0.500,1.361) (0.525,1.318) (0.550,1.257) (0.575,1.273) (0.600,1.358) (0.625,1.412) (0.650,1.342) (0.675,1.168) (0.700,1.002) (0.725,0.932) (0.750,0.931) (0.775,0.898) (0.800,0.776) (0.825,0.615) (0.850,0.507) (0.875,0.480) (0.900,0.478) (0.925,0.430) (0.950,0.334) (0.975,0.250) (1.000,0.223) (1.025,0.233) (1.050,0.224) (1.075,0.176) (1.100,0.123) (1.125,0.103) (1.150,0.114) (1.175,0.119) (1.200,0.097) (1.225,0.064) (1.250,0.050) (1.275,0.059) (1.300,0.068) (1.325,0.057) (1.350,0.036) (1.375,0.026) (1.400,0.033) (1.425,0.042) (1.450,0.037) (1.475,0.022) (1.500,0.015) (1.525,0.021) (1.550,0.028) (1.575,0.025) (1.600,0.015) (1.625,0.009) (1.650,0.014) (1.675,0.020) (1.700,0.018) (1.725,0.010) (1.750,0.006) (1.775,0.010) (1.800,0.015) (1.825,0.014) (1.850,0.008) (1.875,0.004) (1.900,0.007) (1.925,0.012) (1.950,0.011) (1.975,0.006) (2.000,0.003)};
+\node[align=center] at (0,-1.05) {菲涅耳区（$N_F=4$）：\\边缘起皱};
+\end{scope}
+\begin{scope}[xshift=11.2cm,x=0.55cm]
+\draw[->] (-3.3,0)--(3.5,0) node[right]{$x$};
+\draw[thick,red!70!black,domain=-3:3,samples=120] plot (\x,{(sin(deg(pi*\x))/(pi*\x))^2});
+\node[align=center] at (0,-1.05) {夫琅禾费区（$N_F\ll1$）：\\$\sinc^2$ = 孔的频谱};
+\draw (1,0)--(1,-0.08) node[below,font=\scriptsize]{$\frac{\lambda z}{2a}$};
+\end{scope}
+\end{tikzpicture}
+
+{\small 同一个宽 $2a$ 的缝，离得越远，图样从“影子”变成“频谱”。纵轴是强度（以无遮挡时为 1）。}
+\end{center}
+
+\phead{孔越小，衍射斑越大}
+宽 $b$ 的缝，远场强度是 $\sinc^2$，第一个暗纹在方向 $\sin\theta=\lambda/b$。缝窄一半，光散开的角度大一倍。数例：$b=0.1$ mm，$\lambda=0.5\,\mu$m：$\theta\approx5\times10^{-3}$ rad，1 m 外第一暗纹离中心 5 mm。
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 自由传播 $\leftrightarrow$ LTI 系统；惠更斯次波 $\leftrightarrow$ 冲激响应 $h$；叠加 $\leftrightarrow$ 卷积。
+\item 传递函数 $\exp[-i\pi\lambda z(u^2+v^2)]$ $\leftrightarrow$ \textbf{色散}：全通、只有二次相位，像光纤里的脉冲展宽，不丢能量，但形状会变。
+\item 傍轴 vs 远场 $\leftrightarrow$ 窄带信号的“包络”与“载波”：一个小延迟对包络几乎没影响，对高频载波的相位影响却很大。
+\item 孔越小、斑越大 $\leftrightarrow$ \textbf{时宽带宽积}：脉冲越短，频谱越宽。
+\end{itemize}
+\end{idea}
+
+\begin{idea}[通用读法：相位因子按 $x$ 的幂次分类（§\ref{sec:p-lensft}--§\ref{sec:p-aberr} 都用这张表）]
+光走过的路程差乘以 $k$ 就是相位。把相位按坐标的幂次拆开，还要区分二维项在两个方向上的系数：
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{2.6cm}P{4.2cm}P{7.6cm}@{}}
+\toprule
+相位里的项 & 作用 & 在哪里出现\\ \midrule
+常数 $\varphi_0$ & 整体延迟，强度不变，答题可略 & 菲涅耳核的 $\ee^{ikz}$、活塞像差\\
+一次 $2\pi u_0x$ & 平面波的\textbf{方向}；频谱\textbf{平移}；像\textbf{平移} & 棱镜、斜入射、远场里的交叉项 $-\frac{xx_1}{z}$、倾斜像差\\
+旋转对称二次 $\pm\frac{k(x^2+y^2)}{2R}$ & 傍轴\textbf{球面波}：$+$ 发散，$-$ 会聚 & 点光源、菲涅耳核、薄透镜；波像差中的 $a(x^2+y^2)$ 是离焦\\
+像散型二次 $a(x^2-y^2)$、$bxy$ & \textbf{像散}：两主方向曲率不同 & 单纯沿轴移动接收面不能同时消除两方向的曲率差\\
+三次及以上 & 不能靠平移或调焦消除 & 彗差、球差等\\
+\bottomrule
+\end{tabular}
+\end{center}
+后面几节都是在给这些项记账：透镜的二次项抵消传播的二次项，得到傅里叶变换（§\ref{sec:p-lensft}）；成像公式就是二次项系数相加（§\ref{sec:p-lensft}）；像差按空间形式区分可由平移、调焦消除的部分（§\ref{sec:p-aberr}）。
+\end{idea}
+
+\needspace{4\baselineskip}
+\pkao
+\begin{itemize}
+\item 近似比较题就是上面的“两个近似”：问哪个更难满足，比较 $\frac{\rho^2}{2z^2}$ 和 $\frac{\pi\rho^2}{\lambda z}$，相位那个大得多（两者之比 $\frac{2\pi z}{\lambda}\gg1$），远场更难满足；问两种衍射各满足什么，菲涅耳：两屏都只满足傍轴；夫琅禾费：衍射屏还满足远场，观察屏只满足傍轴。
+\item 4f 的输入面\textbf{偏离}第一个透镜的前焦面 $x_1$：多出来的这段自由传播，频谱乘 $\exp[-i\pi\lambda x_1(u^2+v^2)]$；在输出端少走一段把它抵消掉。
+\item 题目说不计透镜有限口径的衍射：透镜当成无限大，不额外挡掉高频。
+\end{itemize}
+
+\psee 近似条件比较\pageref{box:approx}；近似比较例题\pageref{ex:v-approx}；菲涅耳、夫琅禾费公式的推导\pageref{sec:diffderiv}；角谱传播\pageref{sec:angspec}；常见孔的衍射图样\pageref{sec:aperturepatterns}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 傍轴近似和远场近似，哪个更难满足？一句话说原因。
+\item 孔的半宽 $a=1$ mm，$\lambda=0.5\,\mu$m，夫琅禾费区要求 $z$ 远大于多少？
+\item 缝宽从 0.2 mm 变成 0.1 mm，远场衍射角怎么变？
+\end{enumerate}
+\pans{1. 远场更难：同样多走的路，在相位里被 $k=2\pi/\lambda$ 放大，在振幅里只是除以 $z$。\enspace 2. $a^2/\lambda=\frac{10^{-6}}{0.5\times10^{-6}}$ m $=2$ m。\enspace 3. 变为原来的 2 倍（时宽带宽积）。}
+
+% =====================================================================
+\section{透镜做傅里叶变换：2f 与 4f}\label{sec:p-lensft}
+\proot{根① + 根②（透镜是乘法，焦面是搬来的远场）}
+
+\begin{idea}[一句话]
+透镜把\textbf{同一方向}来的平行光会聚到\textbf{焦面上同一点}，而一个方向就是一个空间频率。所以透镜后焦面上的光分布 = 物的\textbf{频谱}，透镜是一台不用通电的傅里叶变换器。
+\end{idea}
+
+\phead{接上上一节：透镜表面改相位，传播把方向分到不同位置}
+刚穿过薄透镜时，光场只是逐点乘透过率 $t(x,y)$；再传播到后焦面，才得到这里的傅里叶变换关系。在傍轴条件下，光场频率 $u$ 对应焦面位置 $X=\lambda fu$。例如 $\lambda=0.0005\,\mathrm{mm}$、$f=100\,\mathrm{mm}$、$u=20\,\mathrm{mm}^{-1}$，得到 $X=1\,\mathrm{mm}$：这是\textbf{某个方向成分的位置}，不是物体某一点的像位置。
+
+本节标准 2f 布置是「输入面到透镜 $f$、透镜到输出面 $f$」，两面分别为前、后焦面。几何光学中的「物距 $2f$、像距 $2f$」则是等大倒像，总距离为 $4f$。先画出各平面间距，再判断哪一面是频谱、哪一面是像，便能接到下一节的成像模型。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[->] (-3,0)--(4.6,0) node[right]{光轴};
+\draw[thick,fill=blue!10] (0,0) ellipse (0.13 and 1.6);
+\foreach \h in {-1,0,1} {\draw[red] (-2.8,\h)--(0,\h)--(3,0);}
+\foreach \h in {-1.2,-0.2,0.8} {\draw[blue,thick,dashed] (-2.8,{\h-0.7})--(0,\h)--(3,0.75);}
+\draw[thick] (3,-1.6)--(3,1.6) node[above]{后焦面（频谱面）};
+\fill[red] (3,0) circle (1.8pt); \draw[blue,fill=white,thick] (3,0.75) circle (2pt);
+\node[red,anchor=west] at (3.1,-0.25) {实线：$u=0$ $\to$ $x=0$};
+\node[blue,anchor=west] at (3.1,0.95) {虚线：$u=\frac{\sin\theta}{\lambda}$ $\to$ $x=\lambda fu$};
+\draw[dashed,gray] (-2.8,-1.9)--(-1.7,-1.9);
+\draw (-2.0,-1.9) arc[start angle=0,end angle=14,radius=0.8]; \node[blue] at (-1.8,-1.72){$\theta$};
+\draw[<->] (0,-1.95)--(3,-1.95) node[midway,below]{$f$};
+\end{tikzpicture}
+
+{\small 实线：平行于光轴的一束（直流）会聚到焦点；虚线：斜 $\theta$ 的一束会聚到焦面上 $x=f\tan\theta\approx\lambda fu$ 处。}
+\end{center}
+
+\begin{itemize}
+\item 与光轴成 $\theta$ 的平行光，会聚到后焦面上 $x=f\tan\theta\approx f\sin\theta$ 处。由 $u=\sin\theta/\lambda$ 得
+\[
+x=\lambda f\,u\qquad\text{（焦面上的位置} \leftrightarrow \text{空间频率）}
+\]
+数例：$f=200$ mm，$\lambda=0.5\,\mu$m，100 lp/mm 的光栅，$\pm1$ 级落在 $x=\pm10$ mm。
+\item \textbf{2f 系统}：物放在透镜\textbf{前焦面}（前方 $f$），后焦面（后方 $f$）上得到准确的 $\F\{E\}$。相当于把夫琅禾费衍射的“无穷远”搬到了焦面上。
+\item \textbf{4f 系统}：两个 2f 首尾相接，总长 $4f$。第一片做一次 $\F$，中间那个面叫\textbf{频谱面}；第二片再做一次 $\F$。两次正变换 $\F\F\{E\}(x)=E(-x)$，所以输出是\textbf{倒立}的像；两片焦距不同时放大率 $M=-f_2/f_1$。
+\item \textbf{在频谱面动手脚 = 滤波}：在频谱面放挡板或相位板，等于把频谱乘上一个 $H(u,v)$。
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[->] (-0.4,0)--(8.6,0);
+\draw[thick,fill=blue!10] (2,0) ellipse (0.12 and 1.5);
+\draw[thick,fill=blue!10] (6,0) ellipse (0.12 and 1.5);
+\draw[thick] (0,-1.5)--(0,1.5); \draw[thick] (8,-1.5)--(8,1.5);
+\draw[line width=2pt] (4,0.35)--(4,1.5); \draw[line width=2pt] (4,-0.35)--(4,-1.5);
+\draw[->,very thick,blue] (0,0)--(0,0.6);
+\draw[->,very thick,blue] (8,0)--(8,-0.6);
+\draw[red] (0,0.6)--(2,0.6)--(4,0)--(6,-0.6)--(8,-0.6);
+\draw[green!50!black,thick,dashed] (0,0.6)--(2,0)--(4,-0.6)--(6,-1.2)--(8,-0.6);
+\node[align=center] at (0,1.95) {输入面\\（物）};
+\node[align=center] at (4,1.95) {频谱面\\（放滤波器）};
+\node[align=center] at (8,1.95) {输出面\\（倒像）};
+\node at (2,1.75){$L_1$}; \node at (6,1.75){$L_2$};
+\foreach \a/\b in {0/2,2/4,4/6,6/8} \draw[<->] (\a,-1.75)--(\b,-1.75) node[midway,below]{$f$};
+\end{tikzpicture}
+
+{\small 4f 系统。频谱面上的光阑只让中心附近（低频）通过，就是一个低通滤波器。}
+\end{center}
+
+\begin{center}\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}P{4.4cm}P{3.6cm}P{7.2cm}@{}}
+\toprule
+频谱面上放什么 & 信号与系统里叫 & 输出的像\\ \midrule
+中心一个小孔 & 低通 & 变模糊，细节、锐边没了\\
+中心一个小黑点（挡直流） & 高通 & 只剩边缘、轮廓（暗场）\\
+一个圆环 & 带通 & 只剩某一粗细的结构\\
+挡掉光栅的某几级 & 选频 & 条纹变粗或变密（\pageref{sec:gratingfilter}）\\
+中心加 $\pi/2$ 相位 & 只改相位的全通 & 相位差变成明暗（相衬）\\
+线性相位（棱镜、SLM 倾斜相位） & 线性相位 = 延时 & 整幅像平移（\pageref{sec:linphase}）\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\phead{为什么透镜能做傅里叶变换：替远场扔掉那一项}\phantomsection\label{sec:p-lensftwhy}
+§\ref{sec:p-diff} 的表里，要得到傅里叶变换，必须扔掉只和孔上坐标有关的二次相位 $\frac{k(x_1^2+y_1^2)}{2z}$，代价是 $z\gg a^2/\lambda$，常常要几米甚至更远。透镜用另一种办法去掉这一项：
+\begin{enumerate}
+\item 紧贴透镜放物，透镜乘上 $\exp\!\big(-ik\frac{x_1^2+y_1^2}{2f}\big)$（§\ref{sec:p-screen}，会聚球面波）。
+\item 从透镜走 $f$ 到后焦面，菲涅耳核展开后正好带出 $\exp\!\big(+ik\frac{x_1^2+y_1^2}{2f}\big)$（就是那张表的第三项，$z=f$）。
+\item 两项\textbf{符号相反、系数相同}，乘起来等于 1 [F2-p9–10]。积分里只剩交叉项，即傅里叶核，$u=\frac{x}{\lambda f}$。
+\end{enumerate}
+所以透镜不是把光“算”成了频谱，而是\textbf{替距离抵消了球面弯曲}：不用走到无穷远，在焦面上就看到了远场。这和上面的几何图是同一件事：同一方向的平行光会聚到焦面同一点，方向对应频率。
+
+\phead{为什么物要放在前焦面：为了相位也对}
+上面那样紧贴透镜放物，焦面上还剩一个只和焦面坐标有关的二次相位 $\exp\!\big(ik\frac{x^2+y^2}{2f}\big)$，强度不受影响，但相位不是严格的 $\F\{E\}$。把物移到透镜前 $d_0$ 处，多出来的这段自由传播在频域乘了 $\exp[-i\pi\lambda d_0(u^2+v^2)]$（§\ref{sec:p-diff}，全通二次相位）。代入 $u=\frac{x}{\lambda f}$，它也是焦面上的二次相位，和剩下那一项合起来是
+\[
+\exp\!\Big[\frac{ik}{2f}\Big(1-\frac{d_0}{f}\Big)(x^2+y^2)\Big]\qquad\text{[F2-p14–15]}
+\]
+$d_0=f$ 时括号为零，二次相位消失，焦面上就是严格的频谱。\textbf{只看强度时 $d_0$ 取多少都行}；要把频谱再送进第二个透镜（4f 系统），相位必须对，所以物放在前焦面。
+
+\phead{成像也是记二次项的账}\phantomsection\label{sec:p-imgacct}
+同一套记账也能推出成像公式 [F2-p18–20]。点光源在透镜前 $l$ 处，到透镜时是发散球面波 $+\frac{kx_1^2}{2l}$；透镜加 $-\frac{kx_1^2}{2f}$；出来要是会聚到 $l'$ 的球面波 $-\frac{kx_1^2}{2l'}$。二次项系数相加：
+\[
+\frac1l-\frac1f=-\frac1{l'}\quad\Longleftrightarrow\quad\frac1l+\frac1{l'}=\frac1f
+\]
+这就是 §\ref{sec:p-geom} 的高斯公式。点光源离轴 $x_0$ 时还多一个一次项（方向），对一次项得 $\frac{x}{x_0}=-\frac{l'}{l}$，即横向放大率。
+\begin{center}\small\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}P{3.2cm}P{5.2cm}P{6cm}@{}}
+\toprule
+ & 傅里叶变换配置（2f） & 成像配置\\ \midrule
+输入 & 平面波照明的物 & 点光源（或物上一点）\\
+在哪里看 & 后焦面 & 与物共轭的像面（$\frac1l+\frac1{l'}=\frac1f$）\\
+二次相位的账 & 透镜的 $-$ 抵消传播 $f$ 的 $+$ & 发散 $+$ 透镜 $-$ = 会聚到 $l'$\\
+看到什么 & 物的频谱（每个方向一个点） & 物的像（每个物点一个点）\\
+\bottomrule
+\end{tabular}
+\end{center}
+同一块透镜，看哪个面就得到哪种结果 [F2-p22]。4f 系统里两种都有：频谱面是第一片的后焦面，输出面是物的像面。
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 透镜后焦面 $\leftrightarrow$ 频谱分析仪的屏幕，横坐标换算 $x=\lambda fu$。
+\item 4f 系统 $\leftrightarrow$ “FFT $\to$ 乘 $H$ $\to$ 再 FFT”的数字滤波；只是第二次用的仍是正变换，所以像倒过来。
+\item 频谱面上的透射系数 $\leftrightarrow$ 滤波器的频率响应 $H(f)$，坐标换算 $u=\xi/(\lambda f_1)$。
+\item 频谱面线性相位 $\leftrightarrow$ $H(f)=\ee^{-i2\pi f\tau}$，纯延时：输出平移。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item 两个 4f \textbf{级联}、相邻透镜焦点重合：四片透镜两两组成 4f。每个 4f 倒一次像，放大率 $-\frac{f_2}{f_1}$ 和 $-\frac{f_4}{f_3}$，两次倒像变回正像，总放大率 $\frac{f_2f_4}{f_1f_3}$。频谱面 1 放滤波器 $T\big(\frac{\xi}{\lambda f_1},\frac{\eta}{\lambda f_1}\big)$：写成这样正是让滤波器的自变量直接是空间频率，相干传递函数就由 $T$ 给出（频率要换到输出面上，\pageref{ex:v-4f2}）。
+\item 两片透镜共焦（前一片的后焦点就是后一片的前焦点）= 4f 系统；输入偏离前焦面 $x_1$，输出也跟着挪 $M^2x_1$（纵向放大率 $=\beta^2$）。
+\item Alvarez 的 4f 实现：频谱面放 SLM，相位 $\varphi=kQ\xi$：频谱面线性相位 $\Rightarrow$ 输出整体平移，把它和 $L_2$ 叠起来就等于“平移 Alvarez 透镜”。
+\end{itemize}
+
+\psee 透镜的傅里叶变换性质\pageref{sec:lensFT}；焦面场\pageref{sec:focalplane}；4f 系统\pageref{sec:4f}；4f 滤波与 CTF \pageref{sec:4fctf}；相干光学处理\pageref{sec:processing}；两个 4f 级联例题\pageref{ex:v-4f2}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item $f=100$ mm，$\lambda=0.5\,\mu$m，200 lp/mm 的分量落在后焦面上哪里？
+\item 4f 系统 $f_1=50$ mm，$f_2=150$ mm，放大率是多少？
+\item 在频谱面中心放一个小黑点，输出的像会怎样？
+\end{enumerate}
+\pans{1. $x=\lambda fu=5\times10^{-4}\times100\times200=10$ mm。\enspace 2. $M=-f_2/f_1=-3$，倒立放大 3 倍。\enspace 3. 挡掉直流和低频（高通），只剩边缘轮廓。}
+
+% =====================================================================
+\section{成像系统是线性系统：PSF、CTF、OTF、MTF}\label{sec:p-imaging}
+\proot{根③ 成像 = LTI 系统，光瞳 = 滤波器}
+
+\textbf{讨论的模型}：物面 $\to$ 镜头 $\to$ 像面，镜头的结构图见\pageref{sec:p-pupil}「光阑、孔径、入瞳、出瞳」小节。镜头里真正限制光束粗细的孔是\textbf{孔径光阑}；从物方隔着它前面的镜片看到的孔径光阑的像是\textbf{入瞳}，从像方隔着它后面的镜片看到的像是\textbf{出瞳}。出瞳是入瞳经整个镜头所成的像，两者共轭：从入瞳进去的光正好从出瞳出来，在一处被挡住的光在另一处也被挡住。所以入瞳和出瞳描述的是同一个限制，只是分别站在物方和像方：物方由入瞳边缘的光锥半角给出 $\mathrm{NA}$，像方由出瞳直径 $D$ 和出瞳到像面的距离 $z_i$ 给出 $\mathrm{NA}'\approx D/(2z_i)$（空气中），两者相差横向放大率，$\mathrm{NA}=|M|\,\mathrm{NA}'$。傅里叶光学从像方计算光的传播，起点是出瞳，因此\textbf{光瞳函数} $P(\xi,\eta)$ 定义在出瞳上（透光处为 1、挡光处为 0，有像差时再乘 $\ee^{ikW}$，见 §\ref{sec:p-aberr}），本节说的「光瞳」都指它。单片薄透镜、光阑贴着透镜时，孔径光阑、入瞳、出瞳都是透镜的通光口，$z_i$ 就是像距，常见题目都是这种情况。于是镜头可以当作黑盒，只用三个量描述：横向放大率 $M$、光瞳函数 $P$、出瞳到像面的距离 $z_i$。系统的输入是物面上的光（相干照明用复振幅，非相干照明用强度），输出是像面上的光；\textbf{理想像}是物按 $M$ 缩放后的样子（$M<0$ 即倒像）。课件的完整推导见\pageref{sec:waveimg}「成像的波动光学描述」一节。
+
+\begin{idea}[一句话]
+几何光学把理想点像画成一个点；加入波动性和有限光瞳后，即使没有像差，点像也会成为衍射光斑。描述这份点响应的函数叫\textbf{点扩散函数 PSF}。许多物点各自留下点响应，再按相干性选择复振幅或强度相加，就形成整幅像。
+\end{idea}
+
+\needspace{14\baselineskip}
+\phead{先把缩写接成一个过程：一个点、许多点、不同粗细的条纹}
+先把放大率和倒像关系计入，得到与像面使用同一坐标的「理想像」。在点响应近似只随物点平移、形状不变的视场内，记振幅点响应为 $h$，归一化强度点响应为
+\[
+p(x,y)=\frac{|h(x,y)|^2}{\iint |h|^2\dd x\dd y},\qquad \iint p\dd x\dd y=1.
+\]
+归一化把总透光量另行计算，让我们专心比较光怎样分散。于是同一系统有两条计算路线：
+\[
+\begin{aligned}
+\text{相干：}\quad&E_{\text{像}}=E_{\text{理想像}}\conv h,
+& H_c&=\F\{h\},\quad I_{\text{像}}=|E_{\text{像}}|^2;\\
+\text{非相干：}\quad&I_{\text{像}}=I_{\text{理想像}}\conv p,
+& \mathrm{OTF}&=\F\{p\},\quad \mathrm{MTF}=|\mathrm{OTF}|.
+\end{aligned}
+\]
+按位置看，PSF 回答「一个点的光分散到哪里」；按频率看，传递函数回答「每种粗细的变化还剩多少、相位怎样改变」。\textbf{它们描述同一个系统，傅里叶变换把两种观察方式连接起来。}如果输入是明暗条纹，亮区的光扩散进暗区，就会降低对比度；MTF 正是用频率描述这件事。
+
+\begin{itemize}
+\item \textbf{衍射受限}：没有像差，唯一的限制是光瞳有限大。题目说“衍射受限系统”就是这个意思。
+\item \textbf{PSF 从哪来}：对一个物点，像面是出瞳的\textbf{傅里叶面}（理由见下面的框），所以像点的振幅 = 光瞳的夫琅禾费衍射图样：$h(x,y)\propto\F\{P\}\big|_{u=\frac{x}{\lambda z_i},\,v=\frac{y}{\lambda z_i}}$。圆形光瞳的 PSF 是\textbf{艾里斑}（中心亮斑加一圈圈暗环）。光瞳越大，斑越小（时宽带宽积）。
+\item \textbf{相干还是非相干}：先判断，判断错整题全错。
+\end{itemize}
+
+\begin{idea}[相干传递函数（CTF）]
+关键的前提是：\textbf{对一个物点，像面是出瞳的傅里叶面}。它由 §\ref{sec:p-lensft} 的两段合起来得到。\pageref{sec:p-imgacct}「成像也是记二次项的账」说明，物点发出的光经过镜头，在出瞳上是会聚到像点的球面波，带二次相位 $\ee^{-ik\xi^2/(2z_i)}$；\pageref{sec:p-lensftwhy}「为什么透镜能做傅里叶变换」说明，这样的二次相位正好抵消从出瞳传播 $z_i$ 带出的 $\ee^{+ik\xi^2/(2z_i)}$，观察面上就是傅里叶变换。也就是说，出瞳上的会聚波相当于一片焦距为 $z_i$ 的透镜，像面就是它的后焦面，即等效的远场。所以振幅 PSF 是光瞳函数的傅里叶变换：$h(x)\propto\F\{P\}\big|_{u=x/(\lambda z_i)}$。
+
+有了这个前提，CTF 用两次傅里叶变换就能得到。上面已经写出相干成像的传递函数 $H_c=\F\{h\}$，代入 $h\propto\F\{P\}$，就是对 $P$ 连做两次正变换，而两次正变换等于坐标反演：
+\[H_c(u)=P(-\lambda z_iu).\]
+第一次变换是光从出瞳传播到像面，第二次只是把像面上的 $h$ 按频率分解，两者意义不同（见下表）。结果是：出瞳上的位置 $\xi$ 对应像面频率 $-\xi/(\lambda z_i)$，光瞳透光处对应的频率通过，挡光处对应的频率被滤掉；光瞳边缘 $|\xi|=D/2$ 给出截止频率 $u_c=\frac{D}{2\lambda z_i}\approx\frac{\mathrm{NA}'}{\lambda_0}$，换到物面再乘 $|M|$，即 $\frac{\mathrm{NA}}{\lambda_0}$。
+\end{idea}
+
+\phead{两次傅里叶变换，意义不同 [F3-p23–25]}
+这一节的公式里有两次傅里叶变换，容易混：
+\begin{center}\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}P{2.6cm}P{5.6cm}P{6.6cm}@{}}
+\toprule
+ & ① 光瞳 $\to$ PSF & ② PSF $\to$ CTF\\ \midrule
+公式 & $h(x')\propto\F\{P\}\big|_{x'/(\lambda z_i)}$ & $H_c(u)=\F\{h\}(u)$\\
+物理过程 & 光从出瞳\textbf{传播}到像面（与 §\ref{sec:p-diff} 夫琅禾费衍射同一公式） & 没有传播，只是把像面上的信号按频率分解（信号与系统）\\
+变换后的“频率” & 是\textbf{方向}，乘 $\lambda z_i$ 换成像面上的位置 $x'$ & 就是像面上的空间频率 $u$，单位 mm$^{-1}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+两次正变换叠起来 $\F\F\{P\}=P(-\cdot)$，所以 $H_c(u)=P(-\lambda z_iu)$。负号来自“两次正变换 = 坐标反演”，和 4f 倒像是同一个原因。光瞳对称时负号不影响结果。
+
+\phead{为什么要分相干和非相干}
+系统对谁线性，就在谁身上做卷积。激光照明时，物上各点的相位关系固定，像面上各点的\textbf{复振幅}相加，所以对复振幅是 LTI，传递函数是 CTF。普通光照明时，各点相位乱跳，干涉项平均为零，只有\textbf{强度}相加，所以对强度是 LTI。强度 PSF 是 $|h|^2$，它的频谱不再是光瞳本身，而是光瞳的自相关（下面一段）。
+这里讨论完全相干与空间非相干两个端点模型，具体照明也可能部分相干。\textbf{不同物点之间非相干，不等于同一个物点经过光瞳不同部分的光不能干涉}；后者仍共同形成这个物点的衍射光斑。
+
+
+\begin{center}\small\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}P{2.4cm}P{6.3cm}P{6.6cm}@{}}
+\toprule
+ & 相干照明（激光） & 非相干照明（普通光、荧光、屏幕）\\ \midrule
+谁是线性的 & 复振幅 $E$ & 强度 $I$\\
+冲激响应 & 振幅 PSF：$h\propto\F\{P\}$ & 强度 PSF：$|h|^2$\\
+传递函数 & \textbf{CTF}（相干传递函数）$H_c(u)=P(-\lambda z_iu)$：\textbf{光瞳的坐标反演与缩放} [F3-p24] & \textbf{OTF}（光学传递函数）$=\F\{|h|^2\}$ 归一化 $=$ 光瞳的\textbf{自相关}；\textbf{MTF}（调制传递函数）$=|\text{OTF}|$\\
+截止频率（像面） & $\dfrac{D}{2\lambda z_i}\approx\dfrac{\mathrm{NA}'}{\lambda_0}$ & $\dfrac{D}{\lambda z_i}\approx\dfrac{2\mathrm{NA}'}{\lambda_0}$（相干的 2 倍）\\
+曲线形状 & 矩形：截止内全通，外面全丢 & 从 1 逐渐降到 0（一条缝：三角形）\\
+\bottomrule
+\end{tabular}
+\end{center}
+$D$：出瞳宽度（缝）或直径（圆）；$z_i$：出瞳到像面的距离。表中的 $D/z_i$ 写法采用空气中的傍轴近似；曲线形状针对均匀、无像差的缝或圆形光瞳。$\mathrm{NA}'=n'\sin\alpha'$ 是像方数值孔径，$\alpha'$ 为像方收光半角。\textbf{带 NA 的公式统一使用真空波长 $\lambda_0$}，即 $u_{c,\text{相干}}=\mathrm{NA}'/\lambda_0$、$u_{c,\text{非相干}}=2\mathrm{NA}'/\lambda_0$；本章空气数例中 $\lambda\approx\lambda_0$。
+
+换成\textbf{物面}频率，应同时换成物方 NA。若横向放大率为 $M$，条纹在像面放宽 $|M|$ 倍，频率就变为物面的 $1/|M|$：$u_{\text{物}}=|M|u_{\text{像}}$。比较频率和光斑大小时，必须使用同一侧的坐标。
+
+\begin{idea}[截止频率为什么差一倍：方向的范围与方向之间的差]
+把 §\ref{sec:p-spfreq} 的方向公式接过来：透镜只接收一定角度内的光，所以像面光场的最大横向频率是
+\[
+u_{\max}=\frac{n'\sin\alpha'}{\lambda_0}=\frac{\mathrm{NA}'}{\lambda_0}.
+\]
+这是\textbf{复振幅}的频率范围。强度则由复振幅取模平方得到。两束单位振幅的相干平面波给出
+\[
+E(x)=\ee^{i2\pi u_1x}+\ee^{i2\pi u_2x}
+\quad\Rightarrow\quad
+|E(x)|^2=2+2\cos[2\pi(u_1-u_2)x].
+\]
+明暗条纹的频率是 $|u_1-u_2|$。若光场允许 $-u_{\max}$ 到 $+u_{\max}$，最大频率差就是 $2u_{\max}$。这解释了强度 PSF 的频谱为何能延伸到两倍范围，也就是非相干 OTF 的截止。有限连续光瞳在该边界的重叠面积为零，MTF 也降到零。
+
+这里的两束波解释的是\textbf{同一物点内部}的干涉；非相干成像再把不同物点的强度 PSF 相加。两个截止针对的输入量不同，不能直接解释成非相干成像在所有情况下都「清楚两倍」。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+\begin{axis}[name=a,width=6.8cm,height=4.4cm,xmin=-0.1,xmax=2.5,ymin=0,ymax=1.2,
+  axis lines=left,xlabel={空间频率 $u/u_c$},ylabel={传递函数},
+  xtick={0,1,2},ytick={0,0.5,1},title={相干：CTF},title style={font=\footnotesize},
+  label style={font=\footnotesize},tick label style={font=\scriptsize}]
+\addplot[thick,blue] coordinates {(0,1) (1,1) (1,0) (2.4,0)};
+\node[font=\scriptsize,anchor=west] at (axis cs:1.05,0.6){截止 $u_c=\frac{D}{2\lambda z_i}$};
+\end{axis}
+\begin{axis}[at={(a.east)},anchor=west,xshift=1.6cm,width=6.8cm,height=4.4cm,xmin=-0.1,xmax=2.5,ymin=0,ymax=1.2,
+  axis lines=left,xlabel={空间频率 $u/u_c$},ylabel={MTF},
+  xtick={0,1,2},ytick={0,0.5,1},title={非相干：MTF},title style={font=\footnotesize},
+  label style={font=\footnotesize},tick label style={font=\scriptsize},
+  legend style={font=\scriptsize,draw=none,fill=none,at={(1.02,1.0)},anchor=north east}]
+\addplot[thick,red] coordinates {(0,1) (2,0) (2.4,0)};
+\addplot[thick,red!60!black,dashed,domain=0:1,samples=60] ({2*x},{2/pi*(rad(acos(x))-x*sqrt(1-x^2))});
+\addplot[thick,gray,dotted,domain=0:2,samples=60] ({x},{(1-x/2)*(1-0.45*sin(deg(pi*x/2)))});
+\legend{一条缝（三角形）,圆孔,有像差（示意）}
+\end{axis}
+\end{tikzpicture}
+
+{\small 横轴以相干截止 $u_c$ 为单位。非相干截止在 $2u_c$。像差只会把曲线往下压（§\ref{sec:p-aberr}）。}
+\end{center}
+
+\needspace{14\baselineskip}
+\phead{为什么缝的 MTF 是斜线}
+左图的 CTF 描的是光瞳本身。均匀缝在截止以内透过率是 1，以外是 0，所以画出来是矩形：每一个点代表一个传播方向，那个方向的平面波要么穿过光瞳，要么被挡住。
+
+右图记录的是强度条纹还能留下多少对比度。强度 PSF 是 $|h|^2=h\cdot h^*$，空间域相乘对应频率域卷积，而 $h$ 的频谱就是光瞳，所以 $|h|^2$ 的频谱是光瞳的自相关，归一化后就是 OTF。无像差、透过率只有 0 和 1 时，自相关就是光瞳与平移后的自己相重叠的长度，再除以原来的宽度。缝宽 $D$，平移 $\Delta=\lambda z_i u$：
+\[
+\mathrm{OTF}(u)=\frac{D-|\Delta|}{D}=1-\frac{\lambda z_i|u|}{D}=1-\frac{|u|}{2u_c},
+\qquad |u|\le 2u_c=\frac{D}{\lambda z_i}.
+\]
+缝的两条边是直的，每多错开一截，重叠就少掉同样的一截，所以下降是直线。横轴用相干截止 $u_c=D/(2\lambda z_i)$ 做单位时，直线在 $2$ 处降到 0。频率越低，两份光瞳重叠越多，对比度越接近 1。
+
+光瞳上相距 $\Delta$ 的两个小孔在像面上干涉，条纹频率就是 $\Delta/(\lambda z_i)$。重叠越长，这样的孔对越多，这个频率传得越好。圆孔比的是两圆的重叠面积，边界是圆弧，所以是虚线那条向下弯的曲线。有像差时，重叠区域里的相位不再对齐，曲线再降低。这条直线只属于均匀、无像差的一维缝；方瞳沿一条轴同样是三角形。
+
+\phead{MTF 的物理意义：条纹对比度剩下多少}
+拿一张正弦条纹做物：$I_{\text{物}}=1+\cos(2\pi Fx)$，最亮 2、最暗 0。\textbf{对比度}（调制度）
+$K=\dfrac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}=1$。线性系统对正弦输入的输出还是同频正弦，只是振幅乘了 MTF：
+\[
+I_{\text{像}}=1+\mathrm{MTF}(F)\cos(2\pi Fx+\text{相移})\quad\Rightarrow\quad K_{\text{像}}=\mathrm{MTF}(F)\times K_{\text{物}}
+\]
+
+\begin{center}
+\begin{tikzpicture}[font=\footnotesize]
+\begin{axis}[width=12cm,height=4.2cm,xmin=0,xmax=3,ymin=0,ymax=2.3,axis lines=left,
+  xlabel={$x$（以条纹周期为单位）},ylabel={强度},ytick={0,0.4,1,1.6,2},xtick={0,1,2,3},
+  label style={font=\footnotesize},tick label style={font=\scriptsize},
+  legend style={font=\scriptsize,draw=none,fill=none,at={(1.0,1.18)},anchor=north east,legend columns=2}]
+\addplot[thick,blue,domain=0:3,samples=150] {1+cos(deg(2*pi*x))};
+\addplot[very thick,red,dashed,domain=0:3,samples=150] {1+0.6*cos(deg(2*pi*x))};
+\legend{物：$K=\frac{2-0}{2+0}=1$,像：$K=\frac{1.6-0.4}{1.6+0.4}=0.6$}
+\end{axis}
+\end{tikzpicture}
+
+{\small 物的条纹最暗是全黑，拍出来最暗只有 0.4、最亮只有 1.6：这个频率上 MTF $=0.6$。}
+\end{center}
+条纹越细（$F$ 越大），MTF 越小；过了截止频率，像就是一片均匀的灰，$K=0$。
+
+\begin{idea}[光斑大小与截止频率：同一孔径的两种尺度]
+对\textbf{均匀、无像差圆形光瞳}，像面艾里斑的中央峰到第一暗环的半径和非相干截止分别是
+\[
+r_{\mathrm A}\approx0.61\frac{\lambda_0}{\mathrm{NA}'},\qquad
+u_{c,\text{非相干}}=\frac{2\mathrm{NA}'}{\lambda_0},\qquad
+r_{\mathrm A}u_{c,\text{非相干}}\approx1.22.
+\]
+因此，在这一理想模型中：\textbf{收光角增大 $\to$ 能组合的方向更多 $\to$ 中央光斑更窄 $\to$ 可传递的条纹频率范围更宽}。$r_{\mathrm A}$ 是第一暗环半径，外面仍有衍射环；$1/u_c$ 是截止对应的正弦条纹周期，\textbf{不是光斑直径，也不是两点分辨距离的通用定义}。
+
+例如像方 $\mathrm{NA}'=0.1$、$\lambda_0=0.5\,\mu\mathrm m$ 时，$r_{\mathrm A}\approx3.05\,\mu\mathrm m$，非相干截止为 $0.4\,\mu\mathrm m^{-1}=400\,\mathrm{mm}^{-1}$，对应条纹周期 $2.5\,\mu\mathrm m$。在截止处，MTF 已为零；接近截止时也只有很低的对比度，不能把「尚未超过截止」当成「看得清」。
+
+这个乘积关系依赖圆形光瞳与半径定义。理想高斯强度光斑的傅里叶变换仍为高斯函数，逐渐衰减而没有有限的硬截止；可按指定阈值定义有效带宽。离焦也能使光斑变宽、MTF 变差，而保持孔径决定的最高频率边界不变。\textbf{比较清晰度要看整条 MTF，不能只看截止或单个光斑宽度。}
+\end{idea}
+
+\needspace{9\baselineskip}
+\phead{把点像、频率和对比度算成同一个结果（自编例）}
+空气中一维均匀缝光瞳宽 $D=2\,\mathrm{mm}$，出瞳到像面 $z_i=100\,\mathrm{mm}$，$\lambda=0.0005\,\mathrm{mm}$。采用无像差、非相干成像，输入已换到理想像坐标。
+\begin{enumerate}
+\item \textbf{点像有多宽？}强度为平方 sinc 形，中心到第一暗纹 $x_1=\lambda z_i/D=0.025\,\mathrm{mm}$。这是缝光瞳，不能套圆孔的 $0.61$ 系数。
+\item \textbf{哪些条纹能传递？}非相干截止 $u_{c,\text{非相干}}=D/(\lambda z_i)=40\,\mathrm{mm}^{-1}$。缝光瞳的 MTF 是三角形，在 $F=20\,\mathrm{mm}^{-1}$ 处，$\mathrm{MTF}=1-F/u_{c,\text{非相干}}=0.5$。
+\item \textbf{最后看见什么？}输入平均强度 1、对比度 1，最亮 2、最暗 0；输出对比度变为 0.5，最亮 1.5、最暗 0.5。空间上是亮区的光扩散进暗区，频域上是条纹幅度乘了 0.5，两种算法描述同一个结果。
+\end{enumerate}
+
+\begin{idea}[类比]
+\begin{itemize}
+\item PSF $\leftrightarrow$ 冲激响应；像 $=$ 物 $\conv$ PSF $\leftrightarrow$ $y=x\conv h$。
+\item CTF、OTF $\leftrightarrow$ 传递函数 $H(f)$；MTF $\leftrightarrow$ 幅频特性 $|H(f)|$（伯德图上幅度那一条）。
+\item OTF $=$ 光瞳的自相关 $\leftrightarrow$ “功率谱 $=$ 自相关的傅里叶变换”（维纳-辛钦）：强度是 $|h|^2$，它的谱是 $h$ 的谱的自相关。
+\item 截止频率 $\leftrightarrow$ 低通滤波器的带宽：镜头越大（NA 越大）、波长越短，带宽越宽。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item 三缝光瞳题：求像面\textbf{点扩展函数}（二维）= 三缝光瞳的夫琅禾费图样的模平方；画 $x$ 方向的\textbf{调制传递函数（MTF）}并标\textbf{截止频率} = 画三缝光瞳的归一化自相关，截止 $\frac{D}{\lambda z_i}=\frac{D}{2\lambda f}$；画像面条纹\textbf{对比度} $K$ 随 $F$ 的变化：物 $1+\cos(2\pi Fx)$ 的对比度是 1，$\beta=-1$ 频率不变，所以 $K(F)$ 就是 MTF 曲线本身。
+\item 显微成像题求物面上的\textbf{非相干成像截止频率}：$\frac{2\mathrm{NA}}{\lambda_0}$。
+\item 证明“有像差时 MTF 不大于无像差时”：MTF 是光瞳的自相关，像差让参与自相关的箭头方向参差不齐（§\ref{sec:p-aberr}）。
+\end{itemize}
+
+\psee 成像总览\pageref{ch:imaging}；相干截止\pageref{sec:typeA}；规则光瞳 OTF \pageref{sec:typeB}；分块光瞳 MTF \pageref{sec:typeC}；对比度传递\pageref{sec:typeE}；三缝完整例题\pageref{ex:3slit}；SIM \pageref{sec:sim}。
+
+\needspace{7\baselineskip}
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 物的条纹对比度为 1，拍出来对比度 0.3，这个频率上 MTF 是多少？
+\item 同一个镜头，激光照明和普通灯照明，哪个截止频率高？高多少？
+\item NA $=0.5$，$\lambda=0.5\,\mu$m 的非相干显微镜，物面截止频率是多少？
+\end{enumerate}
+\pans{1. 0.3。\enspace 2. 普通灯（非相干）高，是相干的 2 倍。\enspace 3. $\frac{2\mathrm{NA}}{\lambda_0}=\frac{1}{5\times10^{-4}\text{ mm}}=2000$ mm$^{-1}$。}
+
+% =====================================================================
+\section{像差与 Strehl 比}\label{sec:p-aberr}
+\proot{根④ 像差 = 光瞳上的相位误差}
+
+\begin{idea}[一句话]
+理想镜头从出瞳射出的是一个完美的球面波，正好会聚到像点。真实镜头的波面有凹凸，偏离理想球面的距离 $W(x,y)$ 就是\textbf{波像差}。它让光瞳多出一个相位 $\ee^{ikW}$，结果光斑变胖、峰值变低、MTF 下降。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\draw[->] (-0.6,0)--(6.3,0) node[right]{光轴};
+\draw[line width=2pt] (0,1.7)--(0,2.1); \draw[line width=2pt] (0,-1.7)--(0,-2.1);
+\node at (0,2.35){出瞳};
+\draw[dashed,thick,blue] ($(5.5,0)+(162:4.6)$) arc[start angle=162,end angle=198,radius=4.6];
+\draw[thick,red,domain=-1.45:1.45,samples=80,smooth] plot ({5.5-sqrt(4.6^2-\x*\x)+0.2*sin(deg(2.6*\x))+0.1*\x*\x},\x);
+\fill (5.5,0) circle (1.8pt) node[below right]{理想像点};
+\draw[gray] (1.0,1.45)--(5.5,0); \draw[gray] (1.0,-1.45)--(5.5,0);
+\draw[<->,thick] (1.0,0.95)--(1.21,0.95); \node[anchor=south] at (1.1,1.0){$W$};
+\node[blue,anchor=west] at (1.45,1.55){理想球面波（虚线）};
+\node[red,anchor=west] at (1.45,-1.55){实际波面（实线）};
+\end{tikzpicture}
+
+{\small 波像差 $W(x,y)$：出瞳上每一点，实际波面比理想球面超前或落后的\textbf{距离}。}
+\end{center}
+
+\begin{itemize}
+\item \textbf{波像差} $W(x,y)$：单位是长度，常以 $\lambda$ 为单位，如 $W=0.1\lambda$。对应相位 $kW=2\pi W/\lambda$。
+\item \textbf{广义光瞳}：把像差并进光瞳，$\mathcal P(x,y)=P(x,y)\,\ee^{ikW(x,y)}$。前面所有公式照用，只把 $P$ 换成 $\mathcal P$。
+\item \textbf{RMS 波前误差} $\sigma_W$：$W$ 在光瞳内的标准差（均方根起伏），$\sigma_W^2=\E[W^2]-\E^2[W]$，$\E$ 是在光瞳内取平均。只看起伏，$W$ 整体加个常数不算。
+\item \textbf{Strehl 比} $S$：有像差时 PSF 中心峰值 / 无像差时的峰值，$0<S\le1$。$S$ 越接近 1 越好，$S>0.8$ 算“接近衍射极限”。
+\item 两个近似：$S\approx1-(k\sigma_W)^2$ 和 $S\approx\ee^{-(k\sigma_W)^2}$。$\sigma_W=\lambda/14$ 时 $k\sigma_W=2\pi/14$，$(k\sigma_W)^2=0.2014$，$S\approx0.8$。
+\item \textbf{倾斜}（$W$ 是 $x,y$ 的一次函数）不算真正的像差：它只让整个像平移，PSF 形状和 MTF 都不变。
+\end{itemize}
+
+\begin{idea}[思路：像差为什么写成 $\ee^{ikW}$，为什么有的“像差”不算数]
+\begin{enumerate}
+\item \textbf{从哪来}：§\ref{sec:p-imaging} 的理想系统，出瞳射出的是会聚到像点的球面波。实际波面和理想球面差了一段路程 $W(x,y)$（光程差）。多走路就多相位（§\ref{sec:p-wave}），所以出瞳上多了一个相位因子 $\ee^{ikW}$，相当于在光瞳上贴了一块相位片。
+\item \textbf{怎么用}：前面所有结论照用，只把 $P$ 换成 $\mathcal P=P\ee^{ikW}$（广义光瞳）[F3-p45]。相干时 CTF 的模不变、只多了相位；非相干时 OTF 仍是自相关，只是箭头方向参差，模变小。
+\item \textbf{按空间形式区分校正方式}（§\ref{sec:p-diff} 末的相位分类表）：常数项（活塞）不改变强度；一次项（倾斜）只让像平移；旋转对称二次项 $a(x^2+y^2)$ 是离焦，调焦即可补偿；二次项里的像散 $a(x^2-y^2)$、$bxy$ 调焦消除不了；三次及以上的项（彗差、球差等）也不能靠平移或调焦消除。“倾斜不算像差”是因为它只让像平移，形状不变。
+\end{enumerate}
+\end{idea}
+
+\phead{Strehl 比的推导在算什么 [F3-p57–58]}
+\begin{enumerate}
+\item \textbf{为什么只看中心}：PSF 中心 $=|\F\{\mathcal P\}(0)|^2=\big|\iint\mathcal P\big|^2$。频率为 0 的傅里叶核是 1，中心的光就是光瞳上所有箭头的直接和（下面的箭头图）。
+\item \textbf{为什么展开到二阶}：$kW$ 很小，$\ee^{ikW}\approx1+ikW-\frac12(kW)^2$。只展开到一阶，模平方里的二阶项不完整；二阶是能看到峰值下降的最低阶。
+\item \textbf{为什么出来的是方差}：平均下来，$|\text{和}|^2\propto1-k^2\big(\E[W^2]-\E^2[W]\big)=1-k^2\sigma_W^2$。$W$ 的平均值是整体的常数延迟（活塞），本来就不影响峰值，所以被减掉；剩下的只有起伏 $\sigma_W$。
+\item \textbf{$\lambda/14$ 从哪来}：要 $S\ge0.8$，需 $(k\sigma_W)^2\le0.2$，$\sigma_W\le\frac{\lambda}{2\pi}\sqrt{0.2}\approx\frac{\lambda}{14}$。
+\end{enumerate}
+
+\phead{单位箭头的直觉：为什么像差让峰值和 MTF 下降}
+像面中心的振幅 $\propto\iint_{\text{光瞳}}\ee^{ikW(x,y)}\dd x\dd y$。光瞳上每一小块贡献一个\textbf{长度相同}的箭头（相量），方向是它的相位 $kW$：
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\begin{scope}
+\foreach \i in {0,...,5} \draw[->,thick,blue] (\i*0.7,0)--++(0.7,0);
+\draw[->,very thick,red] (0,-0.35)--(4.2,-0.35);
+\node[align=center] at (2.1,-1.0) {无像差：全部同向，和最长};
+\end{scope}
+\begin{scope}[xshift=6.6cm]
+\coordinate (p0) at (0,0);
+\foreach \a [count=\i from 0] in {20,-25,40,-10,55,-35} {
+  \pgfmathtruncatemacro{\j}{\i+1}
+  \draw[->,thick,blue] (p\i)--++(\a:0.7) coordinate (p\j);
+}
+\draw[->,very thick,red] (p0)--(p6);
+\node[align=center] at (1.9,-1.0) {有像差：方向参差，和变短};
+\end{scope}
+\begin{scope}[xshift=12cm]
+\coordinate (q0) at (0,0);
+\foreach \a [count=\i from 0] in {0,10,20,30,40,50} {
+  \pgfmathtruncatemacro{\j}{\i+1}
+  \draw[->,thick,blue] (q\i)--++(\a:0.7) coordinate (q\j);
+}
+\draw[->,very thick,red] (q0)--(q6);
+\node[align=center] at (1.9,-1.0) {相位均匀转（倾斜）：\\只是整体转了个方向};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+$S=\dfrac{|\text{有像差时的和}|^2}{|\text{无像差时的和}|^2}$。MTF 同理：某个频率的 MTF 是光瞳上一对对点的箭头之和（自相关），像差让它们互相抵消，所以只降不升（证明见\pageref{ex:v-mtf}）。
+
+\phead{接回上一节：为什么还需要 Strehl，而不能只报截止频率}
+固定光瞳的振幅透过率，只加入相位误差时，允许的方向范围并没有扩大，但这些方向的波可能不能在目标点同相叠加。截止边界仍由孔径限制，光却可能从中央峰分散到周围。Strehl 用一个数比较相同总能量、相同光瞳条件下的峰值；MTF 用一条曲线比较各频率的对比度，二者不能互相代替。
+
+例如残余 RMS 为 $\lambda/20$，小像差近似给出 $S\approx0.90$，但这并不表示所有频率的 MTF 都乘 0.90；求新 MTF 还需要具体的波像差分布。比较峰值时应先处理像的位置与焦面：纯倾斜只使点像平移，追踪平移后的峰值，形状和峰高都不变。上述 MTF 不升高的比较也以\textbf{固定振幅光瞳、只改变相位}为前提。
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 像差 $\leftrightarrow$ \textbf{相位失真的滤波器}：相干时光瞳就是 CTF，$\ee^{ikW}$ 只改相位不改幅度，像一个相位非线性的全通。
+\item 线性相位 $\leftrightarrow$ 纯延时，不失真。所以 $W$ 是一次函数（倾斜）时像只是平移。
+\item $S\approx1-(k\sigma_W)^2$ $\leftrightarrow$ 相位噪声让载波功率下降：$|\E[\ee^{i\phi}]|^2\approx1-\mathrm{Var}(\phi)$。
+\end{itemize}
+\end{idea}
+
+\pkao
+\begin{itemize}
+\item MTF 与像差的证明题：先证有像差时 MTF 不大于无像差；再找一种出瞳上的\textbf{波像差}，使 MTF 不下降；最后由施瓦茨不等式的取等条件推出这种波像差的形式。核心就是上面最后一张箭头图：只有“均匀地转”的相位不改变长度。
+\item Strehl 比题：\textbf{Strehl 比} = 有像差时 PSF 中心峰值 / 无像差时中心峰值；$\sigma_W$ 叫 \textbf{RMS 波前误差}；把相位因子 $\exp[ikW(x,y)]$ 展开到二阶：把 $\ee^{ikW}\approx1+ikW-\frac12(kW)^2$ 在光瞳内取平均，再取模平方。
+\end{itemize}
+
+\psee Strehl 比\pageref{sec:strehl}；数值换算\pageref{sec:strehl-num}；RMS 与像差平衡\pageref{sec:aberrms}；离焦\pageref{sec:defocus-units}；MTF 不升高的证明\pageref{sec:mtfproof}；MTF 例题\pageref{ex:v-mtf}；Strehl 例题\pageref{ex:v-strehl}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item $\sigma_W=\lambda/20$，Strehl 比约为多少？
+\item $W(x,y)=0.3\lambda\,x/a$（一次函数），PSF 和 MTF 有什么变化？
+\item $W$ 整体加上 $\lambda/4$（常数），$\sigma_W$ 和 $S$ 变不变？
+\end{enumerate}
+\pans{1. $(k\sigma_W)^2=(2\pi/20)^2=0.099$，$S\approx1-0.099=0.90$。\enspace 2. 形状不变，只是整个像平移；MTF 不变。\enspace 3. 都不变（常数不影响起伏，也不影响箭头和的长度）。}
+
+% =====================================================================
+\section{眼睛是一台相机：视光学入门}\label{sec:p-eye}
+\proot{根③ 的应用（眼睛也是一个成像系统）}
+
+\begin{idea}[一句话]
+角膜 + 晶状体 = 镜头（约 60 D），瞳孔 = 光圈，视网膜 = 传感器，视锥细胞 = 像素。近视、远视就是“对焦不准”，配一片透镜把焦点挪回视网膜上。
+\end{idea}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\footnotesize]
+\foreach \xs/\fx/\lab in {0/0.93/{正视：焦点在视网膜上},5.6/0.4/{近视：焦点在视网膜前},11.2/1.7/{远视：焦点在视网膜后}}{
+\begin{scope}[xshift=\xs cm]
+  \draw[thick] (0,0) circle (1);
+  \draw[thick,orange!70!black] (-0.93,0.37) arc[start angle=160,end angle=200,radius=1.08];
+  \draw[thick,fill=blue!10] (-0.6,0) ellipse (0.12 and 0.42);
+  \draw[very thick,green!50!black] (0.95,-0.3) arc[start angle=-18,end angle=18,radius=1];
+  \foreach \h in {0.32,-0.32} {
+    \draw[red] (-2.2,\h)--(-0.6,\h);
+    \pgfmathsetmacro{\s}{-1*\h/(\fx+0.6)}
+    \ifdim \fx pt<0.95pt
+      \draw[red] (-0.6,\h)--(\fx,0)--(0.93,{\h+\s*1.53});
+    \else
+      \draw[red] (-0.6,\h)--(0.93,{\h+\s*1.53}); \draw[red,dashed] (0.93,{\h+\s*1.53})--(\fx,0);
+    \fi
+  }
+  \node[align=center] at (0,-1.4) {\lab};
+\end{scope}}
+\node[font=\scriptsize,green!50!black,anchor=west] at (1.0,0.62){视网膜};
+\node[font=\scriptsize,blue!60!black] at (-0.2,1.2){晶状体};
+\node[font=\scriptsize,orange!70!black,anchor=east] at (-1.0,0.8){角膜};
+\end{tikzpicture}
+
+{\small 看远处（平行光）时眼睛放松。近视：眼太“强”或眼轴太长，焦点落在视网膜前；远视相反。}
+\end{center}
+
+\begin{itemize}
+\item \textbf{屈光度}再提一次：$\Phi=1/f$（$f$ 用米），单位 D。整只眼约 60 D，角膜约 40 D，晶状体约 20 D。
+\item \textbf{调节}：看近处时晶状体变厚，屈光度增大。看 $l$ 米远的东西要多出 $1/l$ D（看 25 cm 要调节 4 D）。
+\item \textbf{远点 / 近点}：眼睛完全放松时能看清的最远距离 / 用尽调节时能看清的最近距离。调节幅度 $=\frac1{\text{近点}}-\frac1{\text{远点}}$（D）。
+\item \textbf{近视}：远点在有限远处（比如 0.5 m）。配\textbf{凹透镜}，让无穷远的物成虚像在远点上：$\Phi=-\frac{1}{\text{远点}}=-2$ D，即近视 200 度（忽略镜眼距离）。
+\item \textbf{远视}：放松时连远处都要靠调节，配\textbf{凸透镜}（正度数）。
+\item \textbf{老花}：年龄增大，晶状体变硬，调节幅度下降，近点远离，看书费劲。配凸透镜（老花镜）帮着看近处。
+\item \textbf{视角}：视网膜上像的大小只由物对眼的张角决定：像高 $\approx17\text{ mm}\times\theta$（弧度）。$1'$（1 角分 $=\frac1{60}$ 度）在视网膜上约 5 $\mu$m，大约两个视锥的间距。
+\item \textbf{CPD}（每度周数）：用\textbf{角度}量的空间频率，一度视角里有几个黑白周期。因为视网膜像只看角度，用 CPD 不用 lp/mm。
+\item \textbf{视力}：小数视力 $=\frac{1}{\text{能分辨的最小角（角分）}}$。视力 1.0 $\leftrightarrow$ 分辨 $1'$ $\leftrightarrow$ 30 CPD（一个周期 = 一黑一白 = $2'$）。
+\item \textbf{人眼 = 光学系统 + 采样 + 大脑}：瞳孔和像差决定眼的 MTF；视锥细胞按约 2.5 $\mu$m 的间距采样；大脑再处理一遍。三者合起来测得的“各频率要多大对比度才看得见”的曲线叫\textbf{对比敏感度函数 CSF}，峰值约在 5–10 CPD。
+\end{itemize}
+
+\begin{idea}[类比]
+\begin{itemize}
+\item 眼睛 $\leftrightarrow$ 数码相机：镜头（低通，MTF）$\to$ 像素阵列（采样，奈奎斯特频率）$\to$ 图像处理。
+\item 视锥间距 $\leftrightarrow$ 采样间隔；1 CPD = 2 PPD（每度像素数）$\leftrightarrow$ “每周期至少采样两次”。
+\item CSF $\leftrightarrow$ 整个系统（光学 + 采样 + 神经）测出来的频率响应，中频最灵敏，像一个带通。
+\end{itemize}
+\end{idea}
+
+\phead{顺带：光度色度里的几个词}
+\begin{itemize}
+\item \textbf{光通量}（lm）：按人眼灵敏度加权的总光功率。\textbf{亮度}（luminance，cd/m$^2$，也叫 nit）：一个面看起来有多亮，和你离它多远无关。晴天室外约 $10^4$ nit，手机屏幕几百 nit。
+\item \textbf{朗伯体}（朗伯辐射体）：从各个方向看都一样亮的面，如白纸、墙。
+\item \textbf{gamma}：显示器把灰阶 $C$（0–1）变成亮度约 $C^{2.2}$，所以灰阶 128（一半）只有约 20\% 的亮度。
+\item 色彩空间：XYZ、Lab、Luv 是 CIE 定的，与设备无关；RGB、HSV 依赖具体显示设备。
+\end{itemize}
+
+\pkao 视光学按“计算 + 画图”准备：屈光度加减、配镜、视网膜像大小、光阑与光瞳作图、CPD 与视力换算、gamma 计算。“证明物面和像面亮度相等”一类光度题要用到入瞳、出瞳、孔径角和 §\ref{sec:p-spfreq} 的空间频率。
+
+\psee 视光学全章\pageref{ch:visual}；视网膜像与调节\pageref{sec:retimg}；屈光不正与矫正\pageref{sec:ametropia}；配镜套路\pageref{sec:correct}；老花\pageref{sec:presby}；CPD \pageref{sec:cpd}；视力换算\pageref{sec:acuity}；MTF 与 CSF \pageref{sec:mtfcsf}；gamma \pageref{sec:gamma}；光度色度\pageref{ch:photo}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 远点在 25 cm 的近视眼，要配多少屈光度？
+\item 看 50 cm 处的书，眼睛要调节多少？
+\item 视力 0.5 能分辨多少角分？对应多少 CPD？
+\end{enumerate}
+\pans{1. $-1/0.25=-4$ D（400 度）。\enspace 2. $1/0.5=2$ D。\enspace 3. $2'$；15 CPD。}
+
+% =====================================================================
+\section{\texorpdfstring{信号与系统 $\leftrightarrow$ 光学 对照总表}{信号与系统 ↔ 光学 对照总表}}\label{sec:p-table}
+\proot{速查（四个根一起）}
+
+\begin{center}\small\renewcommand{\arraystretch}{1.28}
+\begin{tabular}{@{}P{3.6cm}P{3.9cm}P{6.0cm}P{1.9cm}@{}}
+\toprule
+信号与系统 & 光学 & 关键式 & 页码\\ \midrule
+时间 $t$ & 平面上的位置 $(x,y)$ & 二维 & \pageref{sec:p-overview}\\
+频率 $f$（Hz） & 空间频率 $u$（lp/mm） & $u=\sin\theta/\lambda$，上限 $1/\lambda$ & \pageref{sec:p-spfreq}/\pageref{sec:spfreq}\\
+复指数 $\ee^{i2\pi ft}$ & 斜平面波 & $\ee^{i2\pi(ux+vy)}$，一个频率 = 一个方向 & \pageref{sec:p-spfreq}\\
+相量 & 复振幅 & $E=A\ee^{i\varphi}$，扔掉 $\ee^{-i\omega t}$ & \pageref{sec:p-wave}/\pageref{ch:wave}\\
+功率、平方律检波 & 强度、探测器 & $I=|E|^2$，相位看不见 & \pageref{sec:p-wave}\\
+同频正弦相加 / 噪声相加 & 相干 / 非相干叠加 & $|E_1+E_2|^2$ / $I_1+I_2$ & \pageref{sec:p-wave}/\pageref{sec:twobeam}\\
+混频、拍频 & 两束光干涉 & 条纹频率 $\frac{2\sin(\theta/2)}{\lambda}$ & \pageref{sec:p-spfreq}/\pageref{sec:twobeam}\\
+相乘（加窗、调制） & 物、光屏 & $E_{\text{出}}=t\,E_{\text{入}}$ & \pageref{sec:p-screen}/\pageref{sec:screens}\\
+频移（调制定理） & 棱镜、斜入射 & 线性相位 $\ee^{i2\pi u_0x}$ & \pageref{sec:p-screen}/\pageref{sec:phasefactors}\\
+线性调频（chirp） & 薄透镜 & $\exp\!\big(-ik\frac{x^2+y^2}{2f}\big)$ & \pageref{sec:p-screen}/\pageref{sec:lensphase}\\
+冲激响应、卷积 & 惠更斯次波、衍射 & $E_{\text{出}}=E_{\text{入}}\conv h$ & \pageref{sec:p-diff}/\pageref{ch:diff}\\
+全通色散 & 自由传播的传递函数 & $\exp[-i\pi\lambda z(u^2+v^2)]$ & \pageref{sec:p-diff}/\pageref{sec:angspec}\\
+包络 vs 载波 & 傍轴 vs 远场 & $\rho\ll z$ vs $z\gg\rho^2/\lambda$ & \pageref{sec:p-diff}/\pageref{box:approx}\\
+傅里叶变换 & 夫琅禾费衍射、透镜后焦面 & $u=\frac{x}{\lambda z}$，焦面 $x=\lambda fu$ & \pageref{sec:p-diff}/\pageref{sec:lensFT}\\
+时宽带宽积 & 孔小斑大 & 第一暗纹 $\sin\theta=\lambda/b$ & \pageref{sec:p-diff}/\pageref{sec:aperturepatterns}\\
+FFT $\to$ 乘 $H$ $\to$ FFT & 4f 系统 & 倒像，$M=-f_2/f_1$ & \pageref{sec:p-lensft}/\pageref{sec:4f}\\
+滤波器 $H(f)$ & 频谱面挡板、相位板 & 坐标 $u=\xi/(\lambda f_1)$ & \pageref{sec:p-lensft}/\pageref{sec:4fctf}\\
+延时 $\ee^{-i2\pi f\tau}$ & 频谱面线性相位 & 输出平移 & \pageref{sec:p-lensft}/\pageref{sec:linphase}\\
+冲激响应 & 点扩散函数 PSF & 相干 $h\propto\F\{P\}$，非相干 $|h|^2$ & \pageref{sec:p-imaging}/\pageref{sec:typeD}\\
+传递函数（相干系统） & CTF & $H_c=P(-\lambda z_iu)$，截止 $\frac{\mathrm{NA}}{\lambda_0}$ & \pageref{sec:p-imaging}/\pageref{sec:typeA}\\
+传递函数（非相干系统） & OTF & 光瞳归一化自相关，截止 $\frac{2\mathrm{NA}}{\lambda_0}$ & \pageref{sec:p-imaging}/\pageref{sec:typeB}\\
+幅频特性 $|H|$ & MTF & $K_{\text{像}}=\mathrm{MTF}\cdot K_{\text{物}}$ & \pageref{sec:p-imaging}/\pageref{sec:typeE}\\
+维纳-辛钦 & OTF = 自相关 & $\F\{|h|^2\}=P\corr P$ & \pageref{sec:p-imaging}/\pageref{sec:mtfproof}\\
+理想系统 $h=\delta$ & 几何光学成像 & $\frac1l+\frac1{l'}=\frac1f$，$\beta=-\frac{l'}{l}$ & \pageref{sec:p-geom}/\pageref{sec:lensimg}\\
+带宽 & 数值孔径 NA、F 数 & $\mathrm{NA}=n\sin\theta$，$F/\#=f/D$ & \pageref{sec:p-geom}/\pageref{sec:stops}\\
+相位失真 & 波像差 & 广义光瞳 $P\ee^{ikW}$ & \pageref{sec:p-aberr}/\pageref{sec:aberrms}\\
+纯延时不失真 & 倾斜像差只平移 & $W$ 是一次函数 & \pageref{sec:p-aberr}/\pageref{sec:mtfproof}\\
+相位噪声降低载波功率 & Strehl 比 & $S\approx1-(k\sigma_W)^2$，$\frac{\lambda}{14}\to0.8$ & \pageref{sec:p-aberr}/\pageref{sec:strehl}\\
+采样、奈奎斯特 & 视锥、像素、CPD & 1 CPD = 2 PPD；1.0 $\leftrightarrow$ 30 CPD & \pageref{sec:p-eye}/\pageref{sec:cpd}\\
+系统频率响应（实测） & CSF & 峰值 5–10 CPD & \pageref{sec:p-eye}/\pageref{sec:mtfcsf}\\
+\bottomrule
+\end{tabular}
+\end{center}
+{\small 页码栏：“入门页 / 详解页”。}
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 信号与系统里的“幅频特性 $|H(f)|$”对应光学里的什么？
+\item 棱镜（或斜入射照明）对应信号与系统的哪条性质？
+\item “孔越小、衍射斑越大”对应哪条性质？
+\end{enumerate}
+\pans{1. MTF。\enspace 2. 调制定理（乘线性相位 = 频移）。\enspace 3. 时宽带宽积（尺度变换性质）。}
+
+% =====================================================================
+\section{怎样读懂一道题}\label{sec:p-read}
+\proot{综合（用四个根拆题）}
+
+\begin{idea}[一句话]
+任何一道傅里叶光学题都是“输入 $\to$ 系统 $\to$ 输出”。先问三个问题，把题干翻译成信号与系统的语言，再去后面各章找对应的模板。
+\end{idea}
+
+\begin{recipe}{三问法}
+\begin{enumerate}
+\item \textbf{输入是什么？} 照明（垂直平面波？两束？点光源？）乘上什么物（孔、光栅、$t(x,y)$、强度透过率 $T(x)$）？\textbf{相干还是非相干？}
+\item \textbf{系统是什么？} 自由传播（菲涅耳 / 夫琅禾费）？一片透镜（2f）？4f（频谱面上有没有东西）？成像系统（光瞳长什么样，有没有像差）？
+\item \textbf{要交什么？} 复振幅、强度、频谱、放大率、传递函数、截止频率、MTF 图、对比度曲线，还是一个证明？
+\end{enumerate}
+\end{recipe}
+
+\phead{示范 1：两个 4f 级联}
+\begin{center}\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}P{5.6cm}P{9.8cm}@{}}
+\toprule
+题目里的说法 & 翻译成大白话\\ \midrule
+两个 4f 串联，四片正透镜焦距 $f_1\sim f_4$，相邻焦点重合 & 四片凸透镜排一排，间距 $f_1+f_2$、$f_2+f_3$、$f_3+f_4$。系统 = 两个“FT–FT”串起来\\
+不计透镜口径的衍射 & 透镜当成无限大，没有光瞳低通\\
+物是复透射系数 $E(x,y)$ 的屏 & 物：$t=E(x,y)$\\
+单色相干平面波垂直照明 & 照明 $=1$；\textbf{相干} $\Rightarrow$ 对复振幅算\\
+物在第一片透镜的前焦面 & 标准 2f 位置，频谱面 1 上是准确的 $\F\{E\}$\\
+求观察屏上的复振幅和总放大率 $M$ & 交：$E_{\text{出}}(x,y)\propto E(x/M,y/M)$ 和 $M=\frac{f_2f_4}{f_1f_3}$（两次倒像，正立）\\
+频谱面 1 放滤波器 $T\big(\frac{\xi}{\lambda f_1},\frac{\eta}{\lambda f_1}\big)$，求相干传递函数 & 频谱乘 $T$；交 $H(u,v)$ 的表达式，注意频率在哪个面上量\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{本质}：两个级联的线性系统 + 频域滤波。\textbf{模板}：\pageref{ex:v-4f2}。
+
+\phead{示范 2：三缝光瞳}
+\begin{center}\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}P{5.6cm}P{9.8cm}@{}}
+\toprule
+题目里的说法 & 翻译成大白话\\ \midrule
+衍射受限、非相干，焦距 $f$ & 没有像差，只受光瞳限制；\textbf{非相干} $\Rightarrow$ 对强度算，用 $|h|^2$ 和 OTF\\
+出瞳是三条透光缝（见图） & $P(x,y)$ = 三个 $\frac D5\times D$ 的矩形之和，中心在 $x=0,\pm\frac{2D}{5}$\\
+物距 $2f$ & 2f–2f：像距 $z_i=2f$，$\beta=-1$，物面频率 = 像面频率\\
+物面、像面原点都在光轴上 & 都在光轴上，不用管平移\\
+求像面 PSF（二维） & 交：$|\F\{P\}|^2$，频率代 $u=\frac{x'}{2\lambda f}$、$v=\frac{y'}{2\lambda f}$\\
+画 $x$ 方向 MTF，标截止频率 & 交一张图：$P$ 沿 $x$ 的归一化自相关；标截止 $\frac{D}{2\lambda f}$、零点、各峰高\\
+物 $T=1+\cos(2\pi Fx)$，画像面对比度 $K(F)$ & 物对比度 1，所以 $K(F)=\mathrm{MTF}(F)$，和 MTF 是同一条曲线；标出 $K=0$ 和极大处的 $F$\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{本质}：已知滤波器（光瞳），求冲激响应和幅频特性。\textbf{模板}：\pageref{ex:3slit}（完整推导）、\pageref{ex:v-3slit}（例题）。
+
+\phead{示范 3：结构光照明 SIM（只翻译不展开）}
+\begin{center}\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}P{5.6cm}P{9.8cm}@{}}
+\toprule
+题目里的说法 & 翻译成大白话\\ \midrule
+SIM：让非相干显微突破衍射极限 & 显微镜是一个非相干低通系统；想办法让截止频率以外的细节也被“看见”\\
+物的强度透过率 $T(x)$ & 物只对强度说话：透过去的强度 = 照明强度 $\times\,T(x)$\\
+两束相干平面波对称照明，夹角 $\theta$ & 照明是两束光的干涉条纹（§\ref{sec:p-spfreq}），频率 $\frac{2\sin(\theta/2)}{\lambda}$\\
+求物面非相干截止频率 & 交一个数：$\frac{2\mathrm{NA}}{\lambda_0}$\\
+求照明强度分布 & 交：$I(x)\propto1+\cos\big(2\pi\frac{2\sin(\theta/2)}{\lambda}x\big)$\\
+求透过物体后强度的频谱 & 时域相乘 $\Rightarrow$ 频谱卷积：$\hat T(u)$ 加上平移到 $\pm$ 条纹频率的两份（各乘 $\frac12$）\\
+怎样选 $\theta$ 让截止频率翻倍 & 平移量最多取到截止频率本身，于是原本在 $2\times$ 截止处的细节被挪进了通带\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{本质}：调制（乘余弦）把频谱搬家，绕过低通滤波器的带宽限制。\textbf{模板}：\pageref{ex:v-sim}（例题）、\pageref{sec:sim}（直觉）。
+
+\begin{warn}[读题时最容易漏的几个词]
+\begin{itemize}
+\item “相干 / 非相干”“激光 / 自然光 / 荧光”：决定对复振幅还是强度算。
+\item “前焦面 / 后焦面 / 偏离 $x_1$”：决定是不是准确的傅里叶变换。
+\item “物面上的 / 像面上的”截止频率：差一个放大率 $|M|$。
+\item “夹角 $\theta$”是两束之间还是每束与光轴之间：差一个因子 2。
+\item “复透射系数”（振幅）和“强度透过率”（$|t|^2$）不是一回事。
+\end{itemize}
+\end{warn}
+
+\psee 综合例题的完整解答\pageref{ch:examples}；题型索引\pageref{tab:typeindex}；考场流程\pageref{sec:examflow}。
+
+\phead{自测}
+\begin{enumerate}[label=\arabic*.]
+\item 题干说“荧光样品”“物面强度分布”，按相干还是非相干算？
+\item 像面截止频率算出来是 1000 mm$^{-1}$，系统 $|M|=10$，物面截止频率是多少？
+\item 题目说“两束光夹角为 $\theta$”，每束与光轴的夹角是多少？
+\end{enumerate}
+\pans{1. 非相干。\enspace 2. $u_{\text{物}}=|M|\,u_{\text{像}}=10^4$ mm$^{-1}$。\enspace 3. $\theta/2$（关于光轴对称时）。}
