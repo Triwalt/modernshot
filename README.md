@@ -4,6 +4,8 @@
 
 《现代光学》（傅里叶光学 + 视光学）开卷速查手册，205 页，适合黑白打印。
 
+> **2026-11-05**：期中考试已于今日 11:50 结束。手册还有许多不完善之处，在此向大家致歉。希望手册的索引结构（题型索引、解题决策树、术语表和各类反查表）能对大家整理自己的资料有所启发，也期待后续的新建议，欢迎提 Issue 或 PR。
+
 - **在线阅读**：<https://triwalt.github.io/modernshot/>
 - **下载最新版 PDF**：<https://github.com/Triwalt/modernshot/releases/latest/download/modernshot.pdf>
 - **历史版本**：[Releases](https://github.com/Triwalt/modernshot/releases)
